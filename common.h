@@ -1,5 +1,5 @@
-#ifndef LIBMDSONASS_COMMON_H
-#define LIBMDSONASS_COMMON_H
+#ifndef LIBSONASSMD_COMMON_H
+#define LIBSONASSMD_COMMON_H
 
 #include <istream>
 #include <string>
@@ -23,4 +23,4 @@ std::string IntegerToHexString(unsigned long integer, unsigned int minimum_digit
 
 }
 
-#endif // LIBMDSONASS_COMMON_H
+#endif // LIBSONASSMD_COMMON_H

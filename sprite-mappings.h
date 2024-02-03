@@ -1,5 +1,5 @@
-#ifndef LIBMDSONASS_SPRITE_MAPPINGS_H
-#define LIBMDSONASS_SPRITE_MAPPINGS_H
+#ifndef LIBSONASSMD_SPRITE_MAPPINGS_H
+#define LIBSONASSMD_SPRITE_MAPPINGS_H
 
 #include <istream>
 #include <ostream>
@@ -23,4 +23,4 @@ struct SpriteMappings
 
 }
 
-#endif // LIBMDSONASS_SPRITE_MAPPINGS_H
+#endif // LIBSONASSMD_SPRITE_MAPPINGS_H

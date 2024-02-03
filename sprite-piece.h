@@ -1,5 +1,5 @@
-#ifndef LIBMDSONASS_SPRITE_PIECE_H
-#define LIBMDSONASS_SPRITE_PIECE_H
+#ifndef LIBSONASSMD_SPRITE_PIECE_H
+#define LIBSONASSMD_SPRITE_PIECE_H
 
 #include <istream>
 #include <ostream>
@@ -42,4 +42,4 @@ struct SpritePiece
 
 }
 
-#endif // LIBMDSONASS_SPRITE_PIECE_H
+#endif // LIBSONASSMD_SPRITE_PIECE_H

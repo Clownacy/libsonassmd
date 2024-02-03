@@ -1,5 +1,5 @@
-#ifndef LIBMDSONASS_SPRITE_FRAME_H
-#define LIBMDSONASS_SPRITE_FRAME_H
+#ifndef LIBSONASSMD_SPRITE_FRAME_H
+#define LIBSONASSMD_SPRITE_FRAME_H
 
 #include <istream>
 #include <ostream>
@@ -19,4 +19,4 @@ struct SpriteFrame
 
 }
 
-#endif // LIBMDSONASS_SPRITE_FRAME_H
+#endif // LIBSONASSMD_SPRITE_FRAME_H
