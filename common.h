@@ -6,7 +6,7 @@
 
 #include "clowncommon/clowncommon.h"
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 unsigned int ReadU8(std::istream &stream);
 unsigned int ReadU16BE(std::istream &stream);

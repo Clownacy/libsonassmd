@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 static unsigned long ReadBE(std::istream &stream, const unsigned int total_bytes)
 {

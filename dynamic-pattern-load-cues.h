@@ -5,7 +5,7 @@
 #include <ostream>
 #include <vector>
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 struct DynamicPatternLoadCues
 {

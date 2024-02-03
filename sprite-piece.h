@@ -5,7 +5,7 @@
 #include <istream>
 #include <ostream>
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 struct SpritePiece
 {

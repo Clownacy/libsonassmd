@@ -7,7 +7,7 @@
 
 #include "common.h"
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 DynamicPatternLoadCues::DynamicPatternLoadCues(std::istream &stream, const Format format)
 {

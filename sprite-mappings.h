@@ -8,7 +8,7 @@
 #include "dynamic-pattern-load-cues.h"
 #include "sprite-frame.h"
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 struct SpriteMappings
 {

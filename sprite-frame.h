@@ -11,7 +11,7 @@
 
 #include "sprite-piece.h"
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 struct SpriteFrame
 {

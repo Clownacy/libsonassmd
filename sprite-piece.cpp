@@ -4,7 +4,7 @@
 
 #include "common.h"
 
-namespace libmdsonass {
+namespace libsonassmd {
 
 void SpritePiece::fromStream(std::istream &stream, const Format format)
 {
