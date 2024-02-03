@@ -5,6 +5,8 @@
 #include <fstream>
 #include <utility>
 
+namespace libsonassmd {
+
 ObjectLayout::ObjectLayout(const char* const file_path)
 {
 	const auto file_size = std::filesystem::file_size(file_path);
@@ -53,4 +55,6 @@ std::ostream& ObjectLayout::operator>>(std::ostream &stream)
 		object >> stream;
 
 	return stream;
+}
+
 }

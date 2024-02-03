@@ -1,11 +1,13 @@
-#ifndef OBJECT_LAYOUT_H
-#define OBJECT_LAYOUT_H
+#ifndef LIBSONASSMD_OBJECT_LAYOUT_H
+#define LIBSONASSMD_OBJECT_LAYOUT_H
 
 #include <istream>
 #include <ostream>
 #include <vector>
 
 #include "object.h"
+
+namespace libsonassmd {
 
 class ObjectLayout
 {
@@ -21,4 +23,6 @@ public:
 	std::ostream& operator>>(std::ostream &stream);
 };
 
-#endif // OBJECT_LAYOUT_H
+}
+
+#endif // LIBSONASSMD_OBJECT_LAYOUT_H

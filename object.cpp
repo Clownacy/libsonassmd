@@ -2,6 +2,8 @@
 
 #include "common.h"
 
+namespace libsonassmd {
+
 Object::Object(std::istream &stream)
 {
 	*this << stream;
@@ -57,4 +59,6 @@ bool Object::operator==(const Object &object) const
 	    && respawn == object.respawn
 	    && x_flip == object.x_flip
 	    && y_flip == object.y_flip;
+}
+
 }

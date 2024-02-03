@@ -1,8 +1,10 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef LIBSONASSMD_OBJECT_H
+#define LIBSONASSMD_OBJECT_H
 
 #include <istream>
 #include <ostream>
+
+namespace libsonassmd {
 
 class Object
 {
@@ -36,4 +38,6 @@ public:
 	bool operator==(const Object &object) const;
 };
 
-#endif // OBJECT_H
+}
+
+#endif // LIBSONASSMD_OBJECT_H
