@@ -9,7 +9,7 @@ namespace libsonassmd {
 void SpritePiece::fromStream(std::istream &stream, const Format format)
 {
 	// This is specifically Sonic 2's mappings format.
-	y = ReadU8(stream);
+	y = ReadS8(stream);
 	const unsigned int size = ReadU8(stream);
 	width = ((size >> 2) & 3) + 1;
 	height = ((size >> 0) & 3) + 1;
@@ -72,25 +72,6 @@ void SpritePiece::toStream(std::ostream &stream, const Format format) const
 			case Format::SONIC_3_AND_KNUCKLES:
 				stream << "\tdc.w\t" << x << "\n";
 				break;
-		}
-	}
-}
-
-void SpritePiece::iterateTiles(const std::function<void(const SpritePiece::Tile&)> &callback) const
-{
-	int current_tile_index = tile_index;
-
-	for (int tile_x = 0; tile_x < width; ++tile_x)
-	{
-		const int tile_x_corrected = (x_flip ? width - tile_x - 1 : tile_x) * Tile::width;
-
-		for (int tile_y = 0; tile_y < height; ++tile_y)
-		{
-			const int tile_y_corrected = (y_flip ? height - tile_y - 1 : tile_y) * Tile::height;
-
-			callback({current_tile_index, x + tile_x_corrected, y + tile_y_corrected, palette_line, x_flip, y_flip});
-
-			++current_tile_index;
 		}
 	}
 }

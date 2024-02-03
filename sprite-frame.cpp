@@ -1,7 +1,5 @@
 #include "sprite-frame.h"
 
-#include <climits>
-
 #include "common.h"
 
 namespace libsonassmd {
@@ -28,15 +26,6 @@ void SpriteFrame::toStream(std::ostream &stream, const SpritePiece::Format forma
 		piece.toStream(stream, format);
 		stream << "\n";
 	}
-}
-
-void SpriteFrame::iteratePieces(const std::function<void(const SpritePiece&)> &callback) const
-{
-	// Must draw in reverse order.
-	for (unsigned int i = 0; i < 2; ++i)
-		for (auto piece = pieces.crbegin(); piece != pieces.crend(); ++piece)
-			if (piece->priority == (i != 0))
-				callback(*piece);
 }
 
 }

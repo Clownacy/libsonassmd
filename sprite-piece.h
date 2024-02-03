@@ -1,7 +1,6 @@
 #ifndef LIBMDSONASS_SPRITE_PIECE_H
 #define LIBMDSONASS_SPRITE_PIECE_H
 
-#include <functional>
 #include <istream>
 #include <ostream>
 
@@ -19,9 +18,6 @@ struct SpritePiece
 
 	struct Tile
 	{
-		static constexpr unsigned int width = 8;
-		static constexpr unsigned int height = 8;
-
 		int index;
 		int x;
 		int y;
@@ -32,8 +28,6 @@ struct SpritePiece
 
 	void fromStream(std::istream &stream, Format format);
 	void toStream(std::ostream &stream, Format format) const;
-
-	void iterateTiles(const std::function<void(const SpritePiece::Tile&)> &callback) const;
 
 	int x;
 	int y;

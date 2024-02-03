@@ -41,17 +41,20 @@ unsigned long ReadU32BE(std::istream &stream)
 
 int ReadS8(std::istream &stream)
 {
-	return CC_SIGN_EXTEND_UINT(7, ReadU8(stream));
+	const unsigned int value = ReadU8(stream);
+	return CC_SIGN_EXTEND_UINT(7, value);
 }
 
 int ReadS16BE(std::istream &stream)
 {
-	return CC_SIGN_EXTEND_UINT(15, ReadU16BE(stream));
+	const unsigned int value = ReadU16BE(stream);
+	return CC_SIGN_EXTEND_UINT(15, value);
 }
 
 long ReadS32BE(std::istream &stream)
 {
-	return CC_SIGN_EXTEND_ULONG(31, ReadU32BE(stream));
+	const unsigned long value = ReadU32BE(stream);
+	return CC_SIGN_EXTEND_ULONG(31, value);
 }
 
 static void WriteBE(std::ostream &stream, const unsigned long value, const unsigned int total_bytes)

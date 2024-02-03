@@ -126,8 +126,8 @@ DynamicPatternLoadCues SpriteMappings::removeDPLCs()
 {
 	// Determine the total number of tiles.
 	int total_tiles = 0;
-	for (auto &frame : frames)
-		for (auto &piece : frame.pieces)
+	for (const auto &frame : std::as_const(frames))
+		for (const auto &piece : std::as_const(frame.pieces))
 			total_tiles = std::max(total_tiles, piece.tile_index + piece.width * piece.height);
 
 	// I suppose a hash map would work here too.
@@ -143,7 +143,7 @@ DynamicPatternLoadCues SpriteMappings::removeDPLCs()
 		// Mark which tiles are mapped to which DPLC tiles.
 		std::fill(tile_indices.begin(), tile_indices.end(), false);
 
-		for (auto &piece : frame.pieces)
+		for (const auto &piece : std::as_const(frame.pieces))
 			for (int i = 0; i < piece.width * piece.height; ++i)
 				tile_indices[piece.tile_index + i] = true;
 
