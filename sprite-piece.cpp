@@ -6,7 +6,7 @@
 
 namespace libsonassmd {
 
-void SpritePiece::fromStream(std::istream &stream, const Format format)
+void SpritePiece::fromBinaryStream(std::istream &stream, const Format format)
 {
 	// This is specifically Sonic 2's mappings format.
 	y = ReadS8(stream);
@@ -38,7 +38,7 @@ void SpritePiece::fromStream(std::istream &stream, const Format format)
 	}
 }
 
-void SpritePiece::toStream(std::ostream &stream, const Format format) const
+void SpritePiece::toAssemblyStream(std::ostream &stream, const Format format) const
 {
 	if (format == Format::MAPMACROS)
 	{

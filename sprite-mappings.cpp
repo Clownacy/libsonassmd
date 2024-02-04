@@ -9,7 +9,7 @@
 
 namespace libsonassmd {
 
-void SpriteMappings::fromStream(std::istream &stream, const SpritePiece::Format format)
+void SpriteMappings::fromBinaryStream(std::istream &stream, const SpritePiece::Format format)
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 
@@ -47,11 +47,11 @@ void SpriteMappings::fromStream(std::istream &stream, const SpritePiece::Format 
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromStream(stream, format);
+		frames[current_frame].fromBinaryStream(stream, format);
 	}
 }
 
-void SpriteMappings::toStream(std::ostream &stream, const SpritePiece::Format format) const
+void SpriteMappings::toAssemblyStream(std::ostream &stream, const SpritePiece::Format format) const
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 	std::random_device random_device;
@@ -85,7 +85,7 @@ void SpriteMappings::toStream(std::ostream &stream, const SpritePiece::Format fo
 			stream << "\tspriteHeader";
 
 		stream << "\n";
-		frame.toStream(stream, format);
+		frame.toAssemblyStream(stream, format);
 
 		if (format == SpritePiece::Format::MAPMACROS)
 			stream << frame_label << "_End\n\n";

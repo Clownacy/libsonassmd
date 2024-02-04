@@ -12,8 +12,8 @@ namespace libsonassmd {
 
 struct SpriteMappings
 {
-	void fromStream(std::istream &stream, SpritePiece::Format format);
-	void toStream(std::ostream &stream, SpritePiece::Format format) const;
+	void fromBinaryStream(std::istream &stream, SpritePiece::Format format);
+	void toAssemblyStream(std::ostream &stream, SpritePiece::Format format) const;
 
 	bool applyDPLCs(const DynamicPatternLoadCues &dplcs);
 	DynamicPatternLoadCues removeDPLCs();
