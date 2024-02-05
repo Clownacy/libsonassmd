@@ -5,18 +5,16 @@
 #include <ostream>
 #include <vector>
 
-#include "assembler.h"
+#include "assembleable.h"
 #include "dynamic-pattern-load-cues.h"
 #include "sprite-frame.h"
 
 namespace libsonassmd {
 
-struct SpriteMappings
+struct SpriteMappings : Assembleable
 {
-	void fromAssemblyStream(std::istream &stream, Game game);
-	void fromBinaryStream(std::istream &stream, Game game);
-	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
-	void toBinaryStream(std::ostream &stream, Game game) const;
+	void fromBinaryStream(std::istream &stream, Game game) override;
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
 
 	bool applyDPLCs(const DynamicPatternLoadCues &dplcs);
 	DynamicPatternLoadCues removeDPLCs();

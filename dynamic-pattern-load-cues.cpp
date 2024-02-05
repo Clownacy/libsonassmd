@@ -11,23 +11,6 @@
 
 namespace libsonassmd {
 
-void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream, const Game game)
-{
-	std::stringstream string_stream;
-	if (!Assemble(stream, string_stream, game))
-		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
-	fromBinaryStream(string_stream, game);
-}
-
-// TODO: Move this to an interface class or something.
-void DynamicPatternLoadCues::toBinaryStream(std::ostream &stream, const Game game) const
-{
-	std::stringstream string_stream;
-	toAssemblyStream(string_stream, game, true);
-	// TODO: Handle this failing.
-	Assemble(string_stream, stream, game);
-}
-
 void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Game game)
 {
 	const auto starting_position = stream.tellg();

@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0...3.28.1)
 project(sonassmd LANGUAGES CXX)
 
 add_library(sonassmd STATIC
+	"assembleable.cpp"
+	"assembleable.h"
 	"assembler.cpp"
 	"assembler.h"
 	"common.cpp"

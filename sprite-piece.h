@@ -4,11 +4,11 @@
 #include <istream>
 #include <ostream>
 
-#include "assembler.h"
+#include "assembleable.h"
 
 namespace libsonassmd {
 
-struct SpritePiece
+struct SpritePiece : Assembleable
 {
 	enum class Format
 	{
@@ -28,10 +28,29 @@ struct SpritePiece
 		bool y_flip;
 	};
 
-	void fromAssemblyStream(std::istream &stream, Game game);
-	void fromBinaryStream(std::istream &stream, Game game);
-	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
-	void toBinaryStream(std::ostream &stream, Game game) const;
+	SpritePiece() = default;
+	SpritePiece(
+		const int x,
+		const int y,
+		const int width,
+		const int height,
+		const bool priority,
+		const int palette_line,
+		const bool y_flip,
+		const bool x_flip,
+		const int tile_index)
+		: x(x)
+		, y(y)
+		, width(width)
+		, height(height)
+		, priority(priority)
+		, palette_line(palette_line)
+		, y_flip(y_flip)
+		, x_flip(x_flip)
+		, tile_index(tile_index){};
+
+	void fromBinaryStream(std::istream &stream, Game game) override;
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
 
 	int x;
 	int y;

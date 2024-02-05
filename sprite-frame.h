@@ -5,17 +5,15 @@
 #include <ostream>
 #include <vector>
 
-#include "assembler.h"
+#include "assembleable.h"
 #include "sprite-piece.h"
 
 namespace libsonassmd {
 
-struct SpriteFrame
+struct SpriteFrame : Assembleable
 {
-	void fromAssemblyStream(std::istream &stream, Game game);
-	void fromBinaryStream(std::istream &stream, Game game);
-	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
-	void toBinaryStream(std::ostream &stream, Game game) const;
+	void fromBinaryStream(std::istream &stream, Game game) override;
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
 
 	std::vector<SpritePiece> pieces;
 };
