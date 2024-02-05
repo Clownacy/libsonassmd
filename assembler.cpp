@@ -79,9 +79,24 @@ static void WriteCharacters(void* const user_data, const char* const characters,
 	callback_data->output->write(characters, total_characters);
 }
 
-static void EmitMapMacros(std::ostream &stream, const unsigned int format)
+static unsigned int GameToNumber(const Game game)
 {
-	stream << "SonicMappingsVer = " << format << "\n";
+	switch (game)
+	{
+		case Game::SONIC_1:
+			return 1;
+
+		case Game::SONIC_2:
+			return 2;
+
+		case Game::SONIC_3_AND_KNUCKLES:
+			return 3;
+	}
+}
+
+static void EmitMapMacros(std::ostream &stream, const Game game)
+{
+	stream << "SonicMappingsVer = " << GameToNumber(game) << "\n";
 	stream << R"(
 mappingsTable macro
 currentMappingsTable set *
@@ -147,7 +162,7 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 )";
 };
 
-bool Assemble(std::istream &input, std::ostream &output, const unsigned int mapmacros_format)
+bool Assemble(std::istream &input, std::ostream &output, const Game game)
 {
 	InputCallbackData input_callback_data = {
 		&input
@@ -171,7 +186,7 @@ bool Assemble(std::istream &input, std::ostream &output, const unsigned int mapm
 		Seek
 	};
 
-	EmitMapMacros(input_callback_data.mapmacros, mapmacros_format);
+	EmitMapMacros(input_callback_data.mapmacros, game);
 
 	// It's okay for some IO errors to occur here.
 	const auto original_exceptions = input.exceptions();

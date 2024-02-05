@@ -12,24 +12,24 @@
 namespace libsonassmd {
 
 // TODO: Move this to an interface class or something.
-void SpriteMappings::fromAssemblyStream(std::istream &stream, const SpritePiece::Format format)
+void SpriteMappings::fromAssemblyStream(std::istream &stream, const Game game)
 {
 	std::stringstream string_stream;
-	if (!Assemble(stream, string_stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3))
-		throw std::ios::failure("File could not be assembled");
-	fromBinaryStream(string_stream, format);
+	if (!Assemble(stream, string_stream, game))
+		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
+	fromBinaryStream(string_stream, game);
 }
 
 // TODO: Move this to an interface class or something.
-void SpriteMappings::toBinaryStream(std::ostream &stream, const SpritePiece::Format format) const
+void SpriteMappings::toBinaryStream(std::ostream &stream, const Game game) const
 {
 	std::stringstream string_stream;
-	toAssemblyStream(string_stream, format);
+	toAssemblyStream(string_stream, game, true);
 	// TODO: Handle this failing.
-	Assemble(string_stream, stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3);
+	Assemble(string_stream, stream, game);
 }
 
-void SpriteMappings::fromBinaryStream(std::istream &stream, const SpritePiece::Format format)
+void SpriteMappings::fromBinaryStream(std::istream &stream, const Game game)
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 
@@ -45,7 +45,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream, const SpritePiece::F
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if ((format == SpritePiece::Format::SONIC_2 || format == SpritePiece::Format::SONIC_3_AND_KNUCKLES) && frame_offset % 2 != 0)
+		if ((game == Game::SONIC_2 || game == Game::SONIC_3_AND_KNUCKLES) && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
@@ -67,28 +67,28 @@ void SpriteMappings::fromBinaryStream(std::istream &stream, const SpritePiece::F
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromBinaryStream(stream, format);
+		frames[current_frame].fromBinaryStream(stream, game);
 	}
 }
 
-void SpriteMappings::toAssemblyStream(std::ostream &stream, const SpritePiece::Format format) const
+void SpriteMappings::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 	std::random_device random_device;
-	const std::string table_label = format == SpritePiece::Format::MAPMACROS ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
+	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
 	stream << table_label << ":";
 
-	if (format == SpritePiece::Format::MAPMACROS)
+	if (mapmacros)
 		stream << "\tmappingsTable";
 
 	stream << "\n";
 
 	for (const auto &frame : std::as_const(frames))
 	{
-		const std::string frame_label = format == SpritePiece::Format::MAPMACROS ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
+		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 
-		if (format == SpritePiece::Format::MAPMACROS)
+		if (mapmacros)
 			stream << "\tmappingsTableEntry.w\t" << frame_label << "\n";
 		else
 			stream << "\tdc.w\t" << frame_label << "-" << table_label << "\n";
@@ -98,16 +98,16 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream, const SpritePiece::F
 
 	for (const auto &frame : std::as_const(frames))
 	{
-		const std::string frame_label = format == SpritePiece::Format::MAPMACROS ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
+		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 		stream << frame_label << ":";
 
-		if (format == SpritePiece::Format::MAPMACROS)
+		if (mapmacros)
 			stream << "\tspriteHeader";
 
 		stream << "\n";
-		frame.toAssemblyStream(stream, format);
+		frame.toAssemblyStream(stream, game, mapmacros);
 
-		if (format == SpritePiece::Format::MAPMACROS)
+		if (mapmacros)
 			stream << frame_label << "_End\n\n";
 	}
 

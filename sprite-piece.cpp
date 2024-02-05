@@ -1,6 +1,5 @@
 #include "sprite-piece.h"
 
-#include <cassert>
 #include <sstream>
 
 #include "assembler.h"
@@ -9,26 +8,25 @@
 namespace libsonassmd {
 
 // TODO: Move this to an interface class or something.
-void SpritePiece::fromAssemblyStream(std::istream &stream, const Format format)
+void SpritePiece::fromAssemblyStream(std::istream &stream, const Game game)
 {
 	std::stringstream string_stream;
-	if (!Assemble(stream, string_stream, format == Format::SONIC_1 ? 1 : format == Format::SONIC_2 ? 2 : 3))
-		throw std::ios::failure("File could not be assembled");
-	fromBinaryStream(string_stream, format);
+	if (!Assemble(stream, string_stream, game))
+		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
+	fromBinaryStream(string_stream, game);
 }
 
 // TODO: Move this to an interface class or something.
-void SpritePiece::toBinaryStream(std::ostream &stream, const Format format) const
+void SpritePiece::toBinaryStream(std::ostream &stream, const Game game) const
 {
 	std::stringstream string_stream;
-	toAssemblyStream(string_stream, format);
+	toAssemblyStream(string_stream, game, true);
 	// TODO: Handle this failing.
-	Assemble(string_stream, stream, format == Format::SONIC_1 ? 1 : format == Format::SONIC_2 ? 2 : 3);
+	Assemble(string_stream, stream, game);
 }
 
-void SpritePiece::fromBinaryStream(std::istream &stream, const Format format)
+void SpritePiece::fromBinaryStream(std::istream &stream, const Game game)
 {
-	// This is specifically Sonic 2's mappings format. // TODO: No this fucking isn't
 	y = ReadS8(stream);
 	const unsigned int size = ReadU8(stream);
 	width = ((size >> 2) & 3) + 1;
@@ -40,27 +38,24 @@ void SpritePiece::fromBinaryStream(std::istream &stream, const Format format)
 	x_flip = (art_tile & (1 << 11)) != 0;
 	tile_index = art_tile & 0x7FF;
 
-	switch (format)
+	switch (game)
 	{
-		case Format::MAPMACROS:
-			assert(false);
-			// Fallthrough
-		case Format::SONIC_1:
+		case Game::SONIC_1:
 			x = ReadS8(stream);
 			break;
 
-		case Format::SONIC_2:
+		case Game::SONIC_2:
 			ReadU16BE(stream); // TODO: Actually use the 2-player data?
 			// Fallthrough
-		case Format::SONIC_3_AND_KNUCKLES:
+		case Game::SONIC_3_AND_KNUCKLES:
 			x = ReadS16BE(stream);
 			break;
 	}
 }
 
-void SpritePiece::toAssemblyStream(std::ostream &stream, const Format format) const
+void SpritePiece::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
-	if (format == Format::MAPMACROS)
+	if (mapmacros)
 	{
 		stream << "\tspritePiece " << x << ", " << y << ", " << width << ", " << height << ", " << tile_index << ", " << x_flip << ", " << y_flip << ", " << palette_line << ", " << priority;
 	}
@@ -77,19 +72,16 @@ void SpritePiece::toAssemblyStream(std::ostream &stream, const Format format) co
 
 		stream << "\tdc.w\t$" << IntegerToHexString(art_tile_upper_bits | static_cast<unsigned int>(tile_index), 4) << "\n";
 
-		switch (format)
+		switch (game)
 		{
-			case Format::MAPMACROS:
-				assert(false);
-				// Fallthrough
-			case Format::SONIC_1:
+			case Game::SONIC_1:
 				stream << "\tdc.b\t" << x << "\n";
 				break;
 
-			case Format::SONIC_2:
+			case Game::SONIC_2:
 				stream << "\tdc.w\t$" << IntegerToHexString(art_tile_upper_bits | static_cast<unsigned int>(tile_index) / 2, 2) << "\n";
 				// Fallthrough
-			case Format::SONIC_3_AND_KNUCKLES:
+			case Game::SONIC_3_AND_KNUCKLES:
 				stream << "\tdc.w\t" << x << "\n";
 				break;
 		}

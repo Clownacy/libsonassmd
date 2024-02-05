@@ -4,6 +4,8 @@
 #include <istream>
 #include <ostream>
 
+#include "assembler.h"
+
 namespace libsonassmd {
 
 struct SpritePiece
@@ -26,10 +28,10 @@ struct SpritePiece
 		bool y_flip;
 	};
 
-	void fromAssemblyStream(std::istream &stream, Format format);
-	void fromBinaryStream(std::istream &stream, Format format);
-	void toAssemblyStream(std::ostream &stream, Format format) const;
-	void toBinaryStream(std::ostream &stream, Format format) const;
+	void fromAssemblyStream(std::istream &stream, Game game);
+	void fromBinaryStream(std::istream &stream, Game game);
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
+	void toBinaryStream(std::ostream &stream, Game game) const;
 
 	int x;
 	int y;

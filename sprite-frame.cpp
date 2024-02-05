@@ -8,43 +8,43 @@
 namespace libsonassmd {
 
 // TODO: Move this to an interface class or something.
-void SpriteFrame::fromAssemblyStream(std::istream &stream, const SpritePiece::Format format)
+void SpriteFrame::fromAssemblyStream(std::istream &stream, const Game game)
 {
 	std::stringstream string_stream;
-	if (!Assemble(stream, string_stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3))
-		throw std::ios::failure("File could not be assembled");
-	fromBinaryStream(string_stream, format);
+	if (!Assemble(stream, string_stream, game))
+		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
+	fromBinaryStream(string_stream, game);
 }
 
 // TODO: Move this to an interface class or something.
-void SpriteFrame::toBinaryStream(std::ostream &stream, const SpritePiece::Format format) const
+void SpriteFrame::toBinaryStream(std::ostream &stream, const Game game) const
 {
 	std::stringstream string_stream;
-	toAssemblyStream(string_stream, format);
+	toAssemblyStream(string_stream, game, true);
 	// TODO: Handle this failing.
-	Assemble(string_stream, stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3);
+	Assemble(string_stream, stream, game);
 }
 
-void SpriteFrame::fromBinaryStream(std::istream &stream, const SpritePiece::Format format)
+void SpriteFrame::fromBinaryStream(std::istream &stream, const Game game)
 {
-	const int total_pieces = format == SpritePiece::Format::SONIC_1 ? ReadU8(stream) : ReadU16BE(stream);
+	const int total_pieces = game == Game::SONIC_1 ? ReadU8(stream) : ReadU16BE(stream);
 	pieces.resize(total_pieces);
 
 	for (auto &piece : pieces)
-		piece.fromBinaryStream(stream, format);
+		piece.fromBinaryStream(stream, game);
 }
 
-void SpriteFrame::toAssemblyStream(std::ostream &stream, const SpritePiece::Format format) const
+void SpriteFrame::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
-	if (format != SpritePiece::Format::MAPMACROS)
+	if (!mapmacros)
 	{
 		// TODO: Report to the user when this is truncated!
-		stream << "\tdc." << (format == SpritePiece::Format::SONIC_1 ? "b" : "w") << "\t" << pieces.size() << "\n\n";
+		stream << "\tdc." << (game == Game::SONIC_1 ? "b" : "w") << "\t" << pieces.size() << "\n\n";
 	}
 
 	for (const auto &piece : pieces)
 	{
-		piece.toAssemblyStream(stream, format);
+		piece.toAssemblyStream(stream, game, mapmacros);
 		stream << "\n";
 	}
 }

@@ -6,7 +6,14 @@
 
 namespace libsonassmd {
 
-bool Assemble(std::istream &input, std::ostream &output, unsigned int mapmacros_format);
+enum class Game
+{
+	SONIC_1,
+	SONIC_2,
+	SONIC_3_AND_KNUCKLES
+};
+
+bool Assemble(std::istream &input, std::ostream &output, Game game);
 
 }
 

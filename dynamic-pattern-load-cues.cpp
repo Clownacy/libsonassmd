@@ -11,24 +11,24 @@
 
 namespace libsonassmd {
 
-void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream, const Format format)
+void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream, const Game game)
 {
 	std::stringstream string_stream;
-	if (!Assemble(stream, string_stream, format == Format::SONIC_1 ? 1 : 2))
-		throw std::ios::failure("File could not be assembled");
-	fromBinaryStream(string_stream, format);
+	if (!Assemble(stream, string_stream, game))
+		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
+	fromBinaryStream(string_stream, game);
 }
 
 // TODO: Move this to an interface class or something.
-void DynamicPatternLoadCues::toBinaryStream(std::ostream &stream, const Format format) const
+void DynamicPatternLoadCues::toBinaryStream(std::ostream &stream, const Game game) const
 {
 	std::stringstream string_stream;
-	toAssemblyStream(string_stream, format);
+	toAssemblyStream(string_stream, game, true);
 	// TODO: Handle this failing.
-	Assemble(string_stream, stream, format == Format::SONIC_1 ? 1 : 2);
+	Assemble(string_stream, stream, game);
 }
 
-void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Format format)
+void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Game game)
 {
 	const auto starting_position = stream.tellg();
 
@@ -39,7 +39,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Format
 	{
 		const unsigned int frame_offset = ReadU16BE(stream);
 
-		if (format == Format::SONIC_2_AND_3_AND_KNUCKLES_AND_CD && (frame_offset & 1) != 0)
+		if (game != Game::SONIC_1 && (frame_offset & 1) != 0)
 			break;
 
 		++total_frames;
@@ -60,7 +60,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Format
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		const unsigned int total_copies = format == Format::SONIC_2_AND_3_AND_KNUCKLES_AND_CD ? ReadU16BE(stream) :  ReadU8(stream);
+		const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
 
 		frame.copies.resize(total_copies);
 
@@ -75,23 +75,23 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Format
 	}
 }
 
-void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream, const Format format) const
+void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
 	std::random_device random_device;
-	const std::string table_label = format == Format::MAPMACROS ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
+	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
 	stream << table_label << ":";
 
-	if (format == DynamicPatternLoadCues::Format::MAPMACROS)
+	if (mapmacros)
 		stream << "\tmappingsTable";
 
 	stream << "\n";
 
 	for (const auto &frame : std::as_const(frames))
 	{
-		const std::string frame_label = format == Format::MAPMACROS ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
+		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 
-		if (format == Format::MAPMACROS)
+		if (mapmacros)
 			stream << "\tmappingsTableEntry.w\t" << frame_label << "\n";
 		else
 			stream << "\tdc.w\t" << frame_label << "-" << table_label << "\n";
@@ -101,16 +101,16 @@ void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream, const Format
 
 	for (const auto &frame : std::as_const(frames))
 	{
-		const std::string frame_label = format == Format::MAPMACROS ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
+		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 		stream << frame_label << ":";
 
-		if (format == DynamicPatternLoadCues::Format::MAPMACROS)
+		if (mapmacros)
 			stream << "\tdplcHeader";
 
 		stream << "\n";
-		frame.toStream(stream, format);
+		frame.toAssemblyStream(stream, game, mapmacros);
 
-		if (format == DynamicPatternLoadCues::Format::MAPMACROS)
+		if (mapmacros)
 			stream << frame_label << "_End\n";
 
 		stream << "\n";
@@ -150,13 +150,13 @@ int DynamicPatternLoadCues::Frame::total_segments() const
 	return segments;
 }
 
-void DynamicPatternLoadCues::Frame::toStream(std::ostream &stream, const Format format) const
+void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
-	if (format != Format::MAPMACROS)
-		stream << "\tdc." << (format == Format::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
+	if (!mapmacros)
+		stream << "\tdc." << (game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
 
 	for (const auto &copy : std::as_const(copies))
-		copy.toStream(stream, format);
+		copy.toAssemblyStream(stream, game, mapmacros);
 }
 
 int DynamicPatternLoadCues::Frame::Copy::size_encoded() const
@@ -169,7 +169,7 @@ int DynamicPatternLoadCues::Frame::Copy::total_segments() const
 	return CC_DIVIDE_CEILING(length, 0x10);
 }
 
-void DynamicPatternLoadCues::Frame::Copy::toStream(std::ostream &stream, const Format format) const
+void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
 	// TODO: Sanity checks (overflow).
 	for (int i = 0; i < total_segments(); ++i)
@@ -177,7 +177,7 @@ void DynamicPatternLoadCues::Frame::Copy::toStream(std::ostream &stream, const F
 		const int segment_start = start + 0x10 * i;
 		const int segment_length = std::min(0x10, length - 0x10 * i);
 
-		if (format == Format::MAPMACROS)
+		if (mapmacros)
 			stream << "\tdplcEntry\t" << segment_length << ", " << segment_start << "\n";
 		else
 			stream << "\tdc.w\t$" << IntegerToHexString((segment_length - 1) << 12 | (segment_start & 0xFFF), 4) << '\n';

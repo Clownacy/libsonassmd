@@ -5,17 +5,12 @@
 #include <ostream>
 #include <vector>
 
+#include "assembler.h"
+
 namespace libsonassmd {
 
 struct DynamicPatternLoadCues
 {
-	enum class Format
-	{
-		SONIC_1,
-		SONIC_2_AND_3_AND_KNUCKLES_AND_CD,
-		MAPMACROS
-	};
-
 	struct Frame
 	{
 		struct Copy
@@ -25,7 +20,7 @@ struct DynamicPatternLoadCues
 
 			int size_encoded() const;
 			int total_segments() const;
-			void toStream(std::ostream &stream, Format format) const;
+			void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
 		};
 
 		std::vector<Copy> copies;
@@ -33,13 +28,13 @@ struct DynamicPatternLoadCues
 		int getMappedTile(int tile_index) const;
 		int size_encoded() const;
 		int total_segments() const;
-		void toStream(std::ostream &stream, Format format) const;
+		void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
 	};
 
-	void fromAssemblyStream(std::istream &stream, Format format);
-	void fromBinaryStream(std::istream &stream, Format format);
-	void toAssemblyStream(std::ostream &stream, Format format) const;
-	void toBinaryStream(std::ostream &stream, Format format) const;
+	void fromAssemblyStream(std::istream &stream, Game game);
+	void fromBinaryStream(std::istream &stream, Game game);
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
+	void toBinaryStream(std::ostream &stream, Game game) const;
 
 	std::vector<Frame> frames;
 };
