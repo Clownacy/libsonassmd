@@ -27,7 +27,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream, const Game game)
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if ((game == Game::SONIC_2 || game == Game::SONIC_3_AND_KNUCKLES) && frame_offset % 2 != 0)
+		if (game != Game::SONIC_1 && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
