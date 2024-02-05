@@ -17,6 +17,15 @@ void SpritePiece::fromAssemblyStream(std::istream &stream, const Format format)
 	fromBinaryStream(string_stream, format);
 }
 
+// TODO: Move this to an interface class or something.
+void SpritePiece::toBinaryStream(std::ostream &stream, const Format format) const
+{
+	std::stringstream string_stream;
+	toAssemblyStream(string_stream, format);
+	// TODO: Handle this failing.
+	Assemble(string_stream, stream, format == Format::SONIC_1 ? 1 : format == Format::SONIC_2 ? 2 : 3);
+}
+
 void SpritePiece::fromBinaryStream(std::istream &stream, const Format format)
 {
 	// This is specifically Sonic 2's mappings format. // TODO: No this fucking isn't

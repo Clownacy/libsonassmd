@@ -29,6 +29,7 @@ struct SpritePiece
 	void fromAssemblyStream(std::istream &stream, Format format);
 	void fromBinaryStream(std::istream &stream, Format format);
 	void toAssemblyStream(std::ostream &stream, Format format) const;
+	void toBinaryStream(std::ostream &stream, Format format) const;
 
 	int x;
 	int y;

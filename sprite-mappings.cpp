@@ -20,6 +20,15 @@ void SpriteMappings::fromAssemblyStream(std::istream &stream, const SpritePiece:
 	fromBinaryStream(string_stream, format);
 }
 
+// TODO: Move this to an interface class or something.
+void SpriteMappings::toBinaryStream(std::ostream &stream, const SpritePiece::Format format) const
+{
+	std::stringstream string_stream;
+	toAssemblyStream(string_stream, format);
+	// TODO: Handle this failing.
+	Assemble(string_stream, stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3);
+}
+
 void SpriteMappings::fromBinaryStream(std::istream &stream, const SpritePiece::Format format)
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?

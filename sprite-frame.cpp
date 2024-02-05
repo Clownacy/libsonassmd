@@ -16,6 +16,15 @@ void SpriteFrame::fromAssemblyStream(std::istream &stream, const SpritePiece::Fo
 	fromBinaryStream(string_stream, format);
 }
 
+// TODO: Move this to an interface class or something.
+void SpriteFrame::toBinaryStream(std::ostream &stream, const SpritePiece::Format format) const
+{
+	std::stringstream string_stream;
+	toAssemblyStream(string_stream, format);
+	// TODO: Handle this failing.
+	Assemble(string_stream, stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3);
+}
+
 void SpriteFrame::fromBinaryStream(std::istream &stream, const SpritePiece::Format format)
 {
 	const int total_pieces = format == SpritePiece::Format::SONIC_1 ? ReadU8(stream) : ReadU16BE(stream);

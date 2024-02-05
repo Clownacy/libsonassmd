@@ -15,6 +15,7 @@ struct SpriteMappings
 	void fromAssemblyStream(std::istream &stream, SpritePiece::Format format);
 	void fromBinaryStream(std::istream &stream, SpritePiece::Format format);
 	void toAssemblyStream(std::ostream &stream, SpritePiece::Format format) const;
+	void toBinaryStream(std::ostream &stream, SpritePiece::Format format) const;
 
 	bool applyDPLCs(const DynamicPatternLoadCues &dplcs);
 	DynamicPatternLoadCues removeDPLCs();

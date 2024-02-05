@@ -14,6 +14,7 @@ struct SpriteFrame
 	void fromAssemblyStream(std::istream &stream, SpritePiece::Format format);
 	void fromBinaryStream(std::istream &stream, SpritePiece::Format format);
 	void toAssemblyStream(std::ostream &stream, SpritePiece::Format format) const;
+	void toBinaryStream(std::ostream &stream, SpritePiece::Format format) const;
 
 	std::vector<SpritePiece> pieces;
 };

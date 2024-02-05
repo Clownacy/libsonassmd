@@ -19,6 +19,15 @@ void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream, const Form
 	fromBinaryStream(string_stream, format);
 }
 
+// TODO: Move this to an interface class or something.
+void DynamicPatternLoadCues::toBinaryStream(std::ostream &stream, const Format format) const
+{
+	std::stringstream string_stream;
+	toAssemblyStream(string_stream, format);
+	// TODO: Handle this failing.
+	Assemble(string_stream, stream, format == Format::SONIC_1 ? 1 : 2);
+}
+
 void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Format format)
 {
 	const auto starting_position = stream.tellg();
