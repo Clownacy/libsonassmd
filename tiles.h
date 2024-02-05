@@ -13,7 +13,7 @@ struct Tiles
 {
 	std::vector<Tile> vector;
 
-	auto size() const {return Tile::size * vector.size();}
+	auto total_bytes() const {return Tile::size * vector.size();}
 	void fromBinaryStream(std::istream &stream);
 	void toBinaryStream(std::ostream &stream) const;
 };
