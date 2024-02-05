@@ -23,6 +23,8 @@ add_library(sonassmd STATIC
 	"sprite-piece.h"
 	"tile.cpp"
 	"tile.h"
+	"tiles.cpp"
+	"tiles.h"
 	"clowncommon/clowncommon.h"
 )
 

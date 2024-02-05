@@ -18,6 +18,7 @@ struct Tile : Assembleable
 {
 	static constexpr unsigned int width = 8;
 	static constexpr unsigned int height = 8;
+	static constexpr unsigned int size = width * height / 2;
 
 	std::array<std::array<unsigned char, width>, height> pixels;
 
