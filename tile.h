@@ -4,17 +4,15 @@
 #include <istream>
 #include <ostream>
 
-#include "assembleable.h"
-
 #include <array>
 #include <istream>
 #include <ostream>
 
-#include "assembleable.h"
+#include "assembler.h"
 
 namespace libsonassmd {
 
-struct Tile : Assembleable
+struct Tile
 {
 	static constexpr unsigned int width = 8;
 	static constexpr unsigned int height = 8;
@@ -22,10 +20,8 @@ struct Tile : Assembleable
 
 	std::array<std::array<unsigned char, width>, height> pixels;
 
-	void fromBinaryStream(std::istream &stream, Game game) override;
-	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
-	// This function isn't virtual, but that's okay since nothing calls the base one.
-	// TODO: Maybe make this virtual anyway, since eventually the mappings will have their own binary output methods too.
+	void fromBinaryStream(std::istream &stream, Game game);
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
 	void toBinaryStream(std::ostream &stream, Game game) const;
 };
 
