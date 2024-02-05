@@ -6,11 +6,8 @@
 
 namespace libsonassmd {
 
-void Tile::fromBinaryStream(std::istream &stream, const Game game)
+void Tile::fromBinaryStream(std::istream &stream)
 {
-	// TODO: Rework the API so this isn't necessary?
-	static_cast<void>(game);
-
 	for (unsigned int y = 0; y < height; ++y)
 	{
 		for (unsigned int x = 0; x < width; x += 2)
@@ -23,12 +20,8 @@ void Tile::fromBinaryStream(std::istream &stream, const Game game)
 	}
 }
 
-void Tile::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void Tile::toAssemblyStream(std::ostream &stream) const
 {
-	// TODO: Rework the API so this isn't necessary?
-	static_cast<void>(game);
-	static_cast<void>(mapmacros);
-
 	stream << "\tdc.b ";
 
 	for (unsigned int y = 0; y < height; ++y)
@@ -49,11 +42,8 @@ void Tile::toAssemblyStream(std::ostream &stream, const Game game, const bool ma
 	stream << '\n';
 }
 
-void Tile::toBinaryStream(std::ostream &stream, const Game game) const
+void Tile::toBinaryStream(std::ostream &stream) const
 {
-	// TODO: Rework the API so this isn't necessary?
-	static_cast<void>(game);
-
 	for (unsigned int y = 0; y < height; ++y)
 	{
 		for (unsigned int x = 0; x < width; x += 2)
