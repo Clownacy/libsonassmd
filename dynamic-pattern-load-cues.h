@@ -11,16 +11,20 @@ namespace libsonassmd {
 
 struct DynamicPatternLoadCues : Assembleable
 {
-	struct Frame
+	struct Frame : Assembleable
 	{
-		struct Copy
+		struct Copy : Assembleable
 		{
 			int start;
 			int length;
 
+			Copy() = default;
+			Copy(const int start, const int length) : start(start), length(length) {}
+
 			int size_encoded() const;
 			int total_segments() const;
-			void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
+			void fromBinaryStream(std::istream &stream, Game game) override;
+			void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
 		};
 
 		std::vector<Copy> copies;
@@ -28,7 +32,8 @@ struct DynamicPatternLoadCues : Assembleable
 		int getMappedTile(int tile_index) const;
 		int size_encoded() const;
 		int total_segments() const;
-		void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
+		void fromBinaryStream(std::istream &stream, Game game) override;
+		void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
 	};
 
 	void fromBinaryStream(std::istream &stream, Game game) override;

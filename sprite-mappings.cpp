@@ -170,8 +170,7 @@ DynamicPatternLoadCues SpriteMappings::removeDPLCs()
 
 			const int dplc_length = search_start - dplc_start;
 
-			// TODO: emplace_back
-			dplc_frame.copies.push_back({dplc_start, dplc_length});
+			dplc_frame.copies.emplace_back(dplc_start, dplc_length);
 		}
 
 		dplcs.frames.push_back(dplc_frame);

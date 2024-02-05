@@ -35,26 +35,13 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Game g
 
 	for (unsigned int current_frame = 0; current_frame < total_frames; ++current_frame)
 	{
-		Frame &frame = frames[current_frame];
-
 		stream.seekg(starting_position);
 		stream.seekg(current_frame * 2, std::ios::cur);
 		const unsigned int offset = ReadU16BE(stream);
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
-
-		frame.copies.resize(total_copies);
-
-		for (unsigned int current_copy = 0; current_copy < total_copies; ++current_copy)
-		{
-			const unsigned int word = ReadU16BE(stream);
-			const int total_tiles = (word >> 4 * 3) + 1;
-			const int tile_index = word & 0xFFF;
-
-			frame.copies[current_copy] = Frame::Copy{tile_index, total_tiles};
-		}
+		frames[current_frame].fromBinaryStream(stream, game);
 	}
 }
 
@@ -133,6 +120,16 @@ int DynamicPatternLoadCues::Frame::total_segments() const
 	return segments;
 }
 
+void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream, const Game game)
+{
+	const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
+
+	copies.resize(total_copies);
+
+	for (unsigned int current_copy = 0; current_copy < total_copies; ++current_copy)
+		copies[current_copy].fromBinaryStream(stream, game);
+}
+
 void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
 {
 	if (!mapmacros)
@@ -150,6 +147,13 @@ int DynamicPatternLoadCues::Frame::Copy::size_encoded() const
 int DynamicPatternLoadCues::Frame::Copy::total_segments() const
 {
 	return CC_DIVIDE_CEILING(length, 0x10);
+}
+
+void DynamicPatternLoadCues::Frame::Copy::fromBinaryStream(std::istream &stream, const Game game)
+{
+	const unsigned int word = ReadU16BE(stream);
+	length = (word >> 4 * 3) + 1;
+	start = word & 0xFFF;
 }
 
 void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
