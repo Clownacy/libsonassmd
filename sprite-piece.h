@@ -10,14 +10,6 @@ namespace libsonassmd {
 
 struct SpritePiece : Assembleable
 {
-	enum class Format
-	{
-		SONIC_1,
-		SONIC_2,
-		SONIC_3_AND_KNUCKLES,
-		MAPMACROS
-	};
-
 	struct Tile
 	{
 		int index;
