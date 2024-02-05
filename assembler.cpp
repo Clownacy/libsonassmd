@@ -50,7 +50,6 @@ static char* ReadLine(std::istream* const stream, char* const buffer, const size
 
 static char* ReadLine(void* const user_data, char* const buffer, const size_t buffer_size)
 {
-	// TODO: This isn't the closest emulation of fgets...
 	InputCallbackData* const callback_data = static_cast<InputCallbackData*>(user_data);
 
 	const auto value = ReadLine(&callback_data->mapmacros, buffer, buffer_size);
@@ -148,7 +147,7 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 )";
 };
 
-cc_bool Assemble(std::istream &input, std::ostream &output, const unsigned int mapmacros_format)
+bool Assemble(std::istream &input, std::ostream &output, const unsigned int mapmacros_format)
 {
 	InputCallbackData input_callback_data = {
 		&input
@@ -179,7 +178,7 @@ cc_bool Assemble(std::istream &input, std::ostream &output, const unsigned int m
 	input.exceptions(original_exceptions & ~(std::ios::eofbit | std::ios::failbit));
 
 	// TODO: Real filename.
-	const cc_bool success = ClownAssembler_Assemble(&input_callbacks, &output_callbacks, nullptr, nullptr, nullptr, "[Filename unknown]", cc_false, cc_false, cc_false, cc_false, cc_false, nullptr, nullptr);
+	const bool success = ClownAssembler_Assemble(&input_callbacks, &output_callbacks, nullptr, nullptr, nullptr, "[Filename unknown]", cc_false, cc_false, cc_false, cc_false, cc_false, nullptr, nullptr);
 
 	input.clear();
 	input.exceptions(original_exceptions);
