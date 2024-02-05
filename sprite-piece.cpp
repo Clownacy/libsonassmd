@@ -8,6 +8,7 @@
 
 namespace libsonassmd {
 
+// TODO: Move this to an interface class or something.
 void SpritePiece::fromAssemblyStream(std::istream &stream, const Format format)
 {
 	std::stringstream string_stream;
