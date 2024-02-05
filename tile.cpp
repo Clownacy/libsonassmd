@@ -49,4 +49,19 @@ void Tile::toAssemblyStream(std::ostream &stream, const Game game, const bool ma
 	stream << '\n';
 }
 
+void Tile::toBinaryStream(std::ostream &stream, const Game game) const
+{
+	// TODO: Rework the API so this isn't necessary?
+	static_cast<void>(game);
+
+	for (unsigned int y = 0; y < height; ++y)
+	{
+		for (unsigned int x = 0; x < width; x += 2)
+		{
+			const unsigned char byte = (pixels[y][x + 0] << 4) | (pixels[y][x + 1] << 0);
+			stream << byte;
+		}
+	}
+}
+
 }
