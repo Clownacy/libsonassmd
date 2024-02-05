@@ -32,4 +32,13 @@ void Tiles::toAssemblyStream(std::ostream &stream, const Game game, const bool m
 		tile.toAssemblyStream(stream, game, mapmacros);
 }
 
+void Tiles::toBinaryStream(std::ostream &stream, const Game game) const
+{
+	// TODO: Rework the API so this isn't necessary?
+	static_cast<void>(game);
+
+	for (const auto &tile : std::as_const(vector))
+		tile.toBinaryStream(stream, game);
+}
+
 }
