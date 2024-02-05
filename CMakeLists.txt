@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0...3.28.1)
 project(sonassmd LANGUAGES CXX)
 
 add_library(sonassmd STATIC
+	"assembler.cpp"
+	"assembler.h"
 	"common.cpp"
 	"common.h"
 	"dynamic-pattern-load-cues.cpp"
@@ -19,3 +21,6 @@ add_library(sonassmd STATIC
 	"sprite-piece.h"
 	"clowncommon/clowncommon.h"
 )
+
+add_subdirectory("clownassembler" EXCLUDE_FROM_ALL)
+target_link_libraries(sonassmd PRIVATE clownassembler_core)

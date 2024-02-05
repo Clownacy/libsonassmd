@@ -1,14 +1,24 @@
 #include "sprite-piece.h"
 
 #include <cassert>
+#include <sstream>
 
+#include "assembler.h"
 #include "common.h"
 
 namespace libsonassmd {
 
+void SpritePiece::fromAssemblyStream(std::istream &stream, const Format format)
+{
+	std::stringstream string_stream;
+	if (!Assemble(stream, string_stream, format == Format::SONIC_1 ? 1 : format == Format::SONIC_2 ? 2 : 3))
+		throw std::ios::failure("File could not be assembled");
+	fromBinaryStream(string_stream, format);
+}
+
 void SpritePiece::fromBinaryStream(std::istream &stream, const Format format)
 {
-	// This is specifically Sonic 2's mappings format.
+	// This is specifically Sonic 2's mappings format. // TODO: No this fucking isn't
 	y = ReadS8(stream);
 	const unsigned int size = ReadU8(stream);
 	width = ((size >> 2) & 3) + 1;

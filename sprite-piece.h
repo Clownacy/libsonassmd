@@ -26,6 +26,7 @@ struct SpritePiece
 		bool y_flip;
 	};
 
+	void fromAssemblyStream(std::istream &stream, Format format);
 	void fromBinaryStream(std::istream &stream, Format format);
 	void toAssemblyStream(std::ostream &stream, Format format) const;
 

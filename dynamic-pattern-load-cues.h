@@ -36,13 +36,11 @@ struct DynamicPatternLoadCues
 		void toStream(std::ostream &stream, Format format) const;
 	};
 
-	// TODO: Replace explicit constuctors with a method!
-	DynamicPatternLoadCues() = default;
-	DynamicPatternLoadCues(std::istream &stream, Format format);
+	void fromAssemblyStream(std::istream &stream, Format format);
+	void fromBinaryStream(std::istream &stream, Format format);
+	void toAssemblyStream(std::ostream &stream, Format format) const;
 
 	std::vector<Frame> frames;
-
-	void toStream(std::ostream &stream, Format format) const;
 };
 
 }

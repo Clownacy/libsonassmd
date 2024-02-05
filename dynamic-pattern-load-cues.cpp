@@ -2,14 +2,24 @@
 
 #include <algorithm>
 #include <random>
+#include <sstream>
 #include <string>
 #include <utility>
 
+#include "assembler.h"
 #include "common.h"
 
 namespace libsonassmd {
 
-DynamicPatternLoadCues::DynamicPatternLoadCues(std::istream &stream, const Format format)
+void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream, const Format format)
+{
+	std::stringstream string_stream;
+	if (!Assemble(stream, string_stream, format == Format::SONIC_1 ? 1 : 2))
+		throw std::ios::failure("File could not be assembled");
+	fromBinaryStream(string_stream, format);
+}
+
+void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Format format)
 {
 	const auto starting_position = stream.tellg();
 
@@ -56,7 +66,7 @@ DynamicPatternLoadCues::DynamicPatternLoadCues(std::istream &stream, const Forma
 	}
 }
 
-void DynamicPatternLoadCues::toStream(std::ostream &stream, const Format format) const
+void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream, const Format format) const
 {
 	std::random_device random_device;
 	const std::string table_label = format == Format::MAPMACROS ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);

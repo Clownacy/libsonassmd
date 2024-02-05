@@ -1,8 +1,19 @@
 #include "sprite-frame.h"
 
+#include <sstream>
+
+#include "assembler.h"
 #include "common.h"
 
 namespace libsonassmd {
+
+void SpriteFrame::fromAssemblyStream(std::istream &stream, const SpritePiece::Format format)
+{
+	std::stringstream string_stream;
+	if (!Assemble(stream, string_stream, format == SpritePiece::Format::SONIC_1 ? 1 : format == SpritePiece::Format::SONIC_2 ? 2 : 3))
+		throw std::ios::failure("File could not be assembled");
+	fromBinaryStream(string_stream, format);
+}
 
 void SpriteFrame::fromBinaryStream(std::istream &stream, const SpritePiece::Format format)
 {
