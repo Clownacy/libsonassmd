@@ -29,7 +29,7 @@ static unsigned long ReadBE(std::istream &stream, const unsigned int total_bytes
 
 unsigned int ReadU8(std::istream &stream)
 {
-	return ReadBE(stream, 1);
+	return stream.get();
 }
 
 unsigned int ReadU16BE(std::istream &stream)
