@@ -15,6 +15,7 @@ struct Tiles
 
 	auto total_bytes() const {return Tile::size * vector.size();}
 	void fromBinaryStream(std::istream &stream);
+	void toAssemblyStream(std::ostream &stream) const;
 	void toBinaryStream(std::ostream &stream) const;
 };
 

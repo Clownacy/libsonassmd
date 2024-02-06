@@ -25,4 +25,10 @@ void Tiles::toBinaryStream(std::ostream &stream) const
 		tile.toBinaryStream(stream);
 }
 
+void Tiles::toAssemblyStream(std::ostream &stream) const
+{
+	for (const auto &tile : std::as_const(vector))
+		tile.toAssemblyStream(stream);
+}
+
 }
