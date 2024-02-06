@@ -6,6 +6,9 @@
 
 namespace libsonassmd {
 
+Game Assembleable::game;
+bool Assembleable::mapmacros;
+
 std::ifstream Assembleable::createFileInputStream(const char* const file_path, const std::ios::openmode flags) const
 {
 	std::ifstream stream;
@@ -26,42 +29,42 @@ std::ofstream Assembleable::createFileOutputStream(const char* const file_path, 
 	return stream;
 }
 
-void Assembleable::fromAssemblyFile(const char* const file_path, const Game game)
+void Assembleable::fromAssemblyFile(const char* const file_path)
 {
 	auto stream = createFileInputStream(file_path, 0);
-	fromAssemblyStream(stream, game);
+	fromAssemblyStream(stream);
 }
 
-void Assembleable::fromBinaryFile(const char* const file_path, const Game game)
+void Assembleable::fromBinaryFile(const char* const file_path)
 {
 	auto stream = createFileInputStream(file_path, std::ios::binary);
-	fromBinaryStream(stream, game);
+	fromBinaryStream(stream);
 }
 
-void Assembleable::toAssemblyFile(const char* const file_path, const Game game, const bool mapmacros) const
+void Assembleable::toAssemblyFile(const char* const file_path) const
 {
 	auto stream = createFileOutputStream(file_path, 0);
-	toAssemblyStream(stream, game, mapmacros);
+	toAssemblyStream(stream);
 }
 
-void Assembleable::toBinaryFile(const char* const file_path, const Game game) const
+void Assembleable::toBinaryFile(const char* const file_path) const
 {
 	auto stream = createFileOutputStream(file_path, std::ios::binary);
-	toBinaryStream(stream, game);
+	toBinaryStream(stream);
 }
 
-void Assembleable::fromAssemblyStream(std::istream &stream, const Game game)
+void Assembleable::fromAssemblyStream(std::istream &stream)
 {
 	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
 	if (!Assemble(stream, string_stream, game))
 		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
-	fromBinaryStream(string_stream, game);
+	fromBinaryStream(string_stream);
 }
 
-void Assembleable::toBinaryStream(std::ostream &stream, const Game game) const
+void Assembleable::toBinaryStream(std::ostream &stream) const
 {
 	std::stringstream string_stream;
-	toAssemblyStream(string_stream, game, true);
+	toAssemblyStream(string_stream);
 	// TODO: Handle this failing.
 	Assemble(string_stream, stream, game);
 }

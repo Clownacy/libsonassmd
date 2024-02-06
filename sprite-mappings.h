@@ -13,8 +13,8 @@ namespace libsonassmd {
 
 struct SpriteMappings : Assembleable
 {
-	void fromBinaryStream(std::istream &stream, Game game) override;
-	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const override;
+	void fromBinaryStream(std::istream &stream) override;
+	void toAssemblyStream(std::ostream &stream) const override;
 
 	bool applyDPLCs(const DynamicPatternLoadCues &dplcs);
 	DynamicPatternLoadCues removeDPLCs();

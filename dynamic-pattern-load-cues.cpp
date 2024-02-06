@@ -11,7 +11,7 @@
 
 namespace libsonassmd {
 
-void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Game game)
+void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 {
 	// TODO: This code is duplicated in the mappings code. Can this be made into a common function?
 
@@ -27,7 +27,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Game g
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if (game != Game::SONIC_1 && frame_offset % 2 != 0)
+		if (getGame() != Game::SONIC_1 && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
@@ -49,12 +49,15 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream, const Game g
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromBinaryStream(stream, game);
+		frames[current_frame].fromBinaryStream(stream);
 	}
 }
 
-void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
 {
+	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
+	const bool mapmacros = mapMacrosEnabled();
+
 	std::random_device random_device;
 	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
@@ -86,7 +89,7 @@ void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream, const Game g
 			stream << "\tdplcHeader";
 
 		stream << "\n";
-		frame.toAssemblyStream(stream, game, mapmacros);
+		frame.toAssemblyStream(stream);
 
 		if (mapmacros)
 			stream << frame_label << "_End\n";
@@ -128,23 +131,23 @@ int DynamicPatternLoadCues::Frame::total_segments() const
 	return segments;
 }
 
-void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream, const Game game)
+void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream)
 {
-	const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
+	const unsigned int total_copies = getGame() != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
 
 	copies.resize(total_copies);
 
 	for (unsigned int current_copy = 0; current_copy < total_copies; ++current_copy)
-		copies[current_copy].fromBinaryStream(stream, game);
+		copies[current_copy].fromBinaryStream(stream);
 }
 
-void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream) const
 {
-	if (!mapmacros)
-		stream << "\tdc." << (game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
+	if (!mapMacrosEnabled())
+		stream << "\tdc." << (getGame() == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
 
 	for (const auto &copy : std::as_const(copies))
-		copy.toAssemblyStream(stream, game, mapmacros);
+		copy.toAssemblyStream(stream);
 }
 
 int DynamicPatternLoadCues::Frame::Copy::size_encoded() const
@@ -157,14 +160,14 @@ int DynamicPatternLoadCues::Frame::Copy::total_segments() const
 	return CC_DIVIDE_CEILING(length, 0x10);
 }
 
-void DynamicPatternLoadCues::Frame::Copy::fromBinaryStream(std::istream &stream, const Game game)
+void DynamicPatternLoadCues::Frame::Copy::fromBinaryStream(std::istream &stream)
 {
 	const unsigned int word = ReadU16BE(stream);
 	length = (word >> 4 * 3) + 1;
 	start = word & 0xFFF;
 }
 
-void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream) const
 {
 	// TODO: Sanity checks (overflow).
 	for (int i = 0; i < total_segments(); ++i)
@@ -172,7 +175,7 @@ void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream,
 		const int segment_start = start + 0x10 * i;
 		const int segment_length = std::min(0x10, length - 0x10 * i);
 
-		if (mapmacros)
+		if (mapMacrosEnabled())
 			stream << "\tdplcEntry\t" << segment_length << ", " << segment_start << "\n";
 		else
 			stream << "\tdc.w\t$" << IntegerToHexString((segment_length - 1) << 12 | (segment_start & 0xFFF), 4) << '\n';

@@ -12,19 +12,27 @@ namespace libsonassmd {
 class Assembleable
 {
 private:
+	static Game game;
+	static bool mapmacros;
+
 	std::ifstream createFileInputStream(const char *file_path, std::ios::openmode flags) const;
 	std::ofstream createFileOutputStream(const char *file_path, std::ios::openmode flags) const;
 
 public:
-	void fromAssemblyFile(const char *file_path, Game game);
-	void fromBinaryFile(const char *file_path, Game game);
-	void toAssemblyFile(const char *file_path, Game game, bool mapmacros) const;
-	void toBinaryFile(const char *file_path, Game game) const;
+	static Game getGame() {return game;}
+	static bool mapMacrosEnabled() {return mapmacros;}
+	static void setGame(const Game game) {Assembleable::game = game;}
+	static void enableMapMacros(const bool mapmacros) {Assembleable::mapmacros = mapmacros;}
 
-	void fromAssemblyStream(std::istream &stream, Game game);
-	virtual void fromBinaryStream(std::istream &stream, Game game) = 0;
-	virtual void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const = 0;
-	void toBinaryStream(std::ostream &stream, Game game) const;
+	void fromAssemblyFile(const char *file_path);
+	void fromBinaryFile(const char *file_path);
+	void toAssemblyFile(const char *file_path) const;
+	void toBinaryFile(const char *file_path) const;
+
+	virtual void fromAssemblyStream(std::istream &stream);
+	virtual void fromBinaryStream(std::istream &stream) = 0;
+	virtual void toAssemblyStream(std::ostream &stream) const = 0;
+	virtual void toBinaryStream(std::ostream &stream) const;
 };
 
 }

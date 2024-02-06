@@ -11,7 +11,7 @@
 
 namespace libsonassmd {
 
-void SpriteMappings::fromBinaryStream(std::istream &stream, const Game game)
+void SpriteMappings::fromBinaryStream(std::istream &stream)
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 
@@ -27,7 +27,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream, const Game game)
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if (game != Game::SONIC_1 && frame_offset % 2 != 0)
+		if (getGame() != Game::SONIC_1 && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
@@ -49,13 +49,15 @@ void SpriteMappings::fromBinaryStream(std::istream &stream, const Game game)
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromBinaryStream(stream, game);
+		frames[current_frame].fromBinaryStream(stream, getGame());
 	}
 }
 
-void SpriteMappings::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
+	const bool mapmacros = mapMacrosEnabled();
+
 	std::random_device random_device;
 	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
@@ -87,7 +89,7 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream, const Game game, con
 			stream << "\tspriteHeader";
 
 		stream << "\n";
-		frame.toAssemblyStream(stream, game, mapmacros);
+		frame.toAssemblyStream(stream, getGame(), mapmacros);
 
 		if (mapmacros)
 			stream << frame_label << "_End\n\n";
