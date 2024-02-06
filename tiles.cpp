@@ -9,14 +9,22 @@ void Tiles::fromBinaryStream(std::istream &stream)
 {
 	clear();
 
-	// TODO: Detect and handle files that end with a partial tile.
-	do
+	// We use peek() to detect EOF, so disable the exceptions that it would throw.
+	const auto original_exceptions = stream.exceptions();
+	const auto new_exceptions = original_exceptions & ~(std::ios::eofbit | std::ios::failbit);
+
+	stream.exceptions(new_exceptions);
+
+	while (stream.peek() != std::ifstream::traits_type::eof())
 	{
+		stream.exceptions(original_exceptions);
 		push_back({}); // TODO: emplace_back
 		back().fromBinaryStream(stream);
-	} while (!stream.eof());
+		stream.exceptions(new_exceptions);
+	}
 
-	pop_back();
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void Tiles::toBinaryStream(std::ostream &stream) const

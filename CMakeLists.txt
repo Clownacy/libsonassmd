@@ -43,7 +43,7 @@ target_link_libraries(sonassmd PRIVATE clownassembler_core)
 # upstream has a hard dependency on Boost which is revolting.
 set(mdcomp_directory "FW-KENSC-ShellExt/FW-KENSC-ShellExt/FW-KENSC")
 
-add_library(sonassmd_mdcomp STATIC
+add_library(mdcomp STATIC
 	# General stuff.
 	"${mdcomp_directory}/basic_decoder.h"
 	"${mdcomp_directory}/bigendian_io.h"
@@ -62,6 +62,6 @@ add_library(sonassmd_mdcomp STATIC
 	"${mdcomp_directory}/nemesis.h"
 )
 
-target_include_directories(sonassmd_mdcomp PUBLIC ${mdcomp_directory})
+target_include_directories(mdcomp PUBLIC ${mdcomp_directory})
 
 target_link_libraries(sonassmd PRIVATE mdcomp)
