@@ -14,7 +14,7 @@ namespace libsonassmd {
 
 void Assembleable::fromFile(const char* const file_path, const Format format)
 {
-	std::ifstream stream(file_path, format == Format::ASSEMBLY ? 0 : std::ios::binary);
+	std::ifstream stream(file_path, format == Format::ASSEMBLY ? std::ios::in : std::ios::binary);
 
 	stream.exceptions(std::ios::failbit | std::ios::badbit | std::ios::eofbit);
 	fromStream(stream, format);
@@ -22,7 +22,7 @@ void Assembleable::fromFile(const char* const file_path, const Format format)
 
 void Assembleable::toFile(const char* const file_path, const Format format) const
 {
-	std::ofstream stream(file_path, format == Format::ASSEMBLY ? 0 : std::ios::binary);
+	std::ofstream stream(file_path, format == Format::ASSEMBLY ? std::ios::out : std::ios::binary);
 
 	stream.exceptions(std::ios::failbit | std::ios::badbit | std::ios::eofbit);
 	toStream(stream, format);
