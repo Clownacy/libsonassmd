@@ -52,7 +52,7 @@ void Assembleable::toBinaryFile(const char* const file_path, const Game game) co
 
 void Assembleable::fromAssemblyStream(std::istream &stream, const Game game)
 {
-	std::stringstream string_stream;
+	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
 	if (!Assemble(stream, string_stream, game))
 		throw std::ios::failure("File could not be assembled"); // TODO: Find a more appropriate exception type.
 	fromBinaryStream(string_stream, game);
