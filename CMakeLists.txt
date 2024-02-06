@@ -28,5 +28,40 @@ add_library(sonassmd STATIC
 	"clowncommon/clowncommon.h"
 )
 
+##################
+# clownassembler #
+##################
+
 add_subdirectory("clownassembler" EXCLUDE_FROM_ALL)
 target_link_libraries(sonassmd PRIVATE clownassembler_core)
+
+##########
+# mdcomp #
+##########
+
+# We're using the Shell Extension's fork of FW-KENSC/mdcomp because
+# upstream has a hard dependency on Boost which is revolting.
+set(mdcomp_directory "FW-KENSC-ShellExt/FW-KENSC-ShellExt/FW-KENSC")
+
+add_library(sonassmd_mdcomp STATIC
+	# General stuff.
+	"${mdcomp_directory}/basic_decoder.h"
+	"${mdcomp_directory}/bigendian_io.h"
+	"${mdcomp_directory}/bitstream.h"
+	"${mdcomp_directory}/ignore_unused_variable_warning.h"
+	"${mdcomp_directory}/lzss.h"
+	"${mdcomp_directory}/moduled_adaptor.h"
+	# Format-specific stuff.
+	"${mdcomp_directory}/comper.cc"
+	"${mdcomp_directory}/comper.h"
+	"${mdcomp_directory}/kosinski.cc"
+	"${mdcomp_directory}/kosinski.h"
+	"${mdcomp_directory}/kosplus.cc"
+	"${mdcomp_directory}/kosplus.h"
+	"${mdcomp_directory}/nemesis.cc"
+	"${mdcomp_directory}/nemesis.h"
+)
+
+target_include_directories(sonassmd_mdcomp PUBLIC ${mdcomp_directory})
+
+target_link_libraries(sonassmd PRIVATE mdcomp)

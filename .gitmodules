@@ -4,3 +4,6 @@
 [submodule "clownassembler"]
 	path = clownassembler
 	url = https://github.com/Clownacy/clownassembler
+[submodule "FW-KENSC-ShellExt"]
+	path = FW-KENSC-ShellExt
+	url = https://github.com/MainMemory/FW-KENSC-ShellExt
