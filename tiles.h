@@ -5,18 +5,19 @@
 #include <ostream>
 #include <vector>
 
+#include "assembleable.h"
 #include "tile.h"
 
 namespace libsonassmd {
 
-struct Tiles
+struct Tiles : Assembleable
 {
 	std::vector<Tile> vector;
 
 	auto total_bytes() const {return Tile::size * vector.size();}
-	void fromBinaryStream(std::istream &stream);
-	void toAssemblyStream(std::ostream &stream) const;
-	void toBinaryStream(std::ostream &stream) const;
+	void fromBinaryStream(std::istream &stream) override;
+	void toAssemblyStream(std::ostream &stream) const override;
+	void toBinaryStream(std::ostream &stream) const override;
 };
 
 }
