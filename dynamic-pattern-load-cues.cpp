@@ -27,7 +27,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if (getGame() != Game::SONIC_1 && frame_offset % 2 != 0)
+		if (game != Game::SONIC_1 && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
@@ -56,8 +56,6 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
-	const bool mapmacros = mapMacrosEnabled();
-
 	std::random_device random_device;
 	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
@@ -133,7 +131,7 @@ int DynamicPatternLoadCues::Frame::total_segments() const
 
 void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream)
 {
-	const unsigned int total_copies = getGame() != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
+	const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
 
 	copies.resize(total_copies);
 
@@ -143,8 +141,8 @@ void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream)
 
 void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream) const
 {
-	if (!mapMacrosEnabled())
-		stream << "\tdc." << (getGame() == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
+	if (!mapmacros)
+		stream << "\tdc." << (game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
 
 	for (const auto &copy : std::as_const(copies))
 		copy.toAssemblyStream(stream);
@@ -175,7 +173,7 @@ void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream)
 		const int segment_start = start + 0x10 * i;
 		const int segment_length = std::min(0x10, length - 0x10 * i);
 
-		if (mapMacrosEnabled())
+		if (mapmacros)
 			stream << "\tdplcEntry\t" << segment_length << ", " << segment_start << "\n";
 		else
 			stream << "\tdc.w\t$" << IntegerToHexString((segment_length - 1) << 12 | (segment_start & 0xFFF), 4) << '\n';

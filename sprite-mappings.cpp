@@ -27,7 +27,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if (getGame() != Game::SONIC_1 && frame_offset % 2 != 0)
+		if (game != Game::SONIC_1 && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
@@ -49,15 +49,13 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromBinaryStream(stream, getGame());
+		frames[current_frame].fromBinaryStream(stream, game);
 	}
 }
 
 void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
-	const bool mapmacros = mapMacrosEnabled();
-
 	std::random_device random_device;
 	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
@@ -89,7 +87,7 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 			stream << "\tspriteHeader";
 
 		stream << "\n";
-		frame.toAssemblyStream(stream, getGame(), mapmacros);
+		frame.toAssemblyStream(stream, game, mapmacros);
 
 		if (mapmacros)
 			stream << frame_label << "_End\n\n";

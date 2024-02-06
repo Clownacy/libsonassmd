@@ -8,6 +8,16 @@
 
 namespace libsonassmd {
 
+enum class Game
+{
+	SONIC_1,
+	SONIC_2,
+	SONIC_3_AND_KNUCKLES
+};
+
+extern Game game;
+extern bool mapmacros;
+
 unsigned int ReadU8(std::istream &stream);
 unsigned int ReadU16BE(std::istream &stream);
 unsigned long ReadU32BE(std::istream &stream);

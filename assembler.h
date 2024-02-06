@@ -4,14 +4,9 @@
 #include <istream>
 #include <ostream>
 
-namespace libsonassmd {
+#include "common.h"
 
-enum class Game
-{
-	SONIC_1,
-	SONIC_2,
-	SONIC_3_AND_KNUCKLES
-};
+namespace libsonassmd {
 
 bool Assemble(std::istream &input, std::ostream &output, Game game);
 

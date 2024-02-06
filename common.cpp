@@ -6,6 +6,9 @@
 
 namespace libsonassmd {
 
+Game game;
+bool mapmacros;
+
 static unsigned long ReadBE(std::istream &stream, const unsigned int total_bytes)
 {
 	unsigned char bytes[sizeof(unsigned long)];

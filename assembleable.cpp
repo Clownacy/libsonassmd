@@ -6,9 +6,6 @@
 
 namespace libsonassmd {
 
-Game Assembleable::game;
-bool Assembleable::mapmacros;
-
 std::ifstream Assembleable::createFileInputStream(const char* const file_path, const std::ios::openmode flags) const
 {
 	std::ifstream stream;
