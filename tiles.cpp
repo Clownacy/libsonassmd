@@ -7,27 +7,27 @@ namespace libsonassmd {
 
 void Tiles::fromBinaryStream(std::istream &stream)
 {
-	vector.clear();
+	clear();
 
 	// TODO: Detect and handle files that end with a partial tile.
 	do
 	{
-		vector.push_back({}); // TODO: emplace_back
-		vector.back().fromBinaryStream(stream);
+		push_back({}); // TODO: emplace_back
+		back().fromBinaryStream(stream);
 	} while (!stream.eof());
 
-	vector.pop_back();
+	pop_back();
 }
 
 void Tiles::toBinaryStream(std::ostream &stream) const
 {
-	for (const auto &tile : std::as_const(vector))
+	for (const auto &tile : std::as_const(*this))
 		tile.toBinaryStream(stream);
 }
 
 void Tiles::toAssemblyStream(std::ostream &stream) const
 {
-	for (const auto &tile : std::as_const(vector))
+	for (const auto &tile : std::as_const(*this))
 		tile.toAssemblyStream(stream);
 }
 

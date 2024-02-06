@@ -10,11 +10,9 @@
 
 namespace libsonassmd {
 
-struct Tiles : Assembleable
+struct Tiles : std::vector<Tile>, Assembleable
 {
-	std::vector<Tile> vector;
-
-	auto total_bytes() const {return Tile::size * vector.size();}
+	auto total_bytes() const {return Tile::size * size();}
 	void fromBinaryStream(std::istream &stream) override;
 	void toAssemblyStream(std::ostream &stream) const override;
 	void toBinaryStream(std::ostream &stream) const override;
