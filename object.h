@@ -6,8 +6,11 @@
 
 namespace libsonassmd {
 
-class Object
+struct Object
 {
+private:
+	unsigned int OutputCommon() const;
+
 public:
 	static constexpr unsigned int size_in_file = 6;
 
@@ -15,6 +18,7 @@ public:
 	unsigned char id, subtype;
 	bool respawn, x_flip, y_flip;
 
+	Object() = default;
 	Object(
 		const unsigned short x,
 		const unsigned short y,
@@ -32,10 +36,10 @@ public:
 		, x_flip(x_flip)
 		, y_flip(y_flip)
 	{};
-	Object(std::istream &stream);
-	std::istream& operator<<(std::istream &stream);
-	std::ostream& operator>>(std::ostream &stream) const;
-	bool operator==(const Object &object) const;
+	void fromBinaryStream(std::istream &stream);
+	void toBinaryStream(std::ostream &stream) const;
+	void toAssemblyStream(std::ostream &stream) const;
+	bool operator==(const Object &object) const; // TODO: This shouldn't be necessary.
 };
 
 }

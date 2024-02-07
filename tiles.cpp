@@ -15,7 +15,7 @@ void Tiles::fromBinaryStream(std::istream &stream)
 
 	stream.exceptions(new_exceptions);
 
-	while (stream.peek() != std::ifstream::traits_type::eof())
+	while (stream.peek() != std::istream::traits_type::eof())
 	{
 		stream.exceptions(original_exceptions);
 		push_back({}); // TODO: emplace_back

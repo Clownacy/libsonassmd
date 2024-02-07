@@ -5,22 +5,26 @@
 #include <ostream>
 #include <vector>
 
+#include "assembleable.h"
 #include "object.h"
 
 namespace libsonassmd {
 
-class ObjectLayout
+struct ObjectLayout : Assembleable
 {
 private:
-	void FromStream(std::istream &stream, std::size_t total_objects);
+	void sort();
 
 public:
 	std::vector<Object> objects;
 
 	ObjectLayout() = default;
-	ObjectLayout(const char *file_path);
-	ObjectLayout(std::istream &stream, std::size_t total_objects);
-	std::ostream& operator>>(std::ostream &stream);
+	ObjectLayout(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}
+	ObjectLayout(std::istream &stream, const Format format) {fromStream(stream, format);}
+
+	void fromBinaryStream(std::istream &stream) override;
+	void toBinaryStream(std::ostream &stream) const override;
+	void toAssemblyStream(std::ostream &stream) const override;
 };
 
 }

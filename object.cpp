@@ -4,12 +4,9 @@
 
 namespace libsonassmd {
 
-Object::Object(std::istream &stream)
-{
-	*this << stream;
-}
+// TODO: Non-Sonic 2 file formats.
 
-std::istream& Object::operator<<(std::istream &stream)
+void Object::fromBinaryStream(std::istream &stream)
 {
 	const unsigned int word1 = ReadU16BE(stream);
 	const unsigned int word2 = ReadU16BE(stream);
@@ -23,11 +20,9 @@ std::istream& Object::operator<<(std::istream &stream)
 	respawn = (byte1 & 0x80) != 0;
 	y_flip = (word2 & (1u << 15)) != 0;
 	x_flip = (word2 & (1u << 14)) != 0;
-
-	return stream;
 }
 
-std::ostream& Object::operator>>(std::ostream &stream) const
+unsigned int Object::OutputCommon() const
 {
 	// 0xFFFF is reserved for sentinel objects.
 	if (x > 0xFFFE)
@@ -42,12 +37,25 @@ std::ostream& Object::operator>>(std::ostream &stream) const
 	if (subtype > 0xFF)
 		throw std::range_error("Subtype is too large");
 
+	return (y << 0) | (static_cast<unsigned int>(x_flip) << 13) | (static_cast<unsigned int>(y_flip) << 14) | (static_cast<unsigned int>(respawn) << 15);
+}
+
+void Object::toBinaryStream(std::ostream &stream) const
+{
+	const auto compact = OutputCommon();
+
 	WriteU16BE(stream, x);
-	WriteU16BE(stream, (y << 0) | (static_cast<unsigned int>(x_flip) << 13) | (static_cast<unsigned int>(y_flip) << 14) | (static_cast<unsigned int>(respawn) << 15));
+	WriteU16BE(stream, compact);
 	WriteU8(stream, id);
 	WriteU8(stream, subtype);
+}
 
-	return stream;
+void Object::toAssemblyStream(std::ostream &stream) const
+{
+	const auto compact = OutputCommon();
+
+	stream << "\tdc.w\t$" << IntegerToHexString(x, 4) << ", " << IntegerToHexString(compact, 4) << '\n';
+	stream << "\tdc.b\t$" << IntegerToHexString(id, 2) << ", " << IntegerToHexString(subtype, 2) << '\n';
 }
 
 bool Object::operator==(const Object &object) const

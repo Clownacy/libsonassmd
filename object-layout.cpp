@@ -7,41 +7,38 @@
 
 namespace libsonassmd {
 
-ObjectLayout::ObjectLayout(const char* const file_path)
+void ObjectLayout::fromBinaryStream(std::istream &stream)
 {
-	const auto file_size = std::filesystem::file_size(file_path);
+	objects.clear();
 
-	if (file_size % Object::size_in_file != 0)
-		throw std::runtime_error("File size is not a multiple of 6");
+	// We use peek() to detect EOF, so disable the exceptions that it would throw.
+	const auto original_exceptions = stream.exceptions();
+	const auto new_exceptions = original_exceptions & ~(std::ios::eofbit | std::ios::failbit);
 
-	std::ifstream stream(file_path, std::ios::binary);
-	FromStream(stream, file_size / Object::size_in_file);
-}
+	stream.exceptions(new_exceptions);
 
-ObjectLayout::ObjectLayout(std::istream &stream, const std::size_t total_objects)
-{
-	FromStream(stream, total_objects);
-}
-
-void ObjectLayout::FromStream(std::istream &stream, const std::size_t total_objects)
-{
-	objects.reserve(total_objects);
-
-	for (std::size_t i = 0; i < total_objects; ++i)
+	while (stream.peek() != std::istream::traits_type::eof())
 	{
-		objects.emplace_back(stream);
+		stream.exceptions(original_exceptions);
+		objects.emplace_back();
+		objects.back().fromBinaryStream(stream);
 
-		// If this is a sentinel object, we've reached the end.
+		// Detect end-of-file sentinel.
 		if (objects.back().x == 0xFFFF)
 		{
 			objects.pop_back();
 			objects.shrink_to_fit();
 			break;
 		}
+
+		stream.exceptions(new_exceptions);
 	}
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
-std::ostream& ObjectLayout::operator>>(std::ostream &stream)
+void ObjectLayout::sort()
 {
 	// Objects must be sorted by their X coordinate.
 	std::stable_sort(objects.begin(), objects.end(),
@@ -50,11 +47,26 @@ std::ostream& ObjectLayout::operator>>(std::ostream &stream)
 			return (a.x < b.x);
 		}
 	);
+}
 
-	for (const auto &object : std::as_const(objects))
-		object >> stream;
+void ObjectLayout::toBinaryStream(std::ostream &stream) const
+{
+	// TODO: Not this.
+	ObjectLayout copy(*this);
+	copy.sort();
 
-	return stream;
+	for (const auto &object : std::as_const(copy.objects))
+		object.toBinaryStream(stream);
+}
+
+void ObjectLayout::toAssemblyStream(std::ostream &stream) const
+{
+	// TODO: Not this.
+	ObjectLayout copy(*this);
+	copy.sort();
+
+	for (const auto &object : std::as_const(copy.objects))
+		object.toAssemblyStream(stream);
 }
 
 }
