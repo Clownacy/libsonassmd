@@ -12,7 +12,7 @@
 
 namespace libsonassmd {
 
-void Assembleable::fromFile(const char* const file_path, const Format format)
+void Assembleable::fromFile(const std::filesystem::path &file_path, const Format format)
 {
 	std::ifstream stream(file_path, format == Format::ASSEMBLY ? std::ios::in : std::ios::binary);
 
@@ -20,7 +20,7 @@ void Assembleable::fromFile(const char* const file_path, const Format format)
 	fromStream(stream, format);
 }
 
-void Assembleable::toFile(const char* const file_path, const Format format) const
+void Assembleable::toFile(const std::filesystem::path &file_path, const Format format) const
 {
 	std::ofstream stream(file_path, format == Format::ASSEMBLY ? std::ios::out : std::ios::binary);
 

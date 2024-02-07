@@ -1,9 +1,10 @@
 #ifndef LIBSONASSMD_ASSEMBLEABLE
 #define LIBSONASSMD_ASSEMBLEABLE
 
+#include <filesystem>
 #include <fstream>
-#include <istream>
 #include <iostream>
+#include <istream>
 #include <ostream>
 
 namespace libsonassmd {
@@ -29,9 +30,9 @@ public:
 		NEMESIS
 	};
 
-	void fromFile(const char *file_path, Format format);
+	void fromFile(const std::filesystem::path &file_path, Format format);
 	void fromStream(std::istream &stream, Format format);
-	void toFile(const char *file_path, Format format) const;
+	void toFile(const std::filesystem::path &file_path, Format format) const;
 	void toStream(std::ostream &stream, Format format) const;
 };
 

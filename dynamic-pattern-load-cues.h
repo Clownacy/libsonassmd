@@ -1,6 +1,7 @@
 #ifndef LIBSONASSMD_DYNAMIC_PATTERN_LOAD_CUES_H
 #define LIBSONASSMD_DYNAMIC_PATTERN_LOAD_CUES_H
 
+#include <filesystem>
 #include <istream>
 #include <ostream>
 #include <vector>
@@ -37,7 +38,7 @@ struct DynamicPatternLoadCues : Assembleable
 	};
 
 	DynamicPatternLoadCues() = default;
-	DynamicPatternLoadCues(const char* const file_path, const Format format) {fromFile(file_path, format);}
+	DynamicPatternLoadCues(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}
 	DynamicPatternLoadCues(std::istream &stream, const Format format) {fromStream(stream, format);}
 
 	void fromBinaryStream(std::istream &stream) override;

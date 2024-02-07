@@ -5,7 +5,6 @@
 #include <ostream>
 #include <vector>
 
-#include "assembler.h"
 #include "sprite-piece.h"
 
 namespace libsonassmd {

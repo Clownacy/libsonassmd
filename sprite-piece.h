@@ -4,7 +4,7 @@
 #include <istream>
 #include <ostream>
 
-#include "assembler.h"
+#include "common.h"
 
 namespace libsonassmd {
 
