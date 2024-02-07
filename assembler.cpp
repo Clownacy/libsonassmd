@@ -1,5 +1,6 @@
 #include "assembler.h"
 
+#include <cassert>
 #include <cstring>
 #include <sstream>
 
@@ -92,6 +93,9 @@ static unsigned int GameToNumber(const Game game)
 		case Game::SONIC_3_AND_KNUCKLES:
 			return 3;
 	}
+
+	assert(false);
+	return 1;
 }
 
 static void EmitMapMacros(std::ostream &stream, const Game game)
@@ -165,7 +169,8 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 bool Assemble(std::istream &input, std::ostream &output, const Game game)
 {
 	InputCallbackData input_callback_data = {
-		&input
+		&input,
+		{}
 	};
 
 	ClownAssembler_TextInput input_callbacks = {
