@@ -16,7 +16,7 @@ public:
 
 	unsigned short x, y;
 	unsigned char id, subtype;
-	bool respawn, x_flip, y_flip;
+	bool respawn, x_flip, y_flip, two_player_flag;
 
 	Object() = default;
 	Object(
@@ -26,7 +26,8 @@ public:
 		const unsigned char subtype,
 		const bool respawn,
 		const bool x_flip,
-		const bool y_flip
+		const bool y_flip,
+		const bool two_player_flag
 	)
 		: x(x)
 		, y(y)
@@ -35,11 +36,13 @@ public:
 		, respawn(respawn)
 		, x_flip(x_flip)
 		, y_flip(y_flip)
+		, two_player_flag(two_player_flag)
 	{};
+
 	void fromBinaryStream(std::istream &stream);
 	void toBinaryStream(std::ostream &stream) const;
 	void toAssemblyStream(std::ostream &stream) const;
-	bool operator==(const Object &object) const; // TODO: This shouldn't be necessary.
+	bool operator==(const Object &object) const;
 };
 
 }

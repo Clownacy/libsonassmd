@@ -7,6 +7,11 @@
 
 namespace libsonassmd {
 
+bool ObjectLayout::compareObjects(const Object &a, const Object &b)
+{
+	return a.x < b.x;
+}
+
 void ObjectLayout::fromBinaryStream(std::istream &stream)
 {
 	objects.clear();
@@ -20,16 +25,15 @@ void ObjectLayout::fromBinaryStream(std::istream &stream)
 	while (stream.peek() != std::istream::traits_type::eof())
 	{
 		stream.exceptions(original_exceptions);
-		objects.emplace_back();
-		objects.back().fromBinaryStream(stream);
+
+		Object object;
+		object.fromBinaryStream(stream);
 
 		// Detect end-of-file sentinel.
-		if (objects.back().x == 0xFFFF)
-		{
-			objects.pop_back();
-			objects.shrink_to_fit();
+		if (object.x == 0xFFFF)
 			break;
-		}
+
+		objects.insert(object);
 
 		stream.exceptions(new_exceptions);
 	}
@@ -40,18 +44,7 @@ void ObjectLayout::fromBinaryStream(std::istream &stream)
 
 void ObjectLayout::toStreamCommon(std::ostream &stream, const bool assembly) const
 {
-	// TODO: Not this.
-	ObjectLayout copy(*this);
-
-	// Objects must be sorted by their X coordinate.
-	std::stable_sort(copy.objects.begin(), copy.objects.end(),
-		[](const auto &a, const auto &b)
-		{
-			return (a.x < b.x);
-		}
-	);
-
-	for (const auto &object : std::as_const(copy.objects))
+	for (const auto &object : std::as_const(objects))
 	{
 		if (assembly)
 			object.toAssemblyStream(stream);
