@@ -13,6 +13,10 @@ namespace libsonassmd {
 
 struct SpriteMappings : Assembleable
 {
+	SpriteMappings() = default;
+	SpriteMappings(const char* const file_path, const Format format) {fromFile(file_path, format);}
+	SpriteMappings(std::istream &stream, const Format format) {fromStream(stream, format);}
+
 	void fromBinaryStream(std::istream &stream) override;
 	void toAssemblyStream(std::ostream &stream) const override;
 

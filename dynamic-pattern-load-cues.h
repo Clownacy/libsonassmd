@@ -36,6 +36,10 @@ struct DynamicPatternLoadCues : Assembleable
 		void toAssemblyStream(std::ostream &stream) const;
 	};
 
+	DynamicPatternLoadCues() = default;
+	DynamicPatternLoadCues(const char* const file_path, const Format format) {fromFile(file_path, format);}
+	DynamicPatternLoadCues(std::istream &stream, const Format format) {fromStream(stream, format);}
+
 	void fromBinaryStream(std::istream &stream) override;
 	void toAssemblyStream(std::ostream &stream) const override;
 
