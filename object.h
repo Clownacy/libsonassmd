@@ -9,7 +9,7 @@ namespace libsonassmd {
 struct Object
 {
 private:
-	unsigned int OutputCommon() const;
+	void toStreamCommon(std::ostream &stream, bool assembly) const;
 
 public:
 	static constexpr unsigned int size_in_file = 6;

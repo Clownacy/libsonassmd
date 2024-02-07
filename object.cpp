@@ -22,7 +22,7 @@ void Object::fromBinaryStream(std::istream &stream)
 	x_flip = (word2 & (1u << 14)) != 0;
 }
 
-unsigned int Object::OutputCommon() const
+void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 {
 	// 0xFFFF is reserved for sentinel objects.
 	if (x > 0xFFFE)
@@ -37,25 +37,30 @@ unsigned int Object::OutputCommon() const
 	if (subtype > 0xFF)
 		throw std::range_error("Subtype is too large");
 
-	return (y << 0) | (static_cast<unsigned int>(x_flip) << 13) | (static_cast<unsigned int>(y_flip) << 14) | (static_cast<unsigned int>(respawn) << 15);
+	const auto compact_word = (y << 0) | (static_cast<unsigned int>(x_flip) << 13) | (static_cast<unsigned int>(y_flip) << 14) | (static_cast<unsigned int>(respawn) << 15);
+
+	if (assembly)
+	{
+		stream << "\tdc.w\t$" << IntegerToHexString(x, 4) << ", " << IntegerToHexString(compact_word, 4) << '\n';
+		stream << "\tdc.b\t$" << IntegerToHexString(id, 2) << ", " << IntegerToHexString(subtype, 2) << '\n';
+	}
+	else
+	{
+		WriteU16BE(stream, x);
+		WriteU16BE(stream, compact_word);
+		WriteU8(stream, id);
+		WriteU8(stream, subtype);
+	}
 }
 
 void Object::toBinaryStream(std::ostream &stream) const
 {
-	const auto compact = OutputCommon();
-
-	WriteU16BE(stream, x);
-	WriteU16BE(stream, compact);
-	WriteU8(stream, id);
-	WriteU8(stream, subtype);
+	toStreamCommon(stream, false);
 }
 
 void Object::toAssemblyStream(std::ostream &stream) const
 {
-	const auto compact = OutputCommon();
-
-	stream << "\tdc.w\t$" << IntegerToHexString(x, 4) << ", " << IntegerToHexString(compact, 4) << '\n';
-	stream << "\tdc.b\t$" << IntegerToHexString(id, 2) << ", " << IntegerToHexString(subtype, 2) << '\n';
+	toStreamCommon(stream, true);
 }
 
 bool Object::operator==(const Object &object) const

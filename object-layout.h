@@ -13,7 +13,7 @@ namespace libsonassmd {
 struct ObjectLayout : Assembleable
 {
 private:
-	void sort();
+	void toStreamCommon(std::ostream &stream, bool assembly) const;
 
 public:
 	std::vector<Object> objects;

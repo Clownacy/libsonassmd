@@ -38,35 +38,36 @@ void ObjectLayout::fromBinaryStream(std::istream &stream)
 	stream.exceptions(original_exceptions);
 }
 
-void ObjectLayout::sort()
+void ObjectLayout::toStreamCommon(std::ostream &stream, const bool assembly) const
 {
+	// TODO: Not this.
+	ObjectLayout copy(*this);
+
 	// Objects must be sorted by their X coordinate.
-	std::stable_sort(objects.begin(), objects.end(),
+	std::stable_sort(copy.objects.begin(), copy.objects.end(),
 		[](const auto &a, const auto &b)
 		{
 			return (a.x < b.x);
 		}
 	);
+
+	for (const auto &object : std::as_const(copy.objects))
+	{
+		if (assembly)
+			object.toAssemblyStream(stream);
+		else
+			object.toBinaryStream(stream);
+	}
 }
 
 void ObjectLayout::toBinaryStream(std::ostream &stream) const
 {
-	// TODO: Not this.
-	ObjectLayout copy(*this);
-	copy.sort();
-
-	for (const auto &object : std::as_const(copy.objects))
-		object.toBinaryStream(stream);
+	toStreamCommon(stream, false);
 }
 
 void ObjectLayout::toAssemblyStream(std::ostream &stream) const
 {
-	// TODO: Not this.
-	ObjectLayout copy(*this);
-	copy.sort();
-
-	for (const auto &object : std::as_const(copy.objects))
-		object.toAssemblyStream(stream);
+	toStreamCommon(stream, true);
 }
 
 }
