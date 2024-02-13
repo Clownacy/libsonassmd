@@ -74,7 +74,7 @@ static void WriteBE(std::ostream &stream, const unsigned long value, const unsig
 
 void WriteU8(std::ostream &stream, const unsigned int value)
 {
-	WriteBE(stream, value, 1);
+	stream.put(value);
 }
 
 void WriteU16BE(std::ostream &stream, const unsigned int value)
