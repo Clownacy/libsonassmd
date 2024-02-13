@@ -26,14 +26,14 @@ void ObjectLayout::fromBinaryStream(std::istream &stream)
 	{
 		stream.exceptions(original_exceptions);
 
-		Object object;
-		object.fromBinaryStream(stream);
+		const auto &it = objects.emplace(stream);
 
 		// Detect end-of-file sentinel.
-		if (object.x == 0xFFFF)
+		if (it->x == 0xFFFF)
+		{
+			objects.erase(it);
 			break;
-
-		objects.insert(object);
+		}
 
 		stream.exceptions(new_exceptions);
 	}
@@ -46,6 +46,10 @@ void ObjectLayout::toStreamCommon(std::ostream &stream, const bool assembly) con
 {
 	for (const auto &object : std::as_const(objects))
 	{
+		// 0xFFFF is reserved for sentinel objects.
+		if (object.x == 0xFFFF)
+			throw std::range_error("X is too large");
+
 		if (assembly)
 			object.toAssemblyStream(stream);
 		else

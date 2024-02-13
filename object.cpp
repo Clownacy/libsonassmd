@@ -52,8 +52,7 @@ void Object::fromBinaryStream(std::istream &stream)
 
 void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 {
-	// 0xFFFF is reserved for sentinel objects.
-	if (x > 0xFFFE)
+	if (x > 0xFFFF)
 		throw std::range_error("X is too large");
 
 	if (y > 0xFFF)
