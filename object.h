@@ -38,6 +38,10 @@ public:
 		, y_flip(y_flip)
 		, two_player_flag(two_player_flag)
 	{};
+	Object(std::istream &stream)
+	{
+		fromBinaryStream(stream);
+	}
 
 	void fromBinaryStream(std::istream &stream);
 	void toBinaryStream(std::ostream &stream) const;

@@ -1,5 +1,7 @@
 #include "object.h"
 
+#include <climits>
+
 #include "common.h"
 
 namespace libsonassmd {
@@ -52,8 +54,10 @@ void Object::fromBinaryStream(std::istream &stream)
 
 void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 {
+#if USHRT_MAX != 0xFFFF
 	if (x > 0xFFFF)
 		throw std::range_error("X is too large");
+#endif
 
 	if (y > 0xFFF)
 		throw std::range_error("Y is too large");
@@ -61,8 +65,10 @@ void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 	if (id > (game == Game::SONIC_1 ? 0x7F : 0xFF))
 		throw std::range_error("ID is too large");
 
+#if UCHAR_MAX != 0xFF
 	if (subtype > 0xFF)
 		throw std::range_error("Subtype is too large");
+#endif
 
 	unsigned int compact_word;
 
