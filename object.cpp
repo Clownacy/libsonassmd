@@ -6,8 +6,6 @@
 
 namespace libsonassmd {
 
-// TODO: Non-Sonic 2 file formats.
-
 void Object::fromBinaryStream(std::istream &stream)
 {
 	const unsigned int word1 = ReadU16BE(stream);
