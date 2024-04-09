@@ -83,6 +83,10 @@ void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 		case Game::SONIC_3_AND_KNUCKLES:
 			compact_word = (y << 0) | (static_cast<unsigned int>(x_flip) << 13) | (static_cast<unsigned int>(y_flip) << 14) | (static_cast<unsigned int>(respawn) << 15);
 			break;
+
+		default:
+			throw std::exception();
+
 	}
 
 	unsigned int compact_byte;
@@ -97,6 +101,9 @@ void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 		case Game::SONIC_3_AND_KNUCKLES:
 			compact_byte = id;
 			break;
+
+		default:
+			throw std::exception();
 	}
 
 	if (assembly)

@@ -50,6 +50,7 @@ void Assembleable::fromStream(std::istream &stream, const Format format)
 
 		switch (format)
 		{
+			default:
 			case Format::ASSEMBLY:
 			case Format::BINARY:
 				assert(false);
@@ -111,6 +112,7 @@ void Assembleable::toStream(std::ostream &stream, const Format format) const
 
 		switch (format)
 		{
+			default:
 			case Format::ASSEMBLY:
 			case Format::BINARY:
 				assert(false);
