@@ -84,7 +84,7 @@ void Assembleable::fromStream(std::istream &stream, const Format format)
 		stream.exceptions(original_exceptions);
 
 		if (!success)
-			throw std::ios::failure("Data could not be decompressed."); // TODO: Find a more appropriate exception type.
+			throw std::runtime_error("Data could not be decompressed.");
 
 		// mdcomp may have changed the read index (notably the Kosinski decompressor does), so rewind it here.
 		string_stream.seekg(0, std::ios::beg);
@@ -143,7 +143,7 @@ void Assembleable::toStream(std::ostream &stream, const Format format) const
 		}
 
 		if (!success)
-			throw std::ios::failure("Data could not be compressed."); // TODO: Find a more appropriate exception type.
+			throw std::runtime_error("Data could not be compressed.");
 	}
 }
 
@@ -151,7 +151,7 @@ void Assembleable::fromAssemblyStream(std::istream &stream)
 {
 	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
 	if (!Assemble(stream, string_stream, game))
-		throw std::ios::failure("Data could not be assembled."); // TODO: Find a more appropriate exception type.
+		throw std::runtime_error("Data could not be assembled.");
 	fromBinaryStream(string_stream);
 }
 
@@ -160,7 +160,7 @@ void Assembleable::toBinaryStream(std::ostream &stream) const
 	std::stringstream string_stream;
 	toAssemblyStream(string_stream);
 	if (!Assemble(string_stream, stream, game))
-		throw std::ios::failure("Data could not be assembled."); // TODO: Find a more appropriate exception type.
+		throw std::runtime_error("Data could not be assembled.");
 }
 
 }
