@@ -93,11 +93,11 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 )";
 };
 
-bool Assemble(std::istream &input, std::ostream &output, const Game game)
+void Assemble(std::istream &input, std::ostream &output, const Game game)
 {
 	std::stringstream expanded_input;
 	EmitMapMacros(expanded_input, game);
-	// TODO: Is there any way to make a meta-stream that concatonates these two instead?
+	// TODO: Is there any way to make a meta-stream that concatenates these two instead?
 	expanded_input << input.rdbuf();
 
 	// It's okay for some IO errors to occur here.
@@ -105,12 +105,14 @@ bool Assemble(std::istream &input, std::ostream &output, const Game game)
 	input.exceptions(original_exceptions & ~(std::ios::eofbit | std::ios::failbit));
 
 	// TODO: Real filename.
-	const bool success = ClownAssembler::Assemble(expanded_input, output, nullptr, nullptr, nullptr, "[Filename unknown]", false, false, false, false, false, nullptr);
+	std::stringstream errors;
+	const bool success = ClownAssembler::Assemble(expanded_input, output, &errors, nullptr, nullptr, "[Filename unknown]", false, false, false, false, false, nullptr);
 
 	input.clear();
 	input.exceptions(original_exceptions);
 
-	return success;
+	if (!success)
+		throw std::runtime_error("Failed to assemble:\n\n" + errors.str());
 }
 
 }

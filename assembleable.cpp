@@ -150,8 +150,7 @@ void Assembleable::toStream(std::ostream &stream, const Format format) const
 void Assembleable::fromAssemblyStream(std::istream &stream)
 {
 	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
-	if (!Assemble(stream, string_stream, game))
-		throw std::runtime_error("Data could not be assembled.");
+	Assemble(stream, string_stream, game);
 	fromBinaryStream(string_stream);
 }
 
@@ -159,8 +158,7 @@ void Assembleable::toBinaryStream(std::ostream &stream) const
 {
 	std::stringstream string_stream;
 	toAssemblyStream(string_stream);
-	if (!Assemble(string_stream, stream, game))
-		throw std::runtime_error("Data could not be assembled.");
+	Assemble(string_stream, stream, game);
 }
 
 }

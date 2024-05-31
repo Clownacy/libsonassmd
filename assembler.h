@@ -8,7 +8,7 @@
 
 namespace libsonassmd {
 
-bool Assemble(std::istream &input, std::ostream &output, Game game);
+void Assemble(std::istream &input, std::ostream &output, Game game);
 
 }
 
