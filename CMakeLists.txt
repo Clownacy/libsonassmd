@@ -32,8 +32,8 @@ add_library(sonassmd STATIC
 # clownassembler #
 ##################
 
-add_subdirectory("clownassembler" EXCLUDE_FROM_ALL)
-target_link_libraries(sonassmd PRIVATE clownassembler_core)
+add_subdirectory("clownassembler/cpp" EXCLUDE_FROM_ALL)
+target_link_libraries(sonassmd PRIVATE clownassembler-cpp)
 
 ##########
 # mdcomp #
