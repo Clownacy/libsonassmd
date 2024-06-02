@@ -14,10 +14,19 @@ namespace libsonassmd {
 
 void Assembleable::fromFile(const std::filesystem::path &file_path, const Format format)
 {
-	std::ifstream stream(file_path, format == Format::ASSEMBLY ? std::ios::in : std::ios::binary);
+	if (format == Format::ASSEMBLY)
+	{
+		std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
+		Assemble(file_path, string_stream, game);
+		fromBinaryStream(string_stream);
+	}
+	else
+	{
+		std::ifstream stream(file_path, std::ios::binary);
 
-	stream.exceptions(std::ios::failbit | std::ios::badbit | std::ios::eofbit);
-	fromStream(stream, format);
+		stream.exceptions(std::ios::failbit | std::ios::badbit | std::ios::eofbit);
+		fromBinaryStream(stream);
+	}
 }
 
 void Assembleable::toFile(const std::filesystem::path &file_path, const Format format) const

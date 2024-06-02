@@ -93,26 +93,40 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 )";
 };
 
+static void AssembleInternal(std::istream &input, std::ostream &output, const Game game)
+{
+	// TODO: Real filename.
+	std::stringstream errors;
+	const bool success = ClownAssembler::Assemble(input, output, &errors, nullptr, nullptr, "[Internal buffer]", false, false, false, false, false, nullptr);
+
+	if (!success)
+		throw std::runtime_error("Failed to assemble:\n\n" + errors.str());
+}
+
 void Assemble(std::istream &input, std::ostream &output, const Game game)
 {
 	std::stringstream expanded_input;
 	EmitMapMacros(expanded_input, game);
-	// TODO: Is there any way to make a meta-stream that concatenates these two instead?
-	expanded_input << input.rdbuf();
 
 	// It's okay for some IO errors to occur here.
 	const auto original_exceptions = input.exceptions();
 	input.exceptions(original_exceptions & ~(std::ios::eofbit | std::ios::failbit));
 
-	// TODO: Real filename.
-	std::stringstream errors;
-	const bool success = ClownAssembler::Assemble(expanded_input, output, &errors, nullptr, nullptr, "[Filename unknown]", false, false, false, false, false, nullptr);
+	// TODO: Is there any way to make a meta-stream that concatenates these two instead?
+	expanded_input << input.rdbuf();
 
 	input.clear();
 	input.exceptions(original_exceptions);
 
-	if (!success)
-		throw std::runtime_error("Failed to assemble:\n\n" + errors.str());
+	AssembleInternal(expanded_input, output, game);
+}
+
+void Assemble(const std::filesystem::path &path, std::ostream &output, const Game game)
+{
+	std::stringstream input;
+	EmitMapMacros(input, game);
+	input << "\tinclude " << path;
+	AssembleInternal(input, output, game);
 }
 
 }
