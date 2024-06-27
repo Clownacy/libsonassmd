@@ -95,7 +95,6 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 
 static void AssembleInternal(std::istream &input, std::ostream &output, const Game game)
 {
-	// TODO: Real filename.
 	std::stringstream errors;
 	const bool success = ClownAssembler::Assemble(input, output, &errors, nullptr, nullptr, "[Internal buffer]", false, false, false, false, false, nullptr);
 
