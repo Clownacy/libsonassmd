@@ -2,7 +2,6 @@
 #define LIBSONASSMD_ASSEMBLEABLE
 
 #include <filesystem>
-#include <fstream>
 #include <iostream>
 #include <istream>
 #include <ostream>

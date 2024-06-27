@@ -1,8 +1,5 @@
 #include "sprite-frame.h"
 
-#include <sstream>
-
-#include "assembler.h"
 #include "common.h"
 
 namespace libsonassmd {

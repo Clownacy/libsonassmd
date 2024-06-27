@@ -1,6 +1,5 @@
 #include "tiles.h"
 
-#include <sstream>
 #include <utility>
 
 namespace libsonassmd {

@@ -1,8 +1,5 @@
 #include "sprite-piece.h"
 
-#include <sstream>
-
-#include "assembler.h"
 #include "common.h"
 
 namespace libsonassmd {

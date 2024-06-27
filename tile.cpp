@@ -1,7 +1,5 @@
 #include "tile.h"
 
-#include <sstream>
-
 #include "common.h"
 
 namespace libsonassmd {

@@ -1,6 +1,7 @@
 #include "assembleable.h"
 
 #include <cassert>
+#include <fstream>
 #include <sstream>
 
 #include "comper.h"
