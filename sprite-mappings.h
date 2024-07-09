@@ -21,6 +21,7 @@ public:
 	SpriteMappings() = default;
 	SpriteMappings(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}
 	SpriteMappings(std::istream &stream, const Format format) {fromStream(stream, format);}
+	SpriteMappings(const SpriteMappings &sprite_mappings, const DynamicPatternLoadCues &dplcs);
 
 	void toAssemblyStream(std::ostream &stream) const override;
 

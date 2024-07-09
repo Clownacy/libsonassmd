@@ -9,6 +9,33 @@
 
 namespace libsonassmd {
 
+SpriteMappings::SpriteMappings(const SpriteMappings &sprite_mappings, const DynamicPatternLoadCues &dplcs)
+	: SpriteMappings(sprite_mappings)
+{
+	if (frames.size() != dplcs.frames.size())
+		throw std::invalid_argument("Mappings and cues have differing number of frames");
+
+	for (unsigned int frame_index = 0; frame_index < frames.size(); ++frame_index)
+	{
+		auto &dplc_frame = dplcs.frames[frame_index];
+
+		for (auto &piece : frames[frame_index].pieces)
+		{
+			const int base_mapped_tile = dplc_frame.getMappedTile(piece.tile_index);
+
+			for (int i = 0; i < piece.width * piece.height; ++i)
+			{
+				const int mapped_tile = dplc_frame.getMappedTile(piece.tile_index + i);
+
+				if (mapped_tile == -1 || mapped_tile != base_mapped_tile + i)
+					throw std::invalid_argument("Cues are not compatible with given mappings");
+			}
+
+			piece.tile_index = base_mapped_tile;
+		}
+	}
+}
+
 void SpriteMappings::fromBinaryStream(std::istream &stream)
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
@@ -92,34 +119,6 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 	}
 
 	stream << "\teven\n";
-}
-
-bool SpriteMappings::applyDPLCs(const DynamicPatternLoadCues &dplcs)
-{
-	if (frames.size() != dplcs.frames.size())
-		return false;
-
-	for (unsigned int frame_index = 0; frame_index < frames.size(); ++frame_index)
-	{
-		auto &dplc_frame = dplcs.frames[frame_index];
-
-		for (auto &piece : frames[frame_index].pieces)
-		{
-			const int base_mapped_tile = dplc_frame.getMappedTile(piece.tile_index);
-
-			for (int i = 0; i < piece.width * piece.height; ++i)
-			{
-				const int mapped_tile = dplc_frame.getMappedTile(piece.tile_index + i);
-
-				if (mapped_tile == -1 || mapped_tile != base_mapped_tile + i)
-					return false;
-			}
-
-			piece.tile_index = base_mapped_tile;
-		}
-	}
-
-	return true;
 }
 
 DynamicPatternLoadCues SpriteMappings::removeDPLCs()
