@@ -37,7 +37,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 			earliest_frame = frame_offset;
 	}
 
-	frames.resize(total_frames);
+	frames.reserve(total_frames);
 
 	for (unsigned int current_frame = 0; current_frame < total_frames; ++current_frame)
 	{
@@ -47,7 +47,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromBinaryStream(stream);
+		frames.emplace_back(stream);
 	}
 }
 
@@ -131,10 +131,10 @@ void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream)
 {
 	const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
 
-	copies.resize(total_copies);
+	copies.reserve(total_copies);
 
 	for (unsigned int current_copy = 0; current_copy < total_copies; ++current_copy)
-		copies[current_copy].fromBinaryStream(stream);
+		copies.emplace_back(stream);
 }
 
 void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream) const

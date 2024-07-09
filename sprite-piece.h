@@ -8,8 +8,12 @@
 
 namespace libsonassmd {
 
-struct SpritePiece
+class SpritePiece
 {
+private:
+	void fromBinaryStream(std::istream &stream, Game game);
+
+public:
 	struct Tile
 	{
 		int index;
@@ -40,8 +44,8 @@ struct SpritePiece
 		, y_flip(y_flip)
 		, x_flip(x_flip)
 		, tile_index(tile_index){};
+	SpritePiece(std::istream &stream, const Game game) {fromBinaryStream(stream, game);}
 
-	void fromBinaryStream(std::istream &stream, Game game);
 	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
 
 	int x;

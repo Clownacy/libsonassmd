@@ -11,7 +11,7 @@
 
 namespace libsonassmd {
 
-struct Tiles : std::vector<Tile>, Assembleable
+struct Tiles : public std::vector<Tile>, public Assembleable
 {
 	Tiles() = default;
 	Tiles(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}

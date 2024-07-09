@@ -37,7 +37,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 			earliest_frame = frame_offset;
 	}
 
-	frames.resize(total_frames);
+	frames.reserve(total_frames);
 
 	for (unsigned int current_frame = 0; current_frame < total_frames; ++current_frame)
 	{
@@ -47,7 +47,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames[current_frame].fromBinaryStream(stream, game);
+		frames.emplace_back(stream, game);
 	}
 }
 

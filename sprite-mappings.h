@@ -12,13 +12,16 @@
 
 namespace libsonassmd {
 
-struct SpriteMappings : Assembleable
+class SpriteMappings : public Assembleable
 {
+private:
+	void fromBinaryStream(std::istream &stream) override;
+
+public:
 	SpriteMappings() = default;
 	SpriteMappings(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}
 	SpriteMappings(std::istream &stream, const Format format) {fromStream(stream, format);}
 
-	void fromBinaryStream(std::istream &stream) override;
 	void toAssemblyStream(std::ostream &stream) const override;
 
 	bool applyDPLCs(const DynamicPatternLoadCues &dplcs);

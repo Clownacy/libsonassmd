@@ -10,30 +10,44 @@
 
 namespace libsonassmd {
 
-struct DynamicPatternLoadCues : Assembleable
+class DynamicPatternLoadCues : public Assembleable
 {
-	struct Frame
+private:
+	void fromBinaryStream(std::istream &stream) override;
+
+public:
+	class Frame
 	{
-		struct Copy
+	private:
+		void fromBinaryStream(std::istream &stream);
+
+	public:
+		class Copy
 		{
+		private:
+			void fromBinaryStream(std::istream &stream);
+
+		public:
 			int start;
 			int length;
 
 			Copy() = default;
 			Copy(const int start, const int length) : start(start), length(length) {}
+			Copy(std::istream &stream) {fromBinaryStream(stream);}
 
 			int size_encoded() const;
 			int total_segments() const;
-			void fromBinaryStream(std::istream &stream);
 			void toAssemblyStream(std::ostream &stream) const;
 		};
 
 		std::vector<Copy> copies;
 
+		Frame() = default;
+		Frame(std::istream &stream) {fromBinaryStream(stream);}
+
 		int getMappedTile(int tile_index) const;
 		int size_encoded() const;
 		int total_segments() const;
-		void fromBinaryStream(std::istream &stream);
 		void toAssemblyStream(std::ostream &stream) const;
 	};
 
@@ -41,7 +55,6 @@ struct DynamicPatternLoadCues : Assembleable
 	DynamicPatternLoadCues(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}
 	DynamicPatternLoadCues(std::istream &stream, const Format format) {fromStream(stream, format);}
 
-	void fromBinaryStream(std::istream &stream) override;
 	void toAssemblyStream(std::ostream &stream) const override;
 
 	std::vector<Frame> frames;
