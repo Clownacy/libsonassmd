@@ -6,6 +6,9 @@ namespace libsonassmd {
 
 void SpritePiece::fromBinaryStream(std::istream &stream, const Game game)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	y = ReadS8(stream);
 	const unsigned int size = ReadU8(stream);
 	width = ((size >> 2) & 3) + 1;
@@ -30,6 +33,9 @@ void SpritePiece::fromBinaryStream(std::istream &stream, const Game game)
 			x = ReadS16BE(stream);
 			break;
 	}
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void SpritePiece::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const

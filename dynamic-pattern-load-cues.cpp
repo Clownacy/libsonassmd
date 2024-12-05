@@ -11,6 +11,9 @@ namespace libsonassmd {
 
 void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	// TODO: This code is duplicated in the mappings code. Can this be made into a common function?
 
 	const auto starting_position = stream.tellg();
@@ -49,6 +52,9 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 
 		frames.emplace_back(stream);
 	}
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
@@ -129,12 +135,18 @@ int DynamicPatternLoadCues::Frame::total_segments() const
 
 void DynamicPatternLoadCues::Frame::fromBinaryStream(std::istream &stream)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
 
 	copies.reserve(total_copies);
 
 	for (unsigned int current_copy = 0; current_copy < total_copies; ++current_copy)
 		copies.emplace_back(stream);
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void DynamicPatternLoadCues::Frame::toAssemblyStream(std::ostream &stream) const
@@ -158,9 +170,15 @@ int DynamicPatternLoadCues::Frame::Copy::total_segments() const
 
 void DynamicPatternLoadCues::Frame::Copy::fromBinaryStream(std::istream &stream)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	const unsigned int word = ReadU16BE(stream);
 	length = (word >> 4 * 3) + 1;
 	start = word & 0xFFF;
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void DynamicPatternLoadCues::Frame::Copy::toAssemblyStream(std::ostream &stream) const

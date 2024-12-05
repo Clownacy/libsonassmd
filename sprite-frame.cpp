@@ -6,11 +6,17 @@ namespace libsonassmd {
 
 void SpriteFrame::fromBinaryStream(std::istream &stream, const Game game)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	const int total_pieces = game == Game::SONIC_1 ? ReadU8(stream) : ReadU16BE(stream);
 	pieces.reserve(total_pieces);
 
 	for (int i = 0; i < total_pieces; ++i)
 		pieces.emplace_back(stream, game);
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void SpriteFrame::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const

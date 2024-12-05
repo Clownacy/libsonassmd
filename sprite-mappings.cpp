@@ -38,6 +38,9 @@ SpriteMappings::SpriteMappings(const SpriteMappings &sprite_mappings, const Dyna
 
 void SpriteMappings::fromBinaryStream(std::istream &stream)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 
 	const auto starting_position = stream.tellg();
@@ -76,6 +79,9 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 
 		frames.emplace_back(stream, game);
 	}
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void SpriteMappings::toAssemblyStream(std::ostream &stream) const

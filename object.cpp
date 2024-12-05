@@ -8,6 +8,9 @@ namespace libsonassmd {
 
 void Object::fromBinaryStream(std::istream &stream)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	const unsigned int word1 = ReadU16BE(stream);
 	const unsigned int word2 = ReadU16BE(stream);
 	const unsigned int byte1 = ReadU8(stream);
@@ -48,6 +51,9 @@ void Object::fromBinaryStream(std::istream &stream)
 			two_player_flag = false;
 			break;
 	}
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void Object::toStreamCommon(std::ostream &stream, const bool assembly) const

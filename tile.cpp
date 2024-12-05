@@ -6,6 +6,9 @@ namespace libsonassmd {
 
 void Tile::fromBinaryStream(std::istream &stream)
 {
+	const auto original_exceptions = stream.exceptions();
+	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
+
 	for (unsigned int y = 0; y < height; ++y)
 	{
 		for (unsigned int x = 0; x < width; x += 2)
@@ -16,6 +19,9 @@ void Tile::fromBinaryStream(std::istream &stream)
 			pixels[y][x + 1] = byte & 0xF;
 		}
 	}
+
+	stream.clear();
+	stream.exceptions(original_exceptions);
 }
 
 void Tile::toAssemblyStream(std::ostream &stream) const

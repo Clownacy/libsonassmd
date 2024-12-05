@@ -24,8 +24,6 @@ void Assembleable::fromFile(const std::filesystem::path &file_path, const Format
 	else
 	{
 		std::ifstream stream(file_path, std::ios::binary);
-
-		stream.exceptions(std::ios::failbit | std::ios::badbit | std::ios::eofbit);
 		fromBinaryStream(stream);
 	}
 }
@@ -33,7 +31,6 @@ void Assembleable::fromFile(const std::filesystem::path &file_path, const Format
 void Assembleable::toFile(const std::filesystem::path &file_path, const Format format) const
 {
 	std::ofstream stream(file_path, format == Format::ASSEMBLY ? std::ios::out : std::ios::binary);
-
 	stream.exceptions(std::ios::failbit | std::ios::badbit | std::ios::eofbit);
 	toStream(stream, format);
 }
