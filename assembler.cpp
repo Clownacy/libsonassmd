@@ -93,7 +93,7 @@ s3kPlayerDplcEntry macro totalTiles, tileIndex
 )";
 };
 
-static void AssembleInternal(std::istream &input, std::ostream &output, const Game game)
+static void AssembleInternal(std::istream &input, std::ostream &output)
 {
 	std::stringstream errors;
 	const bool success = ClownAssembler::Assemble(input, output, &errors, nullptr, nullptr, "[Internal buffer]", false, false, false, false, false, nullptr);
@@ -117,7 +117,7 @@ void Assemble(std::istream &input, std::ostream &output, const Game game)
 	input.clear();
 	input.exceptions(original_exceptions);
 
-	AssembleInternal(expanded_input, output, game);
+	AssembleInternal(expanded_input, output);
 }
 
 void Assemble(const std::filesystem::path &path, std::ostream &output, const Game game)
@@ -125,7 +125,7 @@ void Assemble(const std::filesystem::path &path, std::ostream &output, const Gam
 	std::stringstream input;
 	EmitMapMacros(input, game);
 	input << "\tinclude " << path;
-	AssembleInternal(input, output, game);
+	AssembleInternal(input, output);
 }
 
 }
