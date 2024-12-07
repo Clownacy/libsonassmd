@@ -24,7 +24,7 @@ void Assembleable::fromFile(const std::filesystem::path &file_path, const Format
 	else
 	{
 		std::ifstream stream(file_path, std::ios::binary);
-		fromBinaryStream(stream);
+		fromStream(stream, format);
 	}
 }
 
