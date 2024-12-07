@@ -6,6 +6,7 @@ namespace libsonassmd {
 
 void Tile::fromBinaryStream(std::istream &stream)
 {
+	stream.clear();
 	const auto original_exceptions = stream.exceptions();
 	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
 
