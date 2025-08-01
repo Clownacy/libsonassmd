@@ -29,6 +29,9 @@ static void EmitMapMacros(std::ostream &stream, const Game game)
 {
 	stream << "SonicMappingsVer = " << GameToNumber(game) << "\n";
 	stream << R"(
+FixBugs = 0
+fixBugs = 0
+
 mappingsTable macro
 currentMappingsTable set *
 	endm
