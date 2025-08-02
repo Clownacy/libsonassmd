@@ -24,6 +24,8 @@ public:
 	};
 
 private:
+	virtual void fromAssemblyFile(const std::filesystem::path &file_path);
+	virtual void fromBinaryFile(const std::filesystem::path &file_path);
 	virtual void fromAssemblyStream(std::istream &stream);
 	virtual void fromBinaryStream(std::istream &stream) = 0;
 	virtual void toAssemblyStream(std::ostream &stream) const = 0;

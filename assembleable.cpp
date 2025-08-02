@@ -17,9 +17,11 @@ void Assembleable::fromFile(const std::filesystem::path &file_path, const Format
 {
 	if (format == Format::ASSEMBLY)
 	{
-		std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
-		Assemble(file_path, string_stream, game);
-		fromBinaryStream(string_stream);
+		fromAssemblyFile(file_path);
+	}
+	else if (format == Format::BINARY)
+	{
+		fromBinaryFile(file_path);
 	}
 	else
 	{
@@ -159,6 +161,19 @@ void Assembleable::fromAssemblyStream(std::istream &stream)
 	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
 	Assemble(stream, string_stream, game);
 	fromBinaryStream(string_stream);
+}
+
+void Assembleable::fromAssemblyFile(const std::filesystem::path &file_path)
+{
+	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
+	Assemble(file_path, string_stream, game);
+	fromBinaryStream(string_stream);
+}
+
+void Assembleable::fromBinaryFile(const std::filesystem::path &file_path)
+{
+	std::ifstream stream(file_path, std::ios::binary);
+	fromBinaryStream(stream);
 }
 
 void Assembleable::toBinaryStream(std::ostream &stream) const
