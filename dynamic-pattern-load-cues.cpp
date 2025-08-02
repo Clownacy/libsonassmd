@@ -59,7 +59,7 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 
 void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
 {
-	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
+	// TODO: This code is duplicated in the mappings code. Can this be made into a common function?
 	std::random_device random_device;
 	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
