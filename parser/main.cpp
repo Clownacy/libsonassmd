@@ -1,19 +1,23 @@
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+
 #include "syntactic.h"
 #include "lexical.h"
 
-void m68kasm_warning([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, [[maybe_unused]] const char *message)
+void m68kasm_warning([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, const char *message)
 {
-	
+	std::cerr << message;
 }
 
-void m68kasm_warning_pedantic([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, [[maybe_unused]] const char *message)
+void m68kasm_warning_pedantic([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, const char *message)
 {
-	
+	std::cerr << message;
 }
 
-void m68kasm_error([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, [[maybe_unused]] const char *message)
+void m68kasm_error([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, const char *message)
 {
-	
+	std::cerr << message;
 }
 
 static yyscan_t flex_state;
@@ -26,12 +30,29 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 		//InternalError(&state, "m68kasm_lex_init failed.");
 	}
 
-	const YY_BUFFER_STATE buffer = m68kasm__scan_bytes(NULL, 0, flex_state);
+	const char* const input_file_path = argv[1];
+
+	std::FILE* const file = std::fopen(input_file_path, "r");
+
+	if (file == nullptr)
+	{
+		std::cerr << "Could not open file '" << input_file_path << "'.";
+		return EXIT_FAILURE;
+	}
+
+	m68kasm_debug = 1;
+
+	const YY_BUFFER_STATE buffer = m68kasm__create_buffer(file, YY_BUF_SIZE, flex_state);
+	m68kasm__switch_to_buffer(buffer, flex_state);
 	const int parse_result = m68kasm_parse(flex_state, &statement);
 	m68kasm__delete_buffer(buffer, flex_state);
+
+	std::fclose(file);
 
 	if (m68kasm_lex_destroy(flex_state) != 0)
 	{
 		//InternalError(&state, "m68kasm_lex_destroy failed.");
 	}
+
+	return EXIT_SUCCESS;
 }

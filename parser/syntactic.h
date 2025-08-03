@@ -46,7 +46,7 @@
 #   define M68KASM_DEBUG 0
 #  endif
 # else /* ! defined YYDEBUG */
-#  define M68KASM_DEBUG 0
+#  define M68KASM_DEBUG 1
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined M68KASM_DEBUG */
 #if M68KASM_DEBUG
