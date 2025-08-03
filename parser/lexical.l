@@ -18,7 +18,7 @@
 %option never-interactive
 %option nounistd
 %option nounput noinput noyywrap
-%option reentrant bison-bridge
+%option reentrant
 %option prefix="m68kasm_"
 %option caseless
 
@@ -73,23 +73,21 @@ static bool StringTo32BitInteger(unsigned long* const value, const char* const s
 	return success;
 }
 
-static bool ParseNumber(unsigned long* const value, void* const scanner, const char* const string_start, const size_t string_length, const unsigned long base)
+static unsigned long ParseNumber(void* const scanner, const char* const string_start, const size_t string_length, const unsigned long base)
 {
+	unsigned long value;
 	const char *string_end;
 
-	if (!StringTo32BitInteger(value, string_start, &string_end, base))
+	if (!StringTo32BitInteger(&value, string_start, &string_end, base))
 	{
 		/* S.N. 68k silently truncates values that are too large. This is relied upon by old versions of the Sonic 2 August 21st prototype disassembly. */
 		m68kasm_warning(scanner, NULL, "Number is too large and will be truncated.");
 	}
 
 	if (string_end != string_start + string_length)
-	{
-		m68kasm_error(scanner, NULL, "Number is invalid and cannot be parsed.");
-		return false;
-	}
+		throw m68kasm::parser::syntax_error("Number is invalid and cannot be parsed.");
 
-	return true;
+	return value;
 }
 
 %}
@@ -111,90 +109,78 @@ hexadecimal       {hexadecimal_digit}+
 ;.*?$           ;
 
  /* Terminate at end of file. When terminating, revert to initial state. */
-<<EOF>>         BEGIN(INITIAL); yyterminate();
+<<EOF>>         return m68kasm::parser::make_YYEOF();
 
  /* Directives. */
-even            return m68kasm::parser::token::TOKEN_DIRECTIVE_EVEN;
+even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 
  /* Sizes. */
-".b"            return m68kasm::parser::token::TOKEN_SIZE_BYTE;
-".s"            return m68kasm::parser::token::TOKEN_SIZE_SHORT;
-".w"            return m68kasm::parser::token::TOKEN_SIZE_WORD;
-".l"            return m68kasm::parser::token::TOKEN_SIZE_LONGWORD;
+".b"            return m68kasm::parser::make_SIZE_BYTE();
+".s"            return m68kasm::parser::make_SIZE_SHORT();
+".w"            return m68kasm::parser::make_SIZE_WORD();
+".l"            return m68kasm::parser::make_SIZE_LONGWORD();
 
  /* Misc. symbols. */
-"."             return yytext[0];
-","             return yytext[0];
-"("             return yytext[0];
-")"             return yytext[0];
-"$"             return yytext[0];
-"+"             return yytext[0];
-"-"             return yytext[0];
-"*"             return yytext[0];
-"/"             return yytext[0];
-"="             return yytext[0];
-"@"             return yytext[0];
+"."             return m68kasm::parser::make_PERIOD();
+","             return m68kasm::parser::make_COMMA();
+"("             return m68kasm::parser::make_PARENTHESIS_LEFT();
+")"             return m68kasm::parser::make_PARENTHESIS_RIGHT();
+"$"             return m68kasm::parser::make_DOLLAR();
+"+"             return m68kasm::parser::make_PLUS();
+"-"             return m68kasm::parser::make_MINUS();
+"*"             return m68kasm::parser::make_ASTERIX();
+"/"             return m68kasm::parser::make_FORWARD_SLASH();
+"="             return m68kasm::parser::make_EQUAL();
+"@"             return m68kasm::parser::make_AT();
 
  /* Operators. */
-"&&"            return m68kasm::parser::token::TOKEN_LOGICAL_AND;
-"||"            return m68kasm::parser::token::TOKEN_LOGICAL_OR;
-"=="            return m68kasm::parser::token::TOKEN_EQUALITY;   /* An assembler extension, for programmers that are familiar with C. */
-"!="            return m68kasm::parser::token::TOKEN_INEQUALITY; /* An assembler extension, for programmers that are familiar with C. */
-"<>"            return m68kasm::parser::token::TOKEN_INEQUALITY;
-"><"            return m68kasm::parser::token::TOKEN_INEQUALITY;
-"<="            return m68kasm::parser::token::TOKEN_LESS_OR_EQUAL;
-">="            return m68kasm::parser::token::TOKEN_MORE_OR_EQUAL;
-"<<"            return m68kasm::parser::token::TOKEN_LEFT_SHIFT;
-">>"            return m68kasm::parser::token::TOKEN_RIGHT_SHIFT;
+"&&"            return m68kasm::parser::make_LOGICAL_AND();
+"||"            return m68kasm::parser::make_LOGICAL_OR();
+"=="            return m68kasm::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
+"!="            return m68kasm::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
+"<>"            return m68kasm::parser::make_INEQUALITY();
+"><"            return m68kasm::parser::make_INEQUALITY();
+"<="            return m68kasm::parser::make_LESS_OR_EQUAL();
+">="            return m68kasm::parser::make_MORE_OR_EQUAL();
+"<<"            return m68kasm::parser::make_LEFT_SHIFT();
+">>"            return m68kasm::parser::make_RIGHT_SHIFT();
 
  /* Decimal number. */
 {decimal} {
-	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext, yyleng, 10))
-		return m68kasm::parser::token::M68KASM_error;
-
-	return m68kasm::parser::token::TOKEN_NUMBER;
+	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext, yyleng, 10));
 }
 
  /* Hexadecimal number (68k). */
 \${hexadecimal} {
-	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext + 1, yyleng - 1, 16))
-		return m68kasm::parser::token::M68KASM_error;
-
-	return m68kasm::parser::token::TOKEN_NUMBER;
+	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext + 1, yyleng - 1, 16));
 }
 
  /* Binary number (68k). */
 \%{binary} {
-	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext + 1, yyleng - 1, 2))
-		return m68kasm::parser::token::M68KASM_error;
-
-	return m68kasm::parser::token::TOKEN_NUMBER;
+	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext + 1, yyleng - 1, 2));
 }
 
  /* Identifier. */
 [A-Za-z_][A-Za-z_0-9\?]* {
-	/* Identifier. */
-	if (!String_Create(&yylval->string, yytext, yyleng))
-	{
-		m68kasm_error(yyscanner, NULL, "Could not allocate memory for generic string.");
-		return m68kasm::parser::token::M68KASM_error;
-	}
+	String string;
 
-	return m68kasm::parser::token::TOKEN_IDENTIFIER;
+	if (!String_Create(&string, yytext, yyleng))
+		throw m68kasm::parser::syntax_error("Could not allocate memory for generic string.");
+
+	return m68kasm::parser::make_IDENTIFIER(std::move(string));
 }
 
  /* Local label. */
 [@\.][A-Za-z_0-9\?]+ {
-	if (!String_Create(&yylval->string, yytext, yyleng))
-	{
-		m68kasm_error(yyscanner, NULL, "Could not allocate memory for generic string.");
-		return m68kasm::parser::token::M68KASM_error;
-	}
+	String string;
 
-	return m68kasm::parser::token::TOKEN_LOCAL_IDENTIFIER;
+	if (!String_Create(&string, yytext, yyleng))
+		throw m68kasm::parser::syntax_error("Could not allocate memory for generic string.");
+
+	return m68kasm::parser::make_LOCAL_IDENTIFIER(std::move(string));
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
-.               return yytext[0];
+.       throw m68kasm::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
 
 %%

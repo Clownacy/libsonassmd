@@ -45,15 +45,13 @@
 #ifndef YY_M68KASM_SYNTACTIC_H_INCLUDED
 # define YY_M68KASM_SYNTACTIC_H_INCLUDED
 // "%code requires" blocks.
-#line 31 "syntactic.y"
+#line 37 "syntactic.y"
 
 
 #include "string.h"
 
 // Temporary junk!
 #define YYNOMEM YYERROR
-
-#define YYSTYPE m68kasm::parser::semantic_type
 
 #define CREATE_LIST_TYPE(TYPE)\
 typedef struct TYPE\
@@ -151,7 +149,7 @@ typedef struct Statement
 } Statement;
 
 
-#line 155 "syntactic.h"
+#line 153 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -293,9 +291,9 @@ typedef struct Statement
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined M68KASM_DEBUG */
 
-#line 23 "syntactic.y"
+#line 25 "syntactic.y"
 namespace m68kasm {
-#line 299 "syntactic.h"
+#line 297 "syntactic.h"
 
 
 
@@ -310,21 +308,225 @@ namespace m68kasm {
 # endif
     typedef M68KASM_STYPE value_type;
 #else
-    /// Symbol semantic values.
-    union value_type
+  /// A buffer to store and retrieve objects.
+  ///
+  /// Sort of a variant, but does not keep track of the nature
+  /// of the stored data, since that knowledge is available
+  /// via the current parser state.
+  class value_type
+  {
+  public:
+    /// Type of *this.
+    typedef value_type self_type;
+
+    /// Empty construction.
+    value_type () YY_NOEXCEPT
+      : yyraw_ ()
+    {}
+
+    /// Construct and fill.
+    template <typename T>
+    value_type (YY_RVREF (T) t)
     {
-#line 167 "syntactic.y"
+      new (yyas_<T> ()) T (YY_MOVE (t));
+    }
 
-	unsigned long unsigned_long;
-	String string;
-	Size size;
-	Statement statement;
-	ExpressionList expression_list;
-	Expression expression;
+#if 201103L <= YY_CPLUSPLUS
+    /// Non copyable.
+    value_type (const self_type&) = delete;
+    /// Non copyable.
+    self_type& operator= (const self_type&) = delete;
+#endif
 
-#line 326 "syntactic.h"
+    /// Destruction, allowed only if empty.
+    ~value_type () YY_NOEXCEPT
+    {}
 
+# if 201103L <= YY_CPLUSPLUS
+    /// Instantiate a \a T in here from \a t.
+    template <typename T, typename... U>
+    T&
+    emplace (U&&... u)
+    {
+      return *new (yyas_<T> ()) T (std::forward <U>(u)...);
+    }
+# else
+    /// Instantiate an empty \a T in here.
+    template <typename T>
+    T&
+    emplace ()
+    {
+      return *new (yyas_<T> ()) T ();
+    }
+
+    /// Instantiate a \a T in here from \a t.
+    template <typename T>
+    T&
+    emplace (const T& t)
+    {
+      return *new (yyas_<T> ()) T (t);
+    }
+# endif
+
+    /// Instantiate an empty \a T in here.
+    /// Obsolete, use emplace.
+    template <typename T>
+    T&
+    build ()
+    {
+      return emplace<T> ();
+    }
+
+    /// Instantiate a \a T in here from \a t.
+    /// Obsolete, use emplace.
+    template <typename T>
+    T&
+    build (const T& t)
+    {
+      return emplace<T> (t);
+    }
+
+    /// Accessor to a built \a T.
+    template <typename T>
+    T&
+    as () YY_NOEXCEPT
+    {
+      return *yyas_<T> ();
+    }
+
+    /// Const accessor to a built \a T (for %printer).
+    template <typename T>
+    const T&
+    as () const YY_NOEXCEPT
+    {
+      return *yyas_<T> ();
+    }
+
+    /// Swap the content with \a that, of same type.
+    ///
+    /// Both variants must be built beforehand, because swapping the actual
+    /// data requires reading it (with as()), and this is not possible on
+    /// unconstructed variants: it would require some dynamic testing, which
+    /// should not be the variant's responsibility.
+    /// Swapping between built and (possibly) non-built is done with
+    /// self_type::move ().
+    template <typename T>
+    void
+    swap (self_type& that) YY_NOEXCEPT
+    {
+      std::swap (as<T> (), that.as<T> ());
+    }
+
+    /// Move the content of \a that to this.
+    ///
+    /// Destroys \a that.
+    template <typename T>
+    void
+    move (self_type& that)
+    {
+# if 201103L <= YY_CPLUSPLUS
+      emplace<T> (std::move (that.as<T> ()));
+# else
+      emplace<T> ();
+      swap<T> (that);
+# endif
+      that.destroy<T> ();
+    }
+
+# if 201103L <= YY_CPLUSPLUS
+    /// Move the content of \a that to this.
+    template <typename T>
+    void
+    move (self_type&& that)
+    {
+      emplace<T> (std::move (that.as<T> ()));
+      that.destroy<T> ();
+    }
+#endif
+
+    /// Copy the content of \a that to this.
+    template <typename T>
+    void
+    copy (const self_type& that)
+    {
+      emplace<T> (that.as<T> ());
+    }
+
+    /// Destroy the stored \a T.
+    template <typename T>
+    void
+    destroy ()
+    {
+      as<T> ().~T ();
+    }
+
+  private:
+#if YY_CPLUSPLUS < 201103L
+    /// Non copyable.
+    value_type (const self_type&);
+    /// Non copyable.
+    self_type& operator= (const self_type&);
+#endif
+
+    /// Accessor to raw memory as \a T.
+    template <typename T>
+    T*
+    yyas_ () YY_NOEXCEPT
+    {
+      void *yyp = yyraw_;
+      return static_cast<T*> (yyp);
+     }
+
+    /// Const accessor to raw memory as \a T.
+    template <typename T>
+    const T*
+    yyas_ () const YY_NOEXCEPT
+    {
+      const void *yyp = yyraw_;
+      return static_cast<const T*> (yyp);
+     }
+
+    /// An auxiliary type to compute the largest semantic type.
+    union union_type
+    {
+      // expression
+      // expression1
+      // expression2
+      // expression3
+      // expression4
+      // expression5
+      // expression6
+      // expression7
+      // expression8
+      char dummy1[sizeof (Expression)];
+
+      // expression_list
+      char dummy2[sizeof (ExpressionList)];
+
+      // size
+      char dummy3[sizeof (Size)];
+
+      // IDENTIFIER
+      // LOCAL_IDENTIFIER
+      char dummy4[sizeof (String)];
+
+      // NUMBER
+      char dummy5[sizeof (unsigned long)];
     };
+
+    /// The size of the largest semantic type.
+    enum { size = sizeof (union_type) };
+
+    /// A buffer to store semantic values.
+    union
+    {
+      /// Strongest alignment constraints.
+      long double yyalign_me_;
+      /// A buffer large enough to store any of the semantic values.
+      char yyraw_[size];
+    };
+  };
+
 #endif
     /// Backward compatibility (Bison 3.8).
     typedef value_type semantic_type;
@@ -349,27 +551,38 @@ namespace m68kasm {
     {
       enum token_kind_type
       {
-        M68KASM_EMPTY = -2,
-    M68KASM_EOF = 0,               // "end of file"
-    M68KASM_error = 256,           // error
-    M68KASM_UNDEF = 257,           // "invalid token"
-    TOKEN_DIRECTIVE_DC = 258,      // TOKEN_DIRECTIVE_DC
-    TOKEN_DIRECTIVE_EVEN = 259,    // TOKEN_DIRECTIVE_EVEN
-    TOKEN_SIZE_BYTE = 260,         // TOKEN_SIZE_BYTE
-    TOKEN_SIZE_SHORT = 261,        // TOKEN_SIZE_SHORT
-    TOKEN_SIZE_WORD = 262,         // TOKEN_SIZE_WORD
-    TOKEN_SIZE_LONGWORD = 263,     // TOKEN_SIZE_LONGWORD
-    TOKEN_NUMBER = 264,            // TOKEN_NUMBER
-    TOKEN_IDENTIFIER = 265,        // TOKEN_IDENTIFIER
-    TOKEN_LOCAL_IDENTIFIER = 266,  // TOKEN_LOCAL_IDENTIFIER
-    TOKEN_LOGICAL_AND = 267,       // TOKEN_LOGICAL_AND
-    TOKEN_LOGICAL_OR = 268,        // TOKEN_LOGICAL_OR
-    TOKEN_EQUALITY = 269,          // TOKEN_EQUALITY
-    TOKEN_INEQUALITY = 270,        // TOKEN_INEQUALITY
-    TOKEN_LESS_OR_EQUAL = 271,     // TOKEN_LESS_OR_EQUAL
-    TOKEN_MORE_OR_EQUAL = 272,     // TOKEN_MORE_OR_EQUAL
-    TOKEN_LEFT_SHIFT = 273,        // TOKEN_LEFT_SHIFT
-    TOKEN_RIGHT_SHIFT = 274        // TOKEN_RIGHT_SHIFT
+        TOKEN_M68KASM_EMPTY = -2,
+    TOKEN_YYEOF = 0,               // "end of file"
+    TOKEN_M68KASM_error = 1,       // error
+    TOKEN_M68KASM_UNDEF = 2,       // "invalid token"
+    TOKEN_DIRECTIVE_DC = 3,        // DIRECTIVE_DC
+    TOKEN_DIRECTIVE_EVEN = 4,      // DIRECTIVE_EVEN
+    TOKEN_SIZE_BYTE = 5,           // SIZE_BYTE
+    TOKEN_SIZE_SHORT = 6,          // SIZE_SHORT
+    TOKEN_SIZE_WORD = 7,           // SIZE_WORD
+    TOKEN_SIZE_LONGWORD = 8,       // SIZE_LONGWORD
+    TOKEN_NUMBER = 9,              // NUMBER
+    TOKEN_IDENTIFIER = 10,         // IDENTIFIER
+    TOKEN_LOCAL_IDENTIFIER = 11,   // LOCAL_IDENTIFIER
+    TOKEN_LOGICAL_AND = 12,        // LOGICAL_AND
+    TOKEN_LOGICAL_OR = 13,         // LOGICAL_OR
+    TOKEN_EQUALITY = 14,           // EQUALITY
+    TOKEN_INEQUALITY = 15,         // INEQUALITY
+    TOKEN_LESS_OR_EQUAL = 16,      // LESS_OR_EQUAL
+    TOKEN_MORE_OR_EQUAL = 17,      // MORE_OR_EQUAL
+    TOKEN_LEFT_SHIFT = 18,         // LEFT_SHIFT
+    TOKEN_RIGHT_SHIFT = 19,        // RIGHT_SHIFT
+    TOKEN_PERIOD = 20,             // "."
+    TOKEN_COMMA = 21,              // ","
+    TOKEN_PARENTHESIS_LEFT = 22,   // "("
+    TOKEN_PARENTHESIS_RIGHT = 23,  // ")"
+    TOKEN_DOLLAR = 24,             // "$"
+    TOKEN_PLUS = 25,               // "+"
+    TOKEN_MINUS = 26,              // "-"
+    TOKEN_ASTERIX = 27,            // "*"
+    TOKEN_FORWARD_SLASH = 28,      // "/"
+    TOKEN_EQUAL = 29,              // "="
+    TOKEN_AT = 30                  // "@"
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -386,57 +599,60 @@ namespace m68kasm {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 36, ///< Number of tokens.
+        YYNTOKENS = 39, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
         S_YYUNDEF = 2,                           // "invalid token"
-        S_TOKEN_DIRECTIVE_DC = 3,                // TOKEN_DIRECTIVE_DC
-        S_TOKEN_DIRECTIVE_EVEN = 4,              // TOKEN_DIRECTIVE_EVEN
-        S_TOKEN_SIZE_BYTE = 5,                   // TOKEN_SIZE_BYTE
-        S_TOKEN_SIZE_SHORT = 6,                  // TOKEN_SIZE_SHORT
-        S_TOKEN_SIZE_WORD = 7,                   // TOKEN_SIZE_WORD
-        S_TOKEN_SIZE_LONGWORD = 8,               // TOKEN_SIZE_LONGWORD
-        S_TOKEN_NUMBER = 9,                      // TOKEN_NUMBER
-        S_TOKEN_IDENTIFIER = 10,                 // TOKEN_IDENTIFIER
-        S_TOKEN_LOCAL_IDENTIFIER = 11,           // TOKEN_LOCAL_IDENTIFIER
-        S_TOKEN_LOGICAL_AND = 12,                // TOKEN_LOGICAL_AND
-        S_TOKEN_LOGICAL_OR = 13,                 // TOKEN_LOGICAL_OR
-        S_TOKEN_EQUALITY = 14,                   // TOKEN_EQUALITY
-        S_TOKEN_INEQUALITY = 15,                 // TOKEN_INEQUALITY
-        S_TOKEN_LESS_OR_EQUAL = 16,              // TOKEN_LESS_OR_EQUAL
-        S_TOKEN_MORE_OR_EQUAL = 17,              // TOKEN_MORE_OR_EQUAL
-        S_TOKEN_LEFT_SHIFT = 18,                 // TOKEN_LEFT_SHIFT
-        S_TOKEN_RIGHT_SHIFT = 19,                // TOKEN_RIGHT_SHIFT
-        S_20_ = 20,                              // ','
-        S_21_ = 21,                              // '='
-        S_22_ = 22,                              // '<'
-        S_23_ = 23,                              // '>'
-        S_24_ = 24,                              // '+'
-        S_25_ = 25,                              // '-'
-        S_26_ = 26,                              // '*'
-        S_27_ = 27,                              // '/'
-        S_28_ = 28,                              // '%'
-        S_29_ = 29,                              // '&'
-        S_30_ = 30,                              // '!'
-        S_31_ = 31,                              // '|'
-        S_32_ = 32,                              // '^'
-        S_33_ = 33,                              // '~'
-        S_34_ = 34,                              // '('
-        S_35_ = 35,                              // ')'
-        S_YYACCEPT = 36,                         // $accept
-        S_statement = 37,                        // statement
-        S_expression_list = 38,                  // expression_list
-        S_size = 39,                             // size
-        S_expression = 40,                       // expression
-        S_expression1 = 41,                      // expression1
-        S_expression2 = 42,                      // expression2
-        S_expression3 = 43,                      // expression3
-        S_expression4 = 44,                      // expression4
-        S_expression5 = 45,                      // expression5
-        S_expression6 = 46,                      // expression6
-        S_expression7 = 47,                      // expression7
-        S_expression8 = 48                       // expression8
+        S_DIRECTIVE_DC = 3,                      // DIRECTIVE_DC
+        S_DIRECTIVE_EVEN = 4,                    // DIRECTIVE_EVEN
+        S_SIZE_BYTE = 5,                         // SIZE_BYTE
+        S_SIZE_SHORT = 6,                        // SIZE_SHORT
+        S_SIZE_WORD = 7,                         // SIZE_WORD
+        S_SIZE_LONGWORD = 8,                     // SIZE_LONGWORD
+        S_NUMBER = 9,                            // NUMBER
+        S_IDENTIFIER = 10,                       // IDENTIFIER
+        S_LOCAL_IDENTIFIER = 11,                 // LOCAL_IDENTIFIER
+        S_LOGICAL_AND = 12,                      // LOGICAL_AND
+        S_LOGICAL_OR = 13,                       // LOGICAL_OR
+        S_EQUALITY = 14,                         // EQUALITY
+        S_INEQUALITY = 15,                       // INEQUALITY
+        S_LESS_OR_EQUAL = 16,                    // LESS_OR_EQUAL
+        S_MORE_OR_EQUAL = 17,                    // MORE_OR_EQUAL
+        S_LEFT_SHIFT = 18,                       // LEFT_SHIFT
+        S_RIGHT_SHIFT = 19,                      // RIGHT_SHIFT
+        S_PERIOD = 20,                           // "."
+        S_COMMA = 21,                            // ","
+        S_PARENTHESIS_LEFT = 22,                 // "("
+        S_PARENTHESIS_RIGHT = 23,                // ")"
+        S_DOLLAR = 24,                           // "$"
+        S_PLUS = 25,                             // "+"
+        S_MINUS = 26,                            // "-"
+        S_ASTERIX = 27,                          // "*"
+        S_FORWARD_SLASH = 28,                    // "/"
+        S_EQUAL = 29,                            // "="
+        S_AT = 30,                               // "@"
+        S_31_ = 31,                              // "<"
+        S_32_ = 32,                              // ">"
+        S_33_ = 33,                              // "%"
+        S_34_ = 34,                              // "&"
+        S_35_ = 35,                              // "!"
+        S_36_ = 36,                              // "|"
+        S_37_ = 37,                              // "^"
+        S_38_ = 38,                              // "~"
+        S_YYACCEPT = 39,                         // $accept
+        S_statement = 40,                        // statement
+        S_expression_list = 41,                  // expression_list
+        S_size = 42,                             // size
+        S_expression = 43,                       // expression
+        S_expression1 = 44,                      // expression1
+        S_expression2 = 45,                      // expression2
+        S_expression3 = 46,                      // expression3
+        S_expression4 = 47,                      // expression4
+        S_expression5 = 48,                      // expression5
+        S_expression6 = 49,                      // expression6
+        S_expression7 = 50,                      // expression7
+        S_expression8 = 51                       // expression8
       };
     };
 
@@ -467,18 +683,119 @@ namespace m68kasm {
       /// Move constructor.
       basic_symbol (basic_symbol&& that)
         : Base (std::move (that))
-        , value (std::move (that.value))
-      {}
+        , value ()
+      {
+        switch (this->kind ())
+    {
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
+        value.move< Expression > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< ExpressionList > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_size: // size
+        value.move< Size > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+        value.move< String > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_NUMBER: // NUMBER
+        value.move< unsigned long > (std::move (that.value));
+        break;
+
+      default:
+        break;
+    }
+
+      }
 #endif
 
       /// Copy constructor.
       basic_symbol (const basic_symbol& that);
-      /// Constructor for valueless symbols.
-      basic_symbol (typename Base::kind_type t);
 
-      /// Constructor for symbols with semantic value.
-      basic_symbol (typename Base::kind_type t,
-                    YY_RVREF (value_type) v);
+      /// Constructors for typed symbols.
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t)
+        : Base (t)
+      {}
+#else
+      basic_symbol (typename Base::kind_type t)
+        : Base (t)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Expression&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Expression& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, ExpressionList&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const ExpressionList& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Size&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Size& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, String&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const String& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, unsigned long&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const unsigned long& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
 
       /// Destroy the symbol.
       ~basic_symbol ()
@@ -491,6 +808,52 @@ namespace m68kasm {
       /// Destroy contents, and record that is empty.
       void clear () YY_NOEXCEPT
       {
+        // User destructor.
+        symbol_kind_type yykind = this->kind ();
+        basic_symbol<Base>& yysym = *this;
+        (void) yysym;
+        switch (yykind)
+        {
+       default:
+          break;
+        }
+
+        // Value type destructor.
+switch (yykind)
+    {
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
+        value.template destroy< Expression > ();
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.template destroy< ExpressionList > ();
+        break;
+
+      case symbol_kind::S_size: // size
+        value.template destroy< Size > ();
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+        value.template destroy< String > ();
+        break;
+
+      case symbol_kind::S_NUMBER: // NUMBER
+        value.template destroy< unsigned long > ();
+        break;
+
+      default:
+        break;
+    }
+
         Base::clear ();
       }
 
@@ -564,7 +927,39 @@ namespace m68kasm {
 
     /// "External" symbols: returned by the scanner.
     struct symbol_type : basic_symbol<by_kind>
-    {};
+    {
+      /// Superclass.
+      typedef basic_symbol<by_kind> super_type;
+
+      /// Empty symbol.
+      symbol_type () YY_NOEXCEPT {}
+
+      /// Constructor for valueless symbols, and symbols from each type.
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok)
+        : super_type (token_kind_type (tok))
+#else
+      symbol_type (int tok)
+        : super_type (token_kind_type (tok))
+#endif
+      {}
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, String v)
+        : super_type (token_kind_type (tok), std::move (v))
+#else
+      symbol_type (int tok, const String& v)
+        : super_type (token_kind_type (tok), v)
+#endif
+      {}
+#if 201103L <= YY_CPLUSPLUS
+      symbol_type (int tok, unsigned long v)
+        : super_type (token_kind_type (tok), std::move (v))
+#else
+      symbol_type (int tok, const unsigned long& v)
+        : super_type (token_kind_type (tok), v)
+#endif
+      {}
+    };
 
     /// Build a parser object.
     parser (void *scanner_yyarg, Statement *statement_yyarg);
@@ -610,6 +1005,472 @@ namespace m68kasm {
     /// YYSYMBOL.  No bounds checking.
     static std::string symbol_name (symbol_kind_type yysymbol);
 
+    // Implementation of make_symbol for each token kind.
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_YYEOF ()
+      {
+        return symbol_type (token::TOKEN_YYEOF);
+      }
+#else
+      static
+      symbol_type
+      make_YYEOF ()
+      {
+        return symbol_type (token::TOKEN_YYEOF);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_M68KASM_error ()
+      {
+        return symbol_type (token::TOKEN_M68KASM_error);
+      }
+#else
+      static
+      symbol_type
+      make_M68KASM_error ()
+      {
+        return symbol_type (token::TOKEN_M68KASM_error);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_M68KASM_UNDEF ()
+      {
+        return symbol_type (token::TOKEN_M68KASM_UNDEF);
+      }
+#else
+      static
+      symbol_type
+      make_M68KASM_UNDEF ()
+      {
+        return symbol_type (token::TOKEN_M68KASM_UNDEF);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_DIRECTIVE_DC ()
+      {
+        return symbol_type (token::TOKEN_DIRECTIVE_DC);
+      }
+#else
+      static
+      symbol_type
+      make_DIRECTIVE_DC ()
+      {
+        return symbol_type (token::TOKEN_DIRECTIVE_DC);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_DIRECTIVE_EVEN ()
+      {
+        return symbol_type (token::TOKEN_DIRECTIVE_EVEN);
+      }
+#else
+      static
+      symbol_type
+      make_DIRECTIVE_EVEN ()
+      {
+        return symbol_type (token::TOKEN_DIRECTIVE_EVEN);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_SIZE_BYTE ()
+      {
+        return symbol_type (token::TOKEN_SIZE_BYTE);
+      }
+#else
+      static
+      symbol_type
+      make_SIZE_BYTE ()
+      {
+        return symbol_type (token::TOKEN_SIZE_BYTE);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_SIZE_SHORT ()
+      {
+        return symbol_type (token::TOKEN_SIZE_SHORT);
+      }
+#else
+      static
+      symbol_type
+      make_SIZE_SHORT ()
+      {
+        return symbol_type (token::TOKEN_SIZE_SHORT);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_SIZE_WORD ()
+      {
+        return symbol_type (token::TOKEN_SIZE_WORD);
+      }
+#else
+      static
+      symbol_type
+      make_SIZE_WORD ()
+      {
+        return symbol_type (token::TOKEN_SIZE_WORD);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_SIZE_LONGWORD ()
+      {
+        return symbol_type (token::TOKEN_SIZE_LONGWORD);
+      }
+#else
+      static
+      symbol_type
+      make_SIZE_LONGWORD ()
+      {
+        return symbol_type (token::TOKEN_SIZE_LONGWORD);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_NUMBER (unsigned long v)
+      {
+        return symbol_type (token::TOKEN_NUMBER, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_NUMBER (const unsigned long& v)
+      {
+        return symbol_type (token::TOKEN_NUMBER, v);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_IDENTIFIER (String v)
+      {
+        return symbol_type (token::TOKEN_IDENTIFIER, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_IDENTIFIER (const String& v)
+      {
+        return symbol_type (token::TOKEN_IDENTIFIER, v);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LOCAL_IDENTIFIER (String v)
+      {
+        return symbol_type (token::TOKEN_LOCAL_IDENTIFIER, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_LOCAL_IDENTIFIER (const String& v)
+      {
+        return symbol_type (token::TOKEN_LOCAL_IDENTIFIER, v);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LOGICAL_AND ()
+      {
+        return symbol_type (token::TOKEN_LOGICAL_AND);
+      }
+#else
+      static
+      symbol_type
+      make_LOGICAL_AND ()
+      {
+        return symbol_type (token::TOKEN_LOGICAL_AND);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LOGICAL_OR ()
+      {
+        return symbol_type (token::TOKEN_LOGICAL_OR);
+      }
+#else
+      static
+      symbol_type
+      make_LOGICAL_OR ()
+      {
+        return symbol_type (token::TOKEN_LOGICAL_OR);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_EQUALITY ()
+      {
+        return symbol_type (token::TOKEN_EQUALITY);
+      }
+#else
+      static
+      symbol_type
+      make_EQUALITY ()
+      {
+        return symbol_type (token::TOKEN_EQUALITY);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_INEQUALITY ()
+      {
+        return symbol_type (token::TOKEN_INEQUALITY);
+      }
+#else
+      static
+      symbol_type
+      make_INEQUALITY ()
+      {
+        return symbol_type (token::TOKEN_INEQUALITY);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LESS_OR_EQUAL ()
+      {
+        return symbol_type (token::TOKEN_LESS_OR_EQUAL);
+      }
+#else
+      static
+      symbol_type
+      make_LESS_OR_EQUAL ()
+      {
+        return symbol_type (token::TOKEN_LESS_OR_EQUAL);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_MORE_OR_EQUAL ()
+      {
+        return symbol_type (token::TOKEN_MORE_OR_EQUAL);
+      }
+#else
+      static
+      symbol_type
+      make_MORE_OR_EQUAL ()
+      {
+        return symbol_type (token::TOKEN_MORE_OR_EQUAL);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LEFT_SHIFT ()
+      {
+        return symbol_type (token::TOKEN_LEFT_SHIFT);
+      }
+#else
+      static
+      symbol_type
+      make_LEFT_SHIFT ()
+      {
+        return symbol_type (token::TOKEN_LEFT_SHIFT);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_RIGHT_SHIFT ()
+      {
+        return symbol_type (token::TOKEN_RIGHT_SHIFT);
+      }
+#else
+      static
+      symbol_type
+      make_RIGHT_SHIFT ()
+      {
+        return symbol_type (token::TOKEN_RIGHT_SHIFT);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PERIOD ()
+      {
+        return symbol_type (token::TOKEN_PERIOD);
+      }
+#else
+      static
+      symbol_type
+      make_PERIOD ()
+      {
+        return symbol_type (token::TOKEN_PERIOD);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_COMMA ()
+      {
+        return symbol_type (token::TOKEN_COMMA);
+      }
+#else
+      static
+      symbol_type
+      make_COMMA ()
+      {
+        return symbol_type (token::TOKEN_COMMA);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PARENTHESIS_LEFT ()
+      {
+        return symbol_type (token::TOKEN_PARENTHESIS_LEFT);
+      }
+#else
+      static
+      symbol_type
+      make_PARENTHESIS_LEFT ()
+      {
+        return symbol_type (token::TOKEN_PARENTHESIS_LEFT);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PARENTHESIS_RIGHT ()
+      {
+        return symbol_type (token::TOKEN_PARENTHESIS_RIGHT);
+      }
+#else
+      static
+      symbol_type
+      make_PARENTHESIS_RIGHT ()
+      {
+        return symbol_type (token::TOKEN_PARENTHESIS_RIGHT);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_DOLLAR ()
+      {
+        return symbol_type (token::TOKEN_DOLLAR);
+      }
+#else
+      static
+      symbol_type
+      make_DOLLAR ()
+      {
+        return symbol_type (token::TOKEN_DOLLAR);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PLUS ()
+      {
+        return symbol_type (token::TOKEN_PLUS);
+      }
+#else
+      static
+      symbol_type
+      make_PLUS ()
+      {
+        return symbol_type (token::TOKEN_PLUS);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_MINUS ()
+      {
+        return symbol_type (token::TOKEN_MINUS);
+      }
+#else
+      static
+      symbol_type
+      make_MINUS ()
+      {
+        return symbol_type (token::TOKEN_MINUS);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_ASTERIX ()
+      {
+        return symbol_type (token::TOKEN_ASTERIX);
+      }
+#else
+      static
+      symbol_type
+      make_ASTERIX ()
+      {
+        return symbol_type (token::TOKEN_ASTERIX);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_FORWARD_SLASH ()
+      {
+        return symbol_type (token::TOKEN_FORWARD_SLASH);
+      }
+#else
+      static
+      symbol_type
+      make_FORWARD_SLASH ()
+      {
+        return symbol_type (token::TOKEN_FORWARD_SLASH);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_EQUAL ()
+      {
+        return symbol_type (token::TOKEN_EQUAL);
+      }
+#else
+      static
+      symbol_type
+      make_EQUAL ()
+      {
+        return symbol_type (token::TOKEN_EQUAL);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_AT ()
+      {
+        return symbol_type (token::TOKEN_AT);
+      }
+#else
+      static
+      symbol_type
+      make_AT ()
+      {
+        return symbol_type (token::TOKEN_AT);
+      }
+#endif
 
 
     class context
@@ -938,7 +1799,7 @@ namespace m68kasm {
     /// Constants.
     enum
     {
-      yylast_ = 65,     ///< Last index in yytable_.
+      yylast_ = 62,     ///< Last index in yytable_.
       yynnts_ = 13,  ///< Number of nonterminal symbols.
       yyfinal_ = 9 ///< Termination state number.
     };
@@ -950,21 +1811,190 @@ namespace m68kasm {
 
   };
 
+  inline
+  parser::symbol_kind_type
+  parser::yytranslate_ (int t) YY_NOEXCEPT
+  {
+    return static_cast<symbol_kind_type> (t);
+  }
 
-#line 23 "syntactic.y"
+  // basic_symbol.
+  template <typename Base>
+  parser::basic_symbol<Base>::basic_symbol (const basic_symbol& that)
+    : Base (that)
+    , value ()
+  {
+    switch (this->kind ())
+    {
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
+        value.copy< Expression > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.copy< ExpressionList > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_size: // size
+        value.copy< Size > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+        value.copy< String > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_NUMBER: // NUMBER
+        value.copy< unsigned long > (YY_MOVE (that.value));
+        break;
+
+      default:
+        break;
+    }
+
+  }
+
+
+
+
+  template <typename Base>
+  parser::symbol_kind_type
+  parser::basic_symbol<Base>::type_get () const YY_NOEXCEPT
+  {
+    return this->kind ();
+  }
+
+
+  template <typename Base>
+  bool
+  parser::basic_symbol<Base>::empty () const YY_NOEXCEPT
+  {
+    return this->kind () == symbol_kind::S_YYEMPTY;
+  }
+
+  template <typename Base>
+  void
+  parser::basic_symbol<Base>::move (basic_symbol& s)
+  {
+    super_type::move (s);
+    switch (this->kind ())
+    {
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
+        value.move< Expression > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< ExpressionList > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_size: // size
+        value.move< Size > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+      case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+        value.move< String > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_NUMBER: // NUMBER
+        value.move< unsigned long > (YY_MOVE (s.value));
+        break;
+
+      default:
+        break;
+    }
+
+  }
+
+  // by_kind.
+  inline
+  parser::by_kind::by_kind () YY_NOEXCEPT
+    : kind_ (symbol_kind::S_YYEMPTY)
+  {}
+
+#if 201103L <= YY_CPLUSPLUS
+  inline
+  parser::by_kind::by_kind (by_kind&& that) YY_NOEXCEPT
+    : kind_ (that.kind_)
+  {
+    that.clear ();
+  }
+#endif
+
+  inline
+  parser::by_kind::by_kind (const by_kind& that) YY_NOEXCEPT
+    : kind_ (that.kind_)
+  {}
+
+  inline
+  parser::by_kind::by_kind (token_kind_type t) YY_NOEXCEPT
+    : kind_ (yytranslate_ (t))
+  {}
+
+
+
+  inline
+  void
+  parser::by_kind::clear () YY_NOEXCEPT
+  {
+    kind_ = symbol_kind::S_YYEMPTY;
+  }
+
+  inline
+  void
+  parser::by_kind::move (by_kind& that)
+  {
+    kind_ = that.kind_;
+    that.clear ();
+  }
+
+  inline
+  parser::symbol_kind_type
+  parser::by_kind::kind () const YY_NOEXCEPT
+  {
+    return kind_;
+  }
+
+
+  inline
+  parser::symbol_kind_type
+  parser::by_kind::type_get () const YY_NOEXCEPT
+  {
+    return this->kind ();
+  }
+
+
+#line 25 "syntactic.y"
 } // m68kasm
-#line 957 "syntactic.h"
+#line 1985 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 137 "syntactic.y"
+#line 141 "syntactic.y"
 
 
 void DestroyExpression(Expression *expression);
 void DestroyStatement(Statement *statement);
 
+#define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
-#line 968 "syntactic.h"
+
+#line 1998 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED

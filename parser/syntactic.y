@@ -24,6 +24,10 @@
 %define api.prefix {m68kasm_}
 %define api.namespace {m68kasm}
 
+%define api.token.raw
+%define api.token.constructor 
+%define api.value.type variant 
+
 %param {void *scanner}
 
 %parse-param {Statement *statement}
@@ -36,8 +40,6 @@
 
 // Temporary junk!
 #define YYNOMEM YYERROR
-
-#define YYSTYPE m68kasm::parser::semantic_type
 
 #define CREATE_LIST_TYPE(TYPE)\
 typedef struct TYPE\
@@ -141,6 +143,8 @@ typedef struct Statement
 void DestroyExpression(Expression *expression);
 void DestroyStatement(Statement *statement);
 
+#define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
+
 }
 
 %code {
@@ -150,7 +154,7 @@ void DestroyStatement(Statement *statement);
 #include <stdlib.h>
 #include <string.h>
 
-int m68kasm_lex(YYSTYPE *yylval_param, void *yyscanner);
+YY_DECL;
 void m68kasm_warning(void *scanner, Statement *statement, const char *message);
 void m68kasm_warning_pedantic(void *scanner, Statement *statement, const char *message);
 void m68kasm_error(void *scanner, Statement *statement, const char *message);
@@ -166,40 +170,40 @@ void m68kasm::parser::error(const std::string &message)
 
 }
 
-%union {
-	unsigned long unsigned_long;
-	String string;
-	Size size;
-	Statement statement;
-	ExpressionList expression_list;
-	Expression expression;
-}
+%define api.token.prefix {TOKEN_}
 
-%token TOKEN_DIRECTIVE_DC
-%token TOKEN_DIRECTIVE_EVEN
-%token TOKEN_SIZE_BYTE
-%token TOKEN_SIZE_SHORT
-%token TOKEN_SIZE_WORD
-%token TOKEN_SIZE_LONGWORD
-%token<unsigned_long> TOKEN_NUMBER
-%token<string> TOKEN_IDENTIFIER
-%token<string> TOKEN_LOCAL_IDENTIFIER
-%token TOKEN_LOGICAL_AND
-%token TOKEN_LOGICAL_OR
-%token TOKEN_EQUALITY
-%token TOKEN_INEQUALITY
-%token TOKEN_LESS_OR_EQUAL
-%token TOKEN_MORE_OR_EQUAL
-%token TOKEN_LEFT_SHIFT
-%token TOKEN_RIGHT_SHIFT
+%token DIRECTIVE_DC
+%token DIRECTIVE_EVEN
+%token SIZE_BYTE
+%token SIZE_SHORT
+%token SIZE_WORD
+%token SIZE_LONGWORD
+%token<unsigned long> NUMBER
+%token<String> IDENTIFIER
+%token<String> LOCAL_IDENTIFIER
+%token LOGICAL_AND
+%token LOGICAL_OR
+%token EQUALITY
+%token INEQUALITY
+%token LESS_OR_EQUAL
+%token MORE_OR_EQUAL
+%token LEFT_SHIFT
+%token RIGHT_SHIFT
+%token PERIOD "."
+%token COMMA ","
+%token PARENTHESIS_LEFT "("
+%token PARENTHESIS_RIGHT ")"
+%token DOLLAR "$"
+%token PLUS "+"
+%token MINUS "-"
+%token ASTERIX "*"
+%token FORWARD_SLASH "/"
+%token EQUAL "="
+%token AT "@"
 
-%type<size> size
-%type<expression_list> expression_list
-%type<expression> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
-
-%destructor { String_Destroy(&$$); } TOKEN_IDENTIFIER TOKEN_LOCAL_IDENTIFIER
-%destructor { DestroyExpressionList(&$$); } expression_list
-%destructor { DestroyExpression(&$$); } expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
+%type<Size> size
+%type<ExpressionList> expression_list
+%type<Expression> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
 
 %start statement
 
@@ -210,13 +214,13 @@ statement
 	{
 		statement->type = STATEMENT_TYPE_EMPTY;
 	}
-	| TOKEN_DIRECTIVE_DC size expression_list
+	| DIRECTIVE_DC size expression_list
 	{
 		statement->type = STATEMENT_TYPE_DC;
 		statement->shared.dc.size = $2;
 		statement->shared.dc.values = $3;
 	}
-	| TOKEN_DIRECTIVE_EVEN
+	| DIRECTIVE_EVEN
 	{
 		statement->type = STATEMENT_TYPE_EVEN;
 	}
@@ -240,7 +244,7 @@ expression_list
 
 		$$.head = $$.tail = node;
 	}
-	| expression_list ',' expression
+	| expression_list "," expression
 	{
 		ExpressionListNode *node = (ExpressionListNode*)malloc(sizeof(ExpressionListNode));
 
@@ -268,19 +272,19 @@ expression_list
 	;
 
 size
-	: TOKEN_SIZE_BYTE
+	: SIZE_BYTE
 	{
 		$$ = SIZE_BYTE;
 	}
-	| TOKEN_SIZE_SHORT
+	| SIZE_SHORT
 	{
 		$$ = SIZE_SHORT;
 	}
-	| TOKEN_SIZE_WORD
+	| SIZE_WORD
 	{
 		$$ = SIZE_WORD;
 	}
-	| TOKEN_SIZE_LONGWORD
+	| SIZE_LONGWORD
 	{
 		$$ = SIZE_LONGWORD;
 	}
@@ -288,8 +292,8 @@ size
 
 /*
 number
-	: TOKEN_NUMBER
-	| '$' TOKEN_NUMBER
+	: NUMBER
+	| "$" NUMBER
 	;
 */
 expression
@@ -298,13 +302,13 @@ expression
 		$$ = $1;
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
-	| expression TOKEN_LOGICAL_AND expression1
+	| expression LOGICAL_AND expression1
 	{
 		if (!DoExpression(&$$, EXPRESSION_LOGICAL_AND, &$1, &$3))
 			YYNOMEM;
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
-	| expression TOKEN_LOGICAL_OR expression1
+	| expression LOGICAL_OR expression1
 	{
 		if (!DoExpression(&$$, EXPRESSION_LOGICAL_OR, &$1, &$3))
 			YYNOMEM;
@@ -316,17 +320,17 @@ expression1
 	{
 		$$ = $1;
 	}
-	| expression1 '=' expression2
+	| expression1 "=" expression2
 	{
 		if (!DoExpression(&$$, EXPRESSION_EQUALITY, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression1 TOKEN_EQUALITY expression2
+	| expression1 EQUALITY expression2
 	{
 		if (!DoExpression(&$$, EXPRESSION_EQUALITY, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression1 TOKEN_INEQUALITY expression2
+	| expression1 INEQUALITY expression2
 	{
 		if (!DoExpression(&$$, EXPRESSION_INEQUALITY, &$1, &$3))
 			YYNOMEM;
@@ -338,22 +342,22 @@ expression2
 	{
 		$$ = $1;
 	}
-	| expression2 '<' expression3
+	| expression2 "<" expression3
 	{
 		if (!DoExpression(&$$, EXPRESSION_LESS_THAN, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression2 TOKEN_LESS_OR_EQUAL expression3
+	| expression2 LESS_OR_EQUAL expression3
 	{
 		if (!DoExpression(&$$, EXPRESSION_LESS_OR_EQUAL, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression2 '>' expression3
+	| expression2 ">" expression3
 	{
 		if (!DoExpression(&$$, EXPRESSION_MORE_THAN, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression2 TOKEN_MORE_OR_EQUAL expression3
+	| expression2 MORE_OR_EQUAL expression3
 	{
 		if (!DoExpression(&$$, EXPRESSION_MORE_OR_EQUAL, &$1, &$3))
 			YYNOMEM;
@@ -365,12 +369,12 @@ expression3
 	{
 		$$ = $1;
 	}
-	| expression3 '+' expression4
+	| expression3 "+" expression4
 	{
 		if (!DoExpression(&$$, EXPRESSION_ADD, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression3 '-' expression4
+	| expression3 "-" expression4
 	{
 		if (!DoExpression(&$$, EXPRESSION_SUBTRACT, &$1, &$3))
 			YYNOMEM;
@@ -382,17 +386,17 @@ expression4
 	{
 		$$ = $1;
 	}
-	| expression4 '*' expression5
+	| expression4 "*" expression5
 	{
 		if (!DoExpression(&$$, EXPRESSION_MULTIPLY, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression4 '/' expression5
+	| expression4 "/" expression5
 	{
 		if (!DoExpression(&$$, EXPRESSION_DIVIDE, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression4 '%' expression5
+	| expression4 "%" expression5
 	{
 		if (!DoExpression(&$$, EXPRESSION_MODULO, &$1, &$3))
 			YYNOMEM;
@@ -404,22 +408,22 @@ expression5
 	{
 		$$ = $1;
 	}
-	| expression5 '&' expression6
+	| expression5 "&" expression6
 	{
 		if (!DoExpression(&$$, EXPRESSION_BITWISE_AND, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression5 '!' expression6
+	| expression5 "!" expression6
 	{
 		if (!DoExpression(&$$, EXPRESSION_BITWISE_OR, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression5 '|' expression6
+	| expression5 "|" expression6
 	{
 		if (!DoExpression(&$$, EXPRESSION_BITWISE_OR, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression5 '^' expression6
+	| expression5 "^" expression6
 	{
 		if (!DoExpression(&$$, EXPRESSION_BITWISE_XOR, &$1, &$3))
 			YYNOMEM;
@@ -431,12 +435,12 @@ expression6
 	{
 		$$ = $1;
 	}
-	| expression6 TOKEN_LEFT_SHIFT expression7
+	| expression6 LEFT_SHIFT expression7
 	{
 		if (!DoExpression(&$$, EXPRESSION_LEFT_SHIFT, &$1, &$3))
 			YYNOMEM;
 	}
-	| expression6 TOKEN_RIGHT_SHIFT expression7
+	| expression6 RIGHT_SHIFT expression7
 	{
 		if (!DoExpression(&$$, EXPRESSION_RIGHT_SHIFT, &$1, &$3))
 			YYNOMEM;
@@ -448,22 +452,22 @@ expression7
 	{
 		$$ = $1;
 	}
-	| '+' expression7
+	| "+" expression7
 	{
 		$$ = $2;
 	}
-	| '-' expression7
+	| "-" expression7
 	{
 		if (!DoExpression(&$$, EXPRESSION_NEGATE, &$2, NULL))
 			YYNOMEM;
 	}
-	| '~' expression7
+	| "~" expression7
 	{
 		if (!DoExpression(&$$, EXPRESSION_BITWISE_NOT, &$2, NULL))
 			YYNOMEM;
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
-	| '!' expression7
+	| "!" expression7
 	{
 		if (!DoExpression(&$$, EXPRESSION_LOGICAL_NOT, &$2, NULL))
 			YYNOMEM;
@@ -471,12 +475,12 @@ expression7
 	;
 
 expression8
-	: TOKEN_NUMBER
+	: NUMBER
 	{
 		$$.type = EXPRESSION_NUMBER;
 		$$.shared.unsigned_long = $1;
 	}
-	| '(' expression ')'
+	| "(" expression ")"
 	{
 		$$ = $2;
 	}
