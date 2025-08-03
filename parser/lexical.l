@@ -113,6 +113,9 @@ hexadecimal       {hexadecimal_digit}+
  /* Terminate at end of file. When terminating, revert to initial state. */
 <<EOF>>         BEGIN(INITIAL); yyterminate();
 
+ /* Directives. */
+even            return TOKEN_DIRECTIVE_EVEN;
+
  /* Sizes. */
 ".b"            return TOKEN_SIZE_BYTE;
 ".s"            return TOKEN_SIZE_SHORT;
