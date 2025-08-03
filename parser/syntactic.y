@@ -200,6 +200,14 @@ void m68kasm::parser::error(const std::string &message)
 %token FORWARD_SLASH "/"
 %token EQUAL "="
 %token AT "@"
+%token LESS "<"
+%token MORE ">"
+%token PERCENT "%"
+%token AMPERSAND "&"
+%token EXCLAMATION "!"
+%token VERTICAL_BAR "|"
+%token CARET "^"
+%token TILDE "~"
 
 %type<Size> size
 %type<ExpressionList> expression_list

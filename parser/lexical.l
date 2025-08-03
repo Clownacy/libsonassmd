@@ -132,6 +132,14 @@ even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 "/"             return m68kasm::parser::make_FORWARD_SLASH();
 "="             return m68kasm::parser::make_EQUAL();
 "@"             return m68kasm::parser::make_AT();
+"<"             return m68kasm::parser::make_LESS();
+">"             return m68kasm::parser::make_MORE();
+"%"             return m68kasm::parser::make_PERCENT();
+"&"             return m68kasm::parser::make_AMPERSAND();
+"!"             return m68kasm::parser::make_EXCLAMATION();
+"|"             return m68kasm::parser::make_VERTICAL_BAR();
+"^"             return m68kasm::parser::make_CARET();
+"~"             return m68kasm::parser::make_TILDE();
 
  /* Operators. */
 "&&"            return m68kasm::parser::make_LOGICAL_AND();

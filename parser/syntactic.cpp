@@ -667,7 +667,7 @@ namespace m68kasm {
           switch (yyn)
             {
   case 2: // statement: %empty
-#line 214 "syntactic.y"
+#line 222 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_EMPTY;
 	}
@@ -675,7 +675,7 @@ namespace m68kasm {
     break;
 
   case 3: // statement: DIRECTIVE_DC size expression_list
-#line 218 "syntactic.y"
+#line 226 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_DC;
 		statement->shared.dc.size = yystack_[1].value.as < Size > ();
@@ -685,7 +685,7 @@ namespace m68kasm {
     break;
 
   case 4: // statement: DIRECTIVE_EVEN
-#line 224 "syntactic.y"
+#line 232 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_EVEN;
 	}
@@ -693,7 +693,7 @@ namespace m68kasm {
     break;
 
   case 5: // expression_list: expression
-#line 231 "syntactic.y"
+#line 239 "syntactic.y"
         {
 		ExpressionListNode *node = (ExpressionListNode*)malloc(sizeof(ExpressionListNode));
 
@@ -714,7 +714,7 @@ namespace m68kasm {
     break;
 
   case 6: // expression_list: expression_list "," expression
-#line 248 "syntactic.y"
+#line 256 "syntactic.y"
         {
 		ExpressionListNode *node = (ExpressionListNode*)malloc(sizeof(ExpressionListNode));
 
@@ -743,7 +743,7 @@ namespace m68kasm {
     break;
 
   case 7: // size: SIZE_BYTE
-#line 276 "syntactic.y"
+#line 284 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_BYTE;
 	}
@@ -751,7 +751,7 @@ namespace m68kasm {
     break;
 
   case 8: // size: SIZE_SHORT
-#line 280 "syntactic.y"
+#line 288 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_SHORT;
 	}
@@ -759,7 +759,7 @@ namespace m68kasm {
     break;
 
   case 9: // size: SIZE_WORD
-#line 284 "syntactic.y"
+#line 292 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_WORD;
 	}
@@ -767,7 +767,7 @@ namespace m68kasm {
     break;
 
   case 10: // size: SIZE_LONGWORD
-#line 288 "syntactic.y"
+#line 296 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_LONGWORD;
 	}
@@ -775,7 +775,7 @@ namespace m68kasm {
     break;
 
   case 11: // expression: expression1
-#line 301 "syntactic.y"
+#line 309 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -783,7 +783,7 @@ namespace m68kasm {
     break;
 
   case 12: // expression: expression LOGICAL_AND expression1
-#line 306 "syntactic.y"
+#line 314 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_LOGICAL_AND, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -792,7 +792,7 @@ namespace m68kasm {
     break;
 
   case 13: // expression: expression LOGICAL_OR expression1
-#line 312 "syntactic.y"
+#line 320 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_LOGICAL_OR, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -801,7 +801,7 @@ namespace m68kasm {
     break;
 
   case 14: // expression1: expression2
-#line 320 "syntactic.y"
+#line 328 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -809,7 +809,7 @@ namespace m68kasm {
     break;
 
   case 15: // expression1: expression1 "=" expression2
-#line 324 "syntactic.y"
+#line 332 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_EQUALITY, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -818,7 +818,7 @@ namespace m68kasm {
     break;
 
   case 16: // expression1: expression1 EQUALITY expression2
-#line 329 "syntactic.y"
+#line 337 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_EQUALITY, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -827,7 +827,7 @@ namespace m68kasm {
     break;
 
   case 17: // expression1: expression1 INEQUALITY expression2
-#line 334 "syntactic.y"
+#line 342 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_INEQUALITY, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -836,7 +836,7 @@ namespace m68kasm {
     break;
 
   case 18: // expression2: expression3
-#line 342 "syntactic.y"
+#line 350 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -844,7 +844,7 @@ namespace m68kasm {
     break;
 
   case 19: // expression2: expression2 "<" expression3
-#line 346 "syntactic.y"
+#line 354 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_LESS_THAN, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -853,7 +853,7 @@ namespace m68kasm {
     break;
 
   case 20: // expression2: expression2 LESS_OR_EQUAL expression3
-#line 351 "syntactic.y"
+#line 359 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_LESS_OR_EQUAL, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -862,7 +862,7 @@ namespace m68kasm {
     break;
 
   case 21: // expression2: expression2 ">" expression3
-#line 356 "syntactic.y"
+#line 364 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_MORE_THAN, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -871,7 +871,7 @@ namespace m68kasm {
     break;
 
   case 22: // expression2: expression2 MORE_OR_EQUAL expression3
-#line 361 "syntactic.y"
+#line 369 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_MORE_OR_EQUAL, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -880,7 +880,7 @@ namespace m68kasm {
     break;
 
   case 23: // expression3: expression4
-#line 369 "syntactic.y"
+#line 377 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -888,7 +888,7 @@ namespace m68kasm {
     break;
 
   case 24: // expression3: expression3 "+" expression4
-#line 373 "syntactic.y"
+#line 381 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_ADD, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -897,7 +897,7 @@ namespace m68kasm {
     break;
 
   case 25: // expression3: expression3 "-" expression4
-#line 378 "syntactic.y"
+#line 386 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_SUBTRACT, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -906,7 +906,7 @@ namespace m68kasm {
     break;
 
   case 26: // expression4: expression5
-#line 386 "syntactic.y"
+#line 394 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -914,7 +914,7 @@ namespace m68kasm {
     break;
 
   case 27: // expression4: expression4 "*" expression5
-#line 390 "syntactic.y"
+#line 398 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_MULTIPLY, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -923,7 +923,7 @@ namespace m68kasm {
     break;
 
   case 28: // expression4: expression4 "/" expression5
-#line 395 "syntactic.y"
+#line 403 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_DIVIDE, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -932,7 +932,7 @@ namespace m68kasm {
     break;
 
   case 29: // expression4: expression4 "%" expression5
-#line 400 "syntactic.y"
+#line 408 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_MODULO, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -941,7 +941,7 @@ namespace m68kasm {
     break;
 
   case 30: // expression5: expression6
-#line 408 "syntactic.y"
+#line 416 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -949,7 +949,7 @@ namespace m68kasm {
     break;
 
   case 31: // expression5: expression5 "&" expression6
-#line 412 "syntactic.y"
+#line 420 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_BITWISE_AND, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -958,7 +958,7 @@ namespace m68kasm {
     break;
 
   case 32: // expression5: expression5 "!" expression6
-#line 417 "syntactic.y"
+#line 425 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_BITWISE_OR, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -967,7 +967,7 @@ namespace m68kasm {
     break;
 
   case 33: // expression5: expression5 "|" expression6
-#line 422 "syntactic.y"
+#line 430 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_BITWISE_OR, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -976,7 +976,7 @@ namespace m68kasm {
     break;
 
   case 34: // expression5: expression5 "^" expression6
-#line 427 "syntactic.y"
+#line 435 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_BITWISE_XOR, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -985,7 +985,7 @@ namespace m68kasm {
     break;
 
   case 35: // expression6: expression7
-#line 435 "syntactic.y"
+#line 443 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -993,7 +993,7 @@ namespace m68kasm {
     break;
 
   case 36: // expression6: expression6 LEFT_SHIFT expression7
-#line 439 "syntactic.y"
+#line 447 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_LEFT_SHIFT, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -1002,7 +1002,7 @@ namespace m68kasm {
     break;
 
   case 37: // expression6: expression6 RIGHT_SHIFT expression7
-#line 444 "syntactic.y"
+#line 452 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_RIGHT_SHIFT, &yystack_[2].value.as < Expression > (), &yystack_[0].value.as < Expression > ()))
 			YYNOMEM;
@@ -1011,7 +1011,7 @@ namespace m68kasm {
     break;
 
   case 38: // expression7: expression8
-#line 452 "syntactic.y"
+#line 460 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -1019,7 +1019,7 @@ namespace m68kasm {
     break;
 
   case 39: // expression7: "+" expression7
-#line 456 "syntactic.y"
+#line 464 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
@@ -1027,7 +1027,7 @@ namespace m68kasm {
     break;
 
   case 40: // expression7: "-" expression7
-#line 460 "syntactic.y"
+#line 468 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_NEGATE, &yystack_[0].value.as < Expression > (), NULL))
 			YYNOMEM;
@@ -1036,7 +1036,7 @@ namespace m68kasm {
     break;
 
   case 41: // expression7: "~" expression7
-#line 465 "syntactic.y"
+#line 473 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_BITWISE_NOT, &yystack_[0].value.as < Expression > (), NULL))
 			YYNOMEM;
@@ -1045,7 +1045,7 @@ namespace m68kasm {
     break;
 
   case 42: // expression7: "!" expression7
-#line 471 "syntactic.y"
+#line 479 "syntactic.y"
         {
 		if (!DoExpression(&yylhs.value.as < Expression > (), EXPRESSION_LOGICAL_NOT, &yystack_[0].value.as < Expression > (), NULL))
 			YYNOMEM;
@@ -1054,7 +1054,7 @@ namespace m68kasm {
     break;
 
   case 43: // expression8: NUMBER
-#line 479 "syntactic.y"
+#line 487 "syntactic.y"
         {
 		yylhs.value.as < Expression > ().type = EXPRESSION_NUMBER;
 		yylhs.value.as < Expression > ().shared.unsigned_long = yystack_[0].value.as < unsigned long > ();
@@ -1063,7 +1063,7 @@ namespace m68kasm {
     break;
 
   case 44: // expression8: "(" expression ")"
-#line 484 "syntactic.y"
+#line 492 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[1].value.as < Expression > ();
 	}
@@ -1545,11 +1545,11 @@ namespace m68kasm {
   const short
   parser::yyrline_[] =
   {
-       0,   214,   214,   217,   223,   230,   247,   275,   279,   283,
-     287,   300,   305,   311,   319,   323,   328,   333,   341,   345,
-     350,   355,   360,   368,   372,   377,   385,   389,   394,   399,
-     407,   411,   416,   421,   426,   434,   438,   443,   451,   455,
-     459,   464,   470,   478,   483
+       0,   222,   222,   225,   231,   238,   255,   283,   287,   291,
+     295,   308,   313,   319,   327,   331,   336,   341,   349,   353,
+     358,   363,   368,   376,   380,   385,   393,   397,   402,   407,
+     415,   419,   424,   429,   434,   442,   446,   451,   459,   463,
+     467,   472,   478,   486,   491
   };
 
   void
@@ -1584,7 +1584,7 @@ namespace m68kasm {
 } // m68kasm
 #line 1586 "syntactic.cpp"
 
-#line 489 "syntactic.y"
+#line 497 "syntactic.y"
 
 
 static bool DoExpressionTriple(Expression *expression, ExpressionType type, Expression *left_expression, Expression *middle_expression, Expression *right_expression)

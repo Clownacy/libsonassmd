@@ -582,7 +582,15 @@ namespace m68kasm {
     TOKEN_ASTERIX = 27,            // "*"
     TOKEN_FORWARD_SLASH = 28,      // "/"
     TOKEN_EQUAL = 29,              // "="
-    TOKEN_AT = 30                  // "@"
+    TOKEN_AT = 30,                 // "@"
+    TOKEN_LESS = 31,               // "<"
+    TOKEN_MORE = 32,               // ">"
+    TOKEN_PERCENT = 33,            // "%"
+    TOKEN_AMPERSAND = 34,          // "&"
+    TOKEN_EXCLAMATION = 35,        // "!"
+    TOKEN_VERTICAL_BAR = 36,       // "|"
+    TOKEN_CARET = 37,              // "^"
+    TOKEN_TILDE = 38               // "~"
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -632,14 +640,14 @@ namespace m68kasm {
         S_FORWARD_SLASH = 28,                    // "/"
         S_EQUAL = 29,                            // "="
         S_AT = 30,                               // "@"
-        S_31_ = 31,                              // "<"
-        S_32_ = 32,                              // ">"
-        S_33_ = 33,                              // "%"
-        S_34_ = 34,                              // "&"
-        S_35_ = 35,                              // "!"
-        S_36_ = 36,                              // "|"
-        S_37_ = 37,                              // "^"
-        S_38_ = 38,                              // "~"
+        S_LESS = 31,                             // "<"
+        S_MORE = 32,                             // ">"
+        S_PERCENT = 33,                          // "%"
+        S_AMPERSAND = 34,                        // "&"
+        S_EXCLAMATION = 35,                      // "!"
+        S_VERTICAL_BAR = 36,                     // "|"
+        S_CARET = 37,                            // "^"
+        S_TILDE = 38,                            // "~"
         S_YYACCEPT = 39,                         // $accept
         S_statement = 40,                        // statement
         S_expression_list = 41,                  // expression_list
@@ -1471,6 +1479,126 @@ switch (yykind)
         return symbol_type (token::TOKEN_AT);
       }
 #endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LESS ()
+      {
+        return symbol_type (token::TOKEN_LESS);
+      }
+#else
+      static
+      symbol_type
+      make_LESS ()
+      {
+        return symbol_type (token::TOKEN_LESS);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_MORE ()
+      {
+        return symbol_type (token::TOKEN_MORE);
+      }
+#else
+      static
+      symbol_type
+      make_MORE ()
+      {
+        return symbol_type (token::TOKEN_MORE);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PERCENT ()
+      {
+        return symbol_type (token::TOKEN_PERCENT);
+      }
+#else
+      static
+      symbol_type
+      make_PERCENT ()
+      {
+        return symbol_type (token::TOKEN_PERCENT);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_AMPERSAND ()
+      {
+        return symbol_type (token::TOKEN_AMPERSAND);
+      }
+#else
+      static
+      symbol_type
+      make_AMPERSAND ()
+      {
+        return symbol_type (token::TOKEN_AMPERSAND);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_EXCLAMATION ()
+      {
+        return symbol_type (token::TOKEN_EXCLAMATION);
+      }
+#else
+      static
+      symbol_type
+      make_EXCLAMATION ()
+      {
+        return symbol_type (token::TOKEN_EXCLAMATION);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_VERTICAL_BAR ()
+      {
+        return symbol_type (token::TOKEN_VERTICAL_BAR);
+      }
+#else
+      static
+      symbol_type
+      make_VERTICAL_BAR ()
+      {
+        return symbol_type (token::TOKEN_VERTICAL_BAR);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_CARET ()
+      {
+        return symbol_type (token::TOKEN_CARET);
+      }
+#else
+      static
+      symbol_type
+      make_CARET ()
+      {
+        return symbol_type (token::TOKEN_CARET);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_TILDE ()
+      {
+        return symbol_type (token::TOKEN_TILDE);
+      }
+#else
+      static
+      symbol_type
+      make_TILDE ()
+      {
+        return symbol_type (token::TOKEN_TILDE);
+      }
+#endif
 
 
     class context
@@ -1981,7 +2109,7 @@ switch (yykind)
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 1985 "syntactic.h"
+#line 2113 "syntactic.h"
 
 
 // "%code provides" blocks.
@@ -1994,7 +2122,7 @@ void DestroyStatement(Statement *statement);
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
 
-#line 1998 "syntactic.h"
+#line 2126 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED
