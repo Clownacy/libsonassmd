@@ -40,11 +40,12 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 		return EXIT_FAILURE;
 	}
 
-	m68kasm_debug = 1;
+	//m68kasm_debug = 1;
 
 	const YY_BUFFER_STATE buffer = m68kasm__create_buffer(file, YY_BUF_SIZE, flex_state);
 	m68kasm__switch_to_buffer(buffer, flex_state);
-	const int parse_result = m68kasm_parse(flex_state, &statement);
+	m68kasm::parser parser(flex_state, &statement);
+	const int parse_result = parser.parse();
 	m68kasm__delete_buffer(buffer, flex_state);
 
 	std::fclose(file);

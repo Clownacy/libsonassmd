@@ -1131,28 +1131,28 @@ BEGIN(INITIAL); yyterminate();
 case 3:
 YY_RULE_SETUP
 #line 118 "lexical.l"
-return TOKEN_DIRECTIVE_EVEN;
+return m68kasm::parser::token::TOKEN_DIRECTIVE_EVEN;
 	YY_BREAK
 /* Sizes. */
 case 4:
 YY_RULE_SETUP
 #line 121 "lexical.l"
-return TOKEN_SIZE_BYTE;
+return m68kasm::parser::token::TOKEN_SIZE_BYTE;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 122 "lexical.l"
-return TOKEN_SIZE_SHORT;
+return m68kasm::parser::token::TOKEN_SIZE_SHORT;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 123 "lexical.l"
-return TOKEN_SIZE_WORD;
+return m68kasm::parser::token::TOKEN_SIZE_WORD;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 124 "lexical.l"
-return TOKEN_SIZE_LONGWORD;
+return m68kasm::parser::token::TOKEN_SIZE_LONGWORD;
 	YY_BREAK
 /* Misc. symbols. */
 case 8:
@@ -1214,52 +1214,52 @@ return yytext[0];
 case 19:
 YY_RULE_SETUP
 #line 140 "lexical.l"
-return TOKEN_LOGICAL_AND;
+return m68kasm::parser::token::TOKEN_LOGICAL_AND;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 141 "lexical.l"
-return TOKEN_LOGICAL_OR;
+return m68kasm::parser::token::TOKEN_LOGICAL_OR;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 142 "lexical.l"
-return TOKEN_EQUALITY;   /* An assembler extension, for programmers that are familiar with C. */
+return m68kasm::parser::token::TOKEN_EQUALITY;   /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 143 "lexical.l"
-return TOKEN_INEQUALITY; /* An assembler extension, for programmers that are familiar with C. */
+return m68kasm::parser::token::TOKEN_INEQUALITY; /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 144 "lexical.l"
-return TOKEN_INEQUALITY;
+return m68kasm::parser::token::TOKEN_INEQUALITY;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 145 "lexical.l"
-return TOKEN_INEQUALITY;
+return m68kasm::parser::token::TOKEN_INEQUALITY;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 146 "lexical.l"
-return TOKEN_LESS_OR_EQUAL;
+return m68kasm::parser::token::TOKEN_LESS_OR_EQUAL;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 147 "lexical.l"
-return TOKEN_MORE_OR_EQUAL;
+return m68kasm::parser::token::TOKEN_MORE_OR_EQUAL;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 148 "lexical.l"
-return TOKEN_LEFT_SHIFT;
+return m68kasm::parser::token::TOKEN_LEFT_SHIFT;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 149 "lexical.l"
-return TOKEN_RIGHT_SHIFT;
+return m68kasm::parser::token::TOKEN_RIGHT_SHIFT;
 	YY_BREAK
 /* Decimal number. */
 case 29:
@@ -1267,9 +1267,9 @@ YY_RULE_SETUP
 #line 152 "lexical.l"
 {
 	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext, yyleng, 10))
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 
-	return TOKEN_NUMBER;
+	return m68kasm::parser::token::TOKEN_NUMBER;
 }
 	YY_BREAK
 /* Hexadecimal number (68k). */
@@ -1278,9 +1278,9 @@ YY_RULE_SETUP
 #line 160 "lexical.l"
 {
 	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext + 1, yyleng - 1, 16))
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 
-	return TOKEN_NUMBER;
+	return m68kasm::parser::token::TOKEN_NUMBER;
 }
 	YY_BREAK
 /* Binary number (68k). */
@@ -1289,9 +1289,9 @@ YY_RULE_SETUP
 #line 168 "lexical.l"
 {
 	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext + 1, yyleng - 1, 2))
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 
-	return TOKEN_NUMBER;
+	return m68kasm::parser::token::TOKEN_NUMBER;
 }
 	YY_BREAK
 /* Identifier. */
@@ -1303,10 +1303,10 @@ YY_RULE_SETUP
 	if (!String_Create(&yylval->string, yytext, yyleng))
 	{
 		m68kasm_error(yyscanner, NULL, "Could not allocate memory for generic string.");
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 	}
 
-	return TOKEN_IDENTIFIER;
+	return m68kasm::parser::token::TOKEN_IDENTIFIER;
 }
 	YY_BREAK
 /* Local label. */
@@ -1317,10 +1317,10 @@ YY_RULE_SETUP
 	if (!String_Create(&yylval->string, yytext, yyleng))
 	{
 		m68kasm_error(yyscanner, NULL, "Could not allocate memory for generic string.");
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 	}
 
-	return TOKEN_LOCAL_IDENTIFIER;
+	return m68kasm::parser::token::TOKEN_LOCAL_IDENTIFIER;
 }
 	YY_BREAK
 /* Make Bison signal a syntax error for unrecognised symbols */

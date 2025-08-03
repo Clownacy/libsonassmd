@@ -114,13 +114,13 @@ hexadecimal       {hexadecimal_digit}+
 <<EOF>>         BEGIN(INITIAL); yyterminate();
 
  /* Directives. */
-even            return TOKEN_DIRECTIVE_EVEN;
+even            return m68kasm::parser::token::TOKEN_DIRECTIVE_EVEN;
 
  /* Sizes. */
-".b"            return TOKEN_SIZE_BYTE;
-".s"            return TOKEN_SIZE_SHORT;
-".w"            return TOKEN_SIZE_WORD;
-".l"            return TOKEN_SIZE_LONGWORD;
+".b"            return m68kasm::parser::token::TOKEN_SIZE_BYTE;
+".s"            return m68kasm::parser::token::TOKEN_SIZE_SHORT;
+".w"            return m68kasm::parser::token::TOKEN_SIZE_WORD;
+".l"            return m68kasm::parser::token::TOKEN_SIZE_LONGWORD;
 
  /* Misc. symbols. */
 "."             return yytext[0];
@@ -136,39 +136,39 @@ even            return TOKEN_DIRECTIVE_EVEN;
 "@"             return yytext[0];
 
  /* Operators. */
-"&&"            return TOKEN_LOGICAL_AND;
-"||"            return TOKEN_LOGICAL_OR;
-"=="            return TOKEN_EQUALITY;   /* An assembler extension, for programmers that are familiar with C. */
-"!="            return TOKEN_INEQUALITY; /* An assembler extension, for programmers that are familiar with C. */
-"<>"            return TOKEN_INEQUALITY;
-"><"            return TOKEN_INEQUALITY;
-"<="            return TOKEN_LESS_OR_EQUAL;
-">="            return TOKEN_MORE_OR_EQUAL;
-"<<"            return TOKEN_LEFT_SHIFT;
-">>"            return TOKEN_RIGHT_SHIFT;
+"&&"            return m68kasm::parser::token::TOKEN_LOGICAL_AND;
+"||"            return m68kasm::parser::token::TOKEN_LOGICAL_OR;
+"=="            return m68kasm::parser::token::TOKEN_EQUALITY;   /* An assembler extension, for programmers that are familiar with C. */
+"!="            return m68kasm::parser::token::TOKEN_INEQUALITY; /* An assembler extension, for programmers that are familiar with C. */
+"<>"            return m68kasm::parser::token::TOKEN_INEQUALITY;
+"><"            return m68kasm::parser::token::TOKEN_INEQUALITY;
+"<="            return m68kasm::parser::token::TOKEN_LESS_OR_EQUAL;
+">="            return m68kasm::parser::token::TOKEN_MORE_OR_EQUAL;
+"<<"            return m68kasm::parser::token::TOKEN_LEFT_SHIFT;
+">>"            return m68kasm::parser::token::TOKEN_RIGHT_SHIFT;
 
  /* Decimal number. */
 {decimal} {
 	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext, yyleng, 10))
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 
-	return TOKEN_NUMBER;
+	return m68kasm::parser::token::TOKEN_NUMBER;
 }
 
  /* Hexadecimal number (68k). */
 \${hexadecimal} {
 	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext + 1, yyleng - 1, 16))
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 
-	return TOKEN_NUMBER;
+	return m68kasm::parser::token::TOKEN_NUMBER;
 }
 
  /* Binary number (68k). */
 \%{binary} {
 	if (!ParseNumber(&yylval->unsigned_long, yyscanner, yytext + 1, yyleng - 1, 2))
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 
-	return TOKEN_NUMBER;
+	return m68kasm::parser::token::TOKEN_NUMBER;
 }
 
  /* Identifier. */
@@ -177,10 +177,10 @@ even            return TOKEN_DIRECTIVE_EVEN;
 	if (!String_Create(&yylval->string, yytext, yyleng))
 	{
 		m68kasm_error(yyscanner, NULL, "Could not allocate memory for generic string.");
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 	}
 
-	return TOKEN_IDENTIFIER;
+	return m68kasm::parser::token::TOKEN_IDENTIFIER;
 }
 
  /* Local label. */
@@ -188,10 +188,10 @@ even            return TOKEN_DIRECTIVE_EVEN;
 	if (!String_Create(&yylval->string, yytext, yyleng))
 	{
 		m68kasm_error(yyscanner, NULL, "Could not allocate memory for generic string.");
-		return M68KASM_error;
+		return m68kasm::parser::token::M68KASM_error;
 	}
 
-	return TOKEN_LOCAL_IDENTIFIER;
+	return m68kasm::parser::token::TOKEN_LOCAL_IDENTIFIER;
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
