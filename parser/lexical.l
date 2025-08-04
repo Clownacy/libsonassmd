@@ -25,6 +25,7 @@
 %{
 
 #include <charconv>
+#include <format>
 #include <string>
 
 #include "syntactic.h"
@@ -130,6 +131,6 @@ even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
-.       throw m68kasm::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
+.       throw m68kasm::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
 
 %%
