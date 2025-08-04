@@ -59,13 +59,12 @@ namespace libsonassmd
 {
 	namespace CodeReader
 	{
-		enum Size
+		enum class Size
 		{
-			SIZE_BYTE      = 1 << 0,
-			SIZE_SHORT     = 1 << 1,
-			SIZE_WORD      = 1 << 2,
-			SIZE_LONGWORD  = 1 << 3,
-			SIZE_UNDEFINED = 1 << 4
+			BYTE,
+			SHORT,
+			WORD,
+			LONGWORD
 		};
 
 		struct StatementDc
@@ -74,12 +73,11 @@ namespace libsonassmd
 			std::vector<unsigned long> values;
 		};
 
-		enum StatementType
+		enum class StatementType
 		{
-			STATEMENT_TYPE_EMPTY,
-			STATEMENT_TYPE_OFFSET_TABLE,
-			STATEMENT_TYPE_MAPPING_FRAME,
-			STATEMENT_TYPE_EVEN
+			OFFSET_TABLE,
+			MAPPING_FRAME,
+			EVEN
 		};
 
 		struct Statement
@@ -97,7 +95,7 @@ namespace libsonassmd
 }
 
 
-#line 101 "syntactic.h"
+#line 99 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -241,7 +239,7 @@ namespace libsonassmd
 
 #line 24 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
-#line 245 "syntactic.h"
+#line 243 "syntactic.h"
 
 
 
@@ -2226,17 +2224,17 @@ switch (yykind)
 
 #line 24 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2230 "syntactic.h"
+#line 2228 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 88 "syntactic.y"
+#line 86 "syntactic.y"
 
 
 #define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 
-#line 2240 "syntactic.h"
+#line 2238 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

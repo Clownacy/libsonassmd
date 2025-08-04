@@ -52,7 +52,7 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 	{
 		switch (statement.type)
 		{
-			case libsonassmd::CodeReader::STATEMENT_TYPE_OFFSET_TABLE:
+			case libsonassmd::CodeReader::StatementType::OFFSET_TABLE:
 			{
 				std::cerr << "Block type: Offset table\n";
 
@@ -63,7 +63,7 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 				break;
 			}
 
-			case libsonassmd::CodeReader::STATEMENT_TYPE_MAPPING_FRAME:
+			case libsonassmd::CodeReader::StatementType::MAPPING_FRAME:
 			{
 				std::cerr << "Block type: Mapping frame\n";
 

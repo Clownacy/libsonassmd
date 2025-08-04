@@ -44,10 +44,9 @@
 
 
 // Unqualified %code blocks.
-#line 94 "syntactic.y"
+#line 92 "syntactic.y"
 
 
-#include <cassert>
 #include <initializer_list>
 
 YY_DECL;
@@ -59,7 +58,7 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 }
 
 
-#line 63 "syntactic.cpp"
+#line 62 "syntactic.cpp"
 
 
 #ifndef YY_
@@ -133,7 +132,7 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 
 #line 24 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
-#line 137 "syntactic.cpp"
+#line 136 "syntactic.cpp"
 
   /// Build a parser object.
   parser::parser (void *scanner_yyarg, std::vector<Statement> &statement_list_yyarg)
@@ -759,153 +758,149 @@ namespace libsonassmd { namespace CodeReader {
           switch (yyn)
             {
   case 2: // output: statement_list
-#line 166 "syntactic.y"
+#line 163 "syntactic.y"
         {
 		statement_list = std::move(yystack_[0].value.as < std::vector<Statement> > ());
 	}
-#line 767 "syntactic.cpp"
+#line 766 "syntactic.cpp"
     break;
 
   case 3: // statement_list: offset_table
-#line 173 "syntactic.y"
+#line 170 "syntactic.y"
         {
 		// A label-less offset table can occur at the start of the file, but no later.
 		// This restriction is important for avoiding shift-reduce conflicts.
 		Statement statement;
-		statement.type = STATEMENT_TYPE_OFFSET_TABLE;
+		statement.type = StatementType::OFFSET_TABLE;
 		statement.shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(statement));
 	}
-#line 780 "syntactic.cpp"
+#line 779 "syntactic.cpp"
     break;
 
   case 4: // statement_list: statement
-#line 182 "syntactic.y"
+#line 179 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
 	}
-#line 788 "syntactic.cpp"
+#line 787 "syntactic.cpp"
     break;
 
   case 5: // statement_list: statement_list statement
-#line 186 "syntactic.y"
+#line 183 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Statement> > () = std::move(yystack_[1].value.as < std::vector<Statement> > ());
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
 	}
-#line 797 "syntactic.cpp"
+#line 796 "syntactic.cpp"
     break;
 
   case 6: // statement: label offset_table
-#line 194 "syntactic.y"
+#line 191 "syntactic.y"
         {
-		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_OFFSET_TABLE;
+		yylhs.value.as < Statement > ().type = StatementType::OFFSET_TABLE;
 		yylhs.value.as < Statement > ().shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
 	}
-#line 806 "syntactic.cpp"
+#line 805 "syntactic.cpp"
     break;
 
   case 7: // statement: mapping_frame
-#line 199 "syntactic.y"
+#line 196 "syntactic.y"
         {
-		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_MAPPING_FRAME;
+		yylhs.value.as < Statement > ().type = StatementType::MAPPING_FRAME;
 		yylhs.value.as < Statement > ().shared.emplace<Statement::MappingFrame>(std::move(yystack_[0].value.as < Statement::MappingFrame > ()));
 	}
-#line 815 "syntactic.cpp"
+#line 814 "syntactic.cpp"
     break;
 
   case 8: // statement: DIRECTIVE_EVEN
-#line 204 "syntactic.y"
+#line 201 "syntactic.y"
         {
-		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_EVEN;
+		yylhs.value.as < Statement > ().type = StatementType::EVEN;
 	}
-#line 823 "syntactic.cpp"
+#line 822 "syntactic.cpp"
     break;
 
   case 9: // label: IDENTIFIER ":"
-#line 211 "syntactic.y"
+#line 208 "syntactic.y"
         {
 		yylhs.value.as < std::string > () = std::move(yystack_[1].value.as < std::string > ());
 	}
-#line 831 "syntactic.cpp"
+#line 830 "syntactic.cpp"
     break;
 
   case 10: // offset_table: offset_table_entry
-#line 218 "syntactic.y"
+#line 215 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
-#line 839 "syntactic.cpp"
+#line 838 "syntactic.cpp"
     break;
 
   case 11: // offset_table: offset_table offset_table_entry
-#line 222 "syntactic.y"
+#line 219 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > () = std::move(yystack_[1].value.as < std::vector<std::string> > ());
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
-#line 848 "syntactic.cpp"
+#line 847 "syntactic.cpp"
     break;
 
   case 12: // dc: DIRECTIVE_DC size
-#line 230 "syntactic.y"
+#line 227 "syntactic.y"
         {
 		yylhs.value.as < Size > () = yystack_[0].value.as < Size > ();
 	}
-#line 856 "syntactic.cpp"
+#line 855 "syntactic.cpp"
     break;
 
   case 13: // offset_table_entry: dc IDENTIFIER "-" IDENTIFIER
-#line 237 "syntactic.y"
+#line 234 "syntactic.y"
         {
 		static_cast<void>(yystack_[0].value.as < std::string > ());
 		yylhs.value.as < std::string > () = std::move(yystack_[2].value.as < std::string > ());
 	}
-#line 865 "syntactic.cpp"
+#line 864 "syntactic.cpp"
     break;
 
   case 14: // mapping_frame: label bytes
-#line 245 "syntactic.y"
+#line 242 "syntactic.y"
         {
 		yylhs.value.as < Statement::MappingFrame > ().label = std::move(yystack_[1].value.as < std::string > ());
 		// TODO: Not this junk.
 		// TODO: Catch exceptions?
 		yylhs.value.as < Statement::MappingFrame > ().frame = libsonassmd::SpriteFrame(yystack_[0].value.as < std::stringstream > (), libsonassmd::Game::SONIC_1);
 	}
-#line 876 "syntactic.cpp"
+#line 875 "syntactic.cpp"
     break;
 
   case 15: // bytes: dc expression_list
-#line 255 "syntactic.y"
+#line 252 "syntactic.y"
         {
 		for (const auto &value : yystack_[0].value.as < std::vector<unsigned long> > ())
 		{
 			switch (yystack_[1].value.as < Size > ())
 			{
-				case SIZE_BYTE:
+				case Size::BYTE:
 					libsonassmd::WriteU8(yylhs.value.as < std::stringstream > (), value);
 					break;
 
-				case SIZE_SHORT:
-				case SIZE_WORD:
+				case Size::SHORT:
+				case Size::WORD:
 					libsonassmd::WriteU16BE(yylhs.value.as < std::stringstream > (), value);
 					break;
 
-				case SIZE_LONGWORD:
+				case Size::LONGWORD:
 					libsonassmd::WriteU32BE(yylhs.value.as < std::stringstream > (), value);
-					break;
-
-				case SIZE_UNDEFINED:
-					assert(false);
 					break;
 			}
 		}
 	}
-#line 905 "syntactic.cpp"
+#line 900 "syntactic.cpp"
     break;
 
   case 16: // bytes: bytes dc expression_list
-#line 280 "syntactic.y"
+#line 273 "syntactic.y"
         {
 		yylhs.value.as < std::stringstream > () = std::move(yystack_[2].value.as < std::stringstream > ());
 
@@ -914,351 +909,347 @@ namespace libsonassmd { namespace CodeReader {
 		{
 			switch (yystack_[1].value.as < Size > ())
 			{
-				case SIZE_BYTE:
+				case Size::BYTE:
 					libsonassmd::WriteU8(yylhs.value.as < std::stringstream > (), value);
 					break;
 
-				case SIZE_SHORT:
-				case SIZE_WORD:
+				case Size::SHORT:
+				case Size::WORD:
 					libsonassmd::WriteU16BE(yylhs.value.as < std::stringstream > (), value);
 					break;
 
-				case SIZE_LONGWORD:
+				case Size::LONGWORD:
 					libsonassmd::WriteU32BE(yylhs.value.as < std::stringstream > (), value);
-					break;
-
-				case SIZE_UNDEFINED:
-					assert(false);
 					break;
 			}
 		}
 	}
-#line 937 "syntactic.cpp"
+#line 928 "syntactic.cpp"
     break;
 
   case 17: // expression_list: expression
-#line 311 "syntactic.y"
+#line 300 "syntactic.y"
         {
+		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
+	}
+#line 936 "syntactic.cpp"
+    break;
+
+  case 18: // expression_list: expression_list "," expression
+#line 304 "syntactic.y"
+        {
+		yylhs.value.as < std::vector<unsigned long> > () = std::move(yystack_[2].value.as < std::vector<unsigned long> > ());
 		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
 	}
 #line 945 "syntactic.cpp"
     break;
 
-  case 18: // expression_list: expression_list "," expression
-#line 315 "syntactic.y"
-        {
-		yylhs.value.as < std::vector<unsigned long> > () = std::move(yystack_[2].value.as < std::vector<unsigned long> > ());
-		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
-	}
-#line 954 "syntactic.cpp"
-    break;
-
   case 19: // size: SIZE_BYTE
-#line 323 "syntactic.y"
+#line 312 "syntactic.y"
         {
-		yylhs.value.as < Size > () = SIZE_BYTE;
+		yylhs.value.as < Size > () = Size::BYTE;
 	}
-#line 962 "syntactic.cpp"
+#line 953 "syntactic.cpp"
     break;
 
   case 20: // size: SIZE_SHORT
-#line 327 "syntactic.y"
+#line 316 "syntactic.y"
         {
-		yylhs.value.as < Size > () = SIZE_SHORT;
+		yylhs.value.as < Size > () = Size::SHORT;
 	}
-#line 970 "syntactic.cpp"
+#line 961 "syntactic.cpp"
     break;
 
   case 21: // size: SIZE_WORD
-#line 331 "syntactic.y"
+#line 320 "syntactic.y"
         {
-		yylhs.value.as < Size > () = SIZE_WORD;
+		yylhs.value.as < Size > () = Size::WORD;
 	}
-#line 978 "syntactic.cpp"
+#line 969 "syntactic.cpp"
     break;
 
   case 22: // size: SIZE_LONGWORD
-#line 335 "syntactic.y"
+#line 324 "syntactic.y"
         {
-		yylhs.value.as < Size > () = SIZE_LONGWORD;
+		yylhs.value.as < Size > () = Size::LONGWORD;
 	}
-#line 986 "syntactic.cpp"
+#line 977 "syntactic.cpp"
     break;
 
   case 23: // expression: expression1
-#line 342 "syntactic.y"
+#line 331 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 994 "syntactic.cpp"
+#line 985 "syntactic.cpp"
     break;
 
   case 24: // expression: expression LOGICAL_AND expression1
-#line 347 "syntactic.y"
+#line 336 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () && yystack_[0].value.as < unsigned long > ();
 	}
-#line 1002 "syntactic.cpp"
+#line 993 "syntactic.cpp"
     break;
 
   case 25: // expression: expression LOGICAL_OR expression1
-#line 352 "syntactic.y"
+#line 341 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () || yystack_[0].value.as < unsigned long > ();
 	}
-#line 1010 "syntactic.cpp"
+#line 1001 "syntactic.cpp"
     break;
 
   case 26: // expression1: expression2
-#line 359 "syntactic.y"
+#line 348 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1018 "syntactic.cpp"
+#line 1009 "syntactic.cpp"
     break;
 
   case 27: // expression1: expression1 "=" expression2
-#line 363 "syntactic.y"
+#line 352 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
 	}
-#line 1026 "syntactic.cpp"
+#line 1017 "syntactic.cpp"
     break;
 
   case 28: // expression1: expression1 EQUALITY expression2
-#line 367 "syntactic.y"
+#line 356 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
 	}
-#line 1034 "syntactic.cpp"
+#line 1025 "syntactic.cpp"
     break;
 
   case 29: // expression1: expression1 INEQUALITY expression2
-#line 371 "syntactic.y"
+#line 360 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () != yystack_[0].value.as < unsigned long > ();
 	}
-#line 1042 "syntactic.cpp"
+#line 1033 "syntactic.cpp"
     break;
 
   case 30: // expression2: expression3
-#line 378 "syntactic.y"
+#line 367 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1050 "syntactic.cpp"
+#line 1041 "syntactic.cpp"
     break;
 
   case 31: // expression2: expression2 "<" expression3
-#line 382 "syntactic.y"
+#line 371 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () < yystack_[0].value.as < unsigned long > ();
 	}
-#line 1058 "syntactic.cpp"
+#line 1049 "syntactic.cpp"
     break;
 
   case 32: // expression2: expression2 LESS_OR_EQUAL expression3
-#line 386 "syntactic.y"
+#line 375 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () <= yystack_[0].value.as < unsigned long > ();
 	}
-#line 1066 "syntactic.cpp"
+#line 1057 "syntactic.cpp"
     break;
 
   case 33: // expression2: expression2 ">" expression3
-#line 390 "syntactic.y"
+#line 379 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () > yystack_[0].value.as < unsigned long > ();
 	}
-#line 1074 "syntactic.cpp"
+#line 1065 "syntactic.cpp"
     break;
 
   case 34: // expression2: expression2 MORE_OR_EQUAL expression3
-#line 394 "syntactic.y"
+#line 383 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >= yystack_[0].value.as < unsigned long > ();
 	}
-#line 1082 "syntactic.cpp"
+#line 1073 "syntactic.cpp"
     break;
 
   case 35: // expression3: expression4
-#line 401 "syntactic.y"
+#line 390 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1090 "syntactic.cpp"
+#line 1081 "syntactic.cpp"
     break;
 
   case 36: // expression3: expression3 "+" expression4
-#line 405 "syntactic.y"
+#line 394 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () + yystack_[0].value.as < unsigned long > ();
 	}
-#line 1098 "syntactic.cpp"
+#line 1089 "syntactic.cpp"
     break;
 
   case 37: // expression3: expression3 "-" expression4
-#line 409 "syntactic.y"
+#line 398 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () - yystack_[0].value.as < unsigned long > ();
 	}
-#line 1106 "syntactic.cpp"
+#line 1097 "syntactic.cpp"
     break;
 
   case 38: // expression4: expression5
-#line 416 "syntactic.y"
+#line 405 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1114 "syntactic.cpp"
+#line 1105 "syntactic.cpp"
     break;
 
   case 39: // expression4: expression4 "*" expression5
-#line 420 "syntactic.y"
+#line 409 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () * yystack_[0].value.as < unsigned long > ();
 	}
-#line 1122 "syntactic.cpp"
+#line 1113 "syntactic.cpp"
     break;
 
   case 40: // expression4: expression4 "/" expression5
-#line 424 "syntactic.y"
+#line 413 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () / yystack_[0].value.as < unsigned long > ();
 	}
-#line 1130 "syntactic.cpp"
+#line 1121 "syntactic.cpp"
     break;
 
   case 41: // expression4: expression4 "%" expression5
-#line 428 "syntactic.y"
+#line 417 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () % yystack_[0].value.as < unsigned long > ();
 	}
-#line 1138 "syntactic.cpp"
+#line 1129 "syntactic.cpp"
     break;
 
   case 42: // expression5: expression6
-#line 435 "syntactic.y"
+#line 424 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1146 "syntactic.cpp"
+#line 1137 "syntactic.cpp"
     break;
 
   case 43: // expression5: expression5 "&" expression6
-#line 439 "syntactic.y"
+#line 428 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () & yystack_[0].value.as < unsigned long > ();
 	}
-#line 1154 "syntactic.cpp"
+#line 1145 "syntactic.cpp"
     break;
 
   case 44: // expression5: expression5 "!" expression6
-#line 443 "syntactic.y"
+#line 432 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
 	}
-#line 1162 "syntactic.cpp"
+#line 1153 "syntactic.cpp"
     break;
 
   case 45: // expression5: expression5 "|" expression6
-#line 447 "syntactic.y"
+#line 436 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
 	}
-#line 1170 "syntactic.cpp"
+#line 1161 "syntactic.cpp"
     break;
 
   case 46: // expression5: expression5 "^" expression6
-#line 451 "syntactic.y"
+#line 440 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () ^ yystack_[0].value.as < unsigned long > ();
 	}
-#line 1178 "syntactic.cpp"
+#line 1169 "syntactic.cpp"
     break;
 
   case 47: // expression6: expression7
-#line 458 "syntactic.y"
+#line 447 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1186 "syntactic.cpp"
+#line 1177 "syntactic.cpp"
     break;
 
   case 48: // expression6: expression6 LEFT_SHIFT expression7
-#line 462 "syntactic.y"
+#line 451 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () << yystack_[0].value.as < unsigned long > ();
 	}
-#line 1194 "syntactic.cpp"
+#line 1185 "syntactic.cpp"
     break;
 
   case 49: // expression6: expression6 RIGHT_SHIFT expression7
-#line 466 "syntactic.y"
+#line 455 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >> yystack_[0].value.as < unsigned long > ();
 	}
-#line 1202 "syntactic.cpp"
+#line 1193 "syntactic.cpp"
     break;
 
   case 50: // expression7: expression8
-#line 473 "syntactic.y"
+#line 462 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1210 "syntactic.cpp"
+#line 1201 "syntactic.cpp"
     break;
 
   case 51: // expression7: "+" expression7
-#line 477 "syntactic.y"
+#line 466 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1218 "syntactic.cpp"
+#line 1209 "syntactic.cpp"
     break;
 
   case 52: // expression7: "-" expression7
-#line 481 "syntactic.y"
+#line 470 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = -yystack_[0].value.as < unsigned long > ();
 	}
-#line 1226 "syntactic.cpp"
+#line 1217 "syntactic.cpp"
     break;
 
   case 53: // expression7: "~" expression7
-#line 485 "syntactic.y"
+#line 474 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = ~yystack_[0].value.as < unsigned long > ();
 	}
-#line 1234 "syntactic.cpp"
+#line 1225 "syntactic.cpp"
     break;
 
   case 54: // expression7: "!" expression7
-#line 490 "syntactic.y"
+#line 479 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = !yystack_[0].value.as < unsigned long > ();
 	}
-#line 1242 "syntactic.cpp"
+#line 1233 "syntactic.cpp"
     break;
 
   case 55: // expression8: NUMBER
-#line 497 "syntactic.y"
+#line 486 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
-#line 1250 "syntactic.cpp"
+#line 1241 "syntactic.cpp"
     break;
 
   case 56: // expression8: "(" expression ")"
-#line 501 "syntactic.y"
+#line 490 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[1].value.as < unsigned long > ();
 	}
-#line 1258 "syntactic.cpp"
+#line 1249 "syntactic.cpp"
     break;
 
 
-#line 1262 "syntactic.cpp"
+#line 1253 "syntactic.cpp"
 
             default:
               break;
@@ -1748,12 +1739,12 @@ namespace libsonassmd { namespace CodeReader {
   const short
   parser::yyrline_[] =
   {
-       0,   165,   165,   172,   181,   185,   193,   198,   203,   210,
-     217,   221,   229,   236,   244,   254,   279,   310,   314,   322,
-     326,   330,   334,   341,   346,   351,   358,   362,   366,   370,
-     377,   381,   385,   389,   393,   400,   404,   408,   415,   419,
-     423,   427,   434,   438,   442,   446,   450,   457,   461,   465,
-     472,   476,   480,   484,   489,   496,   500
+       0,   162,   162,   169,   178,   182,   190,   195,   200,   207,
+     214,   218,   226,   233,   241,   251,   272,   299,   303,   311,
+     315,   319,   323,   330,   335,   340,   347,   351,   355,   359,
+     366,   370,   374,   378,   382,   389,   393,   397,   404,   408,
+     412,   416,   423,   427,   431,   435,   439,   446,   450,   454,
+     461,   465,   469,   473,   478,   485,   489
   };
 
   void
@@ -1786,7 +1777,7 @@ namespace libsonassmd { namespace CodeReader {
 
 #line 24 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 1790 "syntactic.cpp"
+#line 1781 "syntactic.cpp"
 
-#line 506 "syntactic.y"
+#line 495 "syntactic.y"
 

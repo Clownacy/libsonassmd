@@ -46,13 +46,12 @@ namespace libsonassmd
 {
 	namespace CodeReader
 	{
-		enum Size
+		enum class Size
 		{
-			SIZE_BYTE      = 1 << 0,
-			SIZE_SHORT     = 1 << 1,
-			SIZE_WORD      = 1 << 2,
-			SIZE_LONGWORD  = 1 << 3,
-			SIZE_UNDEFINED = 1 << 4
+			BYTE,
+			SHORT,
+			WORD,
+			LONGWORD
 		};
 
 		struct StatementDc
@@ -61,12 +60,11 @@ namespace libsonassmd
 			std::vector<unsigned long> values;
 		};
 
-		enum StatementType
+		enum class StatementType
 		{
-			STATEMENT_TYPE_EMPTY,
-			STATEMENT_TYPE_OFFSET_TABLE,
-			STATEMENT_TYPE_MAPPING_FRAME,
-			STATEMENT_TYPE_EVEN
+			OFFSET_TABLE,
+			MAPPING_FRAME,
+			EVEN
 		};
 
 		struct Statement
@@ -93,7 +91,6 @@ namespace libsonassmd
 
 %code {
 
-#include <cassert>
 #include <initializer_list>
 
 YY_DECL;
@@ -174,7 +171,7 @@ statement_list
 		// A label-less offset table can occur at the start of the file, but no later.
 		// This restriction is important for avoiding shift-reduce conflicts.
 		Statement statement;
-		statement.type = STATEMENT_TYPE_OFFSET_TABLE;
+		statement.type = StatementType::OFFSET_TABLE;
 		statement.shared.emplace<std::vector<std::string>>(std::move($1));
 		$$.emplace_back(std::move(statement));
 	}
@@ -192,17 +189,17 @@ statement_list
 statement
 	: label offset_table
 	{
-		$$.type = STATEMENT_TYPE_OFFSET_TABLE;
+		$$.type = StatementType::OFFSET_TABLE;
 		$$.shared.emplace<std::vector<std::string>>(std::move($2));
 	}
 	| mapping_frame
 	{
-		$$.type = STATEMENT_TYPE_MAPPING_FRAME;
+		$$.type = StatementType::MAPPING_FRAME;
 		$$.shared.emplace<Statement::MappingFrame>(std::move($1));
 	}
 	| DIRECTIVE_EVEN
 	{
-		$$.type = STATEMENT_TYPE_EVEN;
+		$$.type = StatementType::EVEN;
 	}
 	;
 
@@ -257,21 +254,17 @@ bytes
 		{
 			switch ($1)
 			{
-				case SIZE_BYTE:
+				case Size::BYTE:
 					libsonassmd::WriteU8($$, value);
 					break;
 
-				case SIZE_SHORT:
-				case SIZE_WORD:
+				case Size::SHORT:
+				case Size::WORD:
 					libsonassmd::WriteU16BE($$, value);
 					break;
 
-				case SIZE_LONGWORD:
+				case Size::LONGWORD:
 					libsonassmd::WriteU32BE($$, value);
-					break;
-
-				case SIZE_UNDEFINED:
-					assert(false);
 					break;
 			}
 		}
@@ -285,21 +278,17 @@ bytes
 		{
 			switch ($2)
 			{
-				case SIZE_BYTE:
+				case Size::BYTE:
 					libsonassmd::WriteU8($$, value);
 					break;
 
-				case SIZE_SHORT:
-				case SIZE_WORD:
+				case Size::SHORT:
+				case Size::WORD:
 					libsonassmd::WriteU16BE($$, value);
 					break;
 
-				case SIZE_LONGWORD:
+				case Size::LONGWORD:
 					libsonassmd::WriteU32BE($$, value);
-					break;
-
-				case SIZE_UNDEFINED:
-					assert(false);
 					break;
 			}
 		}
@@ -321,19 +310,19 @@ expression_list
 size
 	: SIZE_BYTE
 	{
-		$$ = SIZE_BYTE;
+		$$ = Size::BYTE;
 	}
 	| SIZE_SHORT
 	{
-		$$ = SIZE_SHORT;
+		$$ = Size::SHORT;
 	}
 	| SIZE_WORD
 	{
-		$$ = SIZE_WORD;
+		$$ = Size::WORD;
 	}
 	| SIZE_LONGWORD
 	{
-		$$ = SIZE_LONGWORD;
+		$$ = Size::LONGWORD;
 	}
 	;
 
