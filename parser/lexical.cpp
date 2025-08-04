@@ -705,57 +705,11 @@ static const flex_int16_t yy_chk[146] =
 void m68kasm_warning(void *scanner, Statement *statement, const char *message);
 void m68kasm_error(void *scanner, Statement *statement, const char *message);
 
-static bool CharacterToInteger(unsigned int* const value, const unsigned int character)
+static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const unsigned long base)
 {
-	if (character >= '0' && character <= '9')
-		*value = 0x0 + (character - '0');
-	else if (character >= 'A' && character <= 'Z')
-		*value = 0xA + (character - 'A');
-	else if (character >= 'a' && character <= 'z')
-		*value = 0xA + (character - 'a');
-	else
-		return false;
-
-	return true;
-}
-
-/* Like `strtoul`, except this one returns a truncated value when parsing a number that is too large. */
-// TODO: Replace this with 'std::from_chars' or something.
-static bool StringTo32BitInteger(unsigned long* const value, const char* const string_start, const char** const string_end, const unsigned long base)
-{
-	bool success = true;
-	const unsigned long limit = 0xFFFFFFFF / base;
-	const char* string_pointer;
-
-	*value = 0;
-
-	for (string_pointer = string_start; ; ++string_pointer)
-	{
-		unsigned int digit;
-		if (!CharacterToInteger(&digit, *string_pointer) || digit >= base)
-			break;
-
-		if (*value > limit)
-			success = false;
-
-		*value *= base;
-		*value += digit;
-	}
-
-	*string_end = string_pointer;
-	return success;
-}
-
-static unsigned long ParseNumber(void* const scanner, const char* const string_start, const size_t string_length, const unsigned long base)
-{
-	unsigned long value;
-	const char *string_end;
-
-	if (!StringTo32BitInteger(&value, string_start, &string_end, base))
-	{
-		/* S.N. 68k silently truncates values that are too large. This is relied upon by old versions of the Sonic 2 August 21st prototype disassembly. */
-		m68kasm_warning(scanner, NULL, "Number is too large and will be truncated.");
-	}
+	// TODO: Replace this with 'std::from_chars' or something.
+	char *string_end;
+	const unsigned long value = strtoul(string_start, &string_end, base);
 
 	if (string_end != string_start + string_length)
 		throw m68kasm::parser::syntax_error("Number is invalid and cannot be parsed.");
@@ -763,9 +717,9 @@ static unsigned long ParseNumber(void* const scanner, const char* const string_s
 	return value;
 }
 
-#line 766 "lexical.cpp"
+#line 720 "lexical.cpp"
 /* Regular expression. */
-#line 768 "lexical.cpp"
+#line 722 "lexical.cpp"
 
 #define INITIAL 0
 
@@ -1023,12 +977,12 @@ YY_DECL
 		}
 
 	{
-#line 103 "lexical.l"
+#line 57 "lexical.l"
 
 
-#line 106 "lexical.l"
+#line 60 "lexical.l"
  /* Ignore whitespace */
-#line 1031 "lexical.cpp"
+#line 985 "lexical.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1083,7 +1037,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 107 "lexical.l"
+#line 61 "lexical.l"
 ;
 	YY_BREAK
 /* Ignore comments */
@@ -1092,216 +1046,216 @@ case 2:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 110 "lexical.l"
+#line 64 "lexical.l"
 ;
 	YY_BREAK
 /* Terminate at end of file. When terminating, revert to initial state. */
 case YY_STATE_EOF(INITIAL):
-#line 113 "lexical.l"
+#line 67 "lexical.l"
 return m68kasm::parser::make_YYEOF();
 	YY_BREAK
 /* Directives. */
 case 3:
 YY_RULE_SETUP
-#line 116 "lexical.l"
+#line 70 "lexical.l"
 return m68kasm::parser::make_DIRECTIVE_EVEN();
 	YY_BREAK
 /* Sizes. */
 case 4:
 YY_RULE_SETUP
-#line 119 "lexical.l"
+#line 73 "lexical.l"
 return m68kasm::parser::make_SIZE_BYTE();
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 120 "lexical.l"
+#line 74 "lexical.l"
 return m68kasm::parser::make_SIZE_SHORT();
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 121 "lexical.l"
+#line 75 "lexical.l"
 return m68kasm::parser::make_SIZE_WORD();
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 122 "lexical.l"
+#line 76 "lexical.l"
 return m68kasm::parser::make_SIZE_LONGWORD();
 	YY_BREAK
 /* Misc. symbols. */
 case 8:
 YY_RULE_SETUP
-#line 125 "lexical.l"
+#line 79 "lexical.l"
 return m68kasm::parser::make_PERIOD();
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 126 "lexical.l"
+#line 80 "lexical.l"
 return m68kasm::parser::make_COMMA();
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 127 "lexical.l"
+#line 81 "lexical.l"
 return m68kasm::parser::make_PARENTHESIS_LEFT();
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 128 "lexical.l"
+#line 82 "lexical.l"
 return m68kasm::parser::make_PARENTHESIS_RIGHT();
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 129 "lexical.l"
+#line 83 "lexical.l"
 return m68kasm::parser::make_DOLLAR();
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 130 "lexical.l"
+#line 84 "lexical.l"
 return m68kasm::parser::make_PLUS();
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 131 "lexical.l"
+#line 85 "lexical.l"
 return m68kasm::parser::make_MINUS();
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 132 "lexical.l"
+#line 86 "lexical.l"
 return m68kasm::parser::make_ASTERIX();
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 133 "lexical.l"
+#line 87 "lexical.l"
 return m68kasm::parser::make_FORWARD_SLASH();
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 134 "lexical.l"
+#line 88 "lexical.l"
 return m68kasm::parser::make_EQUAL();
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 135 "lexical.l"
+#line 89 "lexical.l"
 return m68kasm::parser::make_AT();
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 136 "lexical.l"
+#line 90 "lexical.l"
 return m68kasm::parser::make_LESS();
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 137 "lexical.l"
+#line 91 "lexical.l"
 return m68kasm::parser::make_MORE();
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 138 "lexical.l"
+#line 92 "lexical.l"
 return m68kasm::parser::make_PERCENT();
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 139 "lexical.l"
+#line 93 "lexical.l"
 return m68kasm::parser::make_AMPERSAND();
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 140 "lexical.l"
+#line 94 "lexical.l"
 return m68kasm::parser::make_EXCLAMATION();
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 141 "lexical.l"
+#line 95 "lexical.l"
 return m68kasm::parser::make_VERTICAL_BAR();
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 142 "lexical.l"
+#line 96 "lexical.l"
 return m68kasm::parser::make_CARET();
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 143 "lexical.l"
+#line 97 "lexical.l"
 return m68kasm::parser::make_TILDE();
 	YY_BREAK
 /* Operators. */
 case 27:
 YY_RULE_SETUP
-#line 146 "lexical.l"
+#line 100 "lexical.l"
 return m68kasm::parser::make_LOGICAL_AND();
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 147 "lexical.l"
+#line 101 "lexical.l"
 return m68kasm::parser::make_LOGICAL_OR();
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 148 "lexical.l"
+#line 102 "lexical.l"
 return m68kasm::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 149 "lexical.l"
+#line 103 "lexical.l"
 return m68kasm::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 150 "lexical.l"
+#line 104 "lexical.l"
 return m68kasm::parser::make_INEQUALITY();
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 151 "lexical.l"
+#line 105 "lexical.l"
 return m68kasm::parser::make_INEQUALITY();
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 152 "lexical.l"
+#line 106 "lexical.l"
 return m68kasm::parser::make_LESS_OR_EQUAL();
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 153 "lexical.l"
+#line 107 "lexical.l"
 return m68kasm::parser::make_MORE_OR_EQUAL();
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 154 "lexical.l"
+#line 108 "lexical.l"
 return m68kasm::parser::make_LEFT_SHIFT();
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 155 "lexical.l"
+#line 109 "lexical.l"
 return m68kasm::parser::make_RIGHT_SHIFT();
 	YY_BREAK
 /* Decimal number. */
 case 37:
 YY_RULE_SETUP
-#line 158 "lexical.l"
+#line 112 "lexical.l"
 {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext, yyleng, 10));
+	return m68kasm::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
 }
 	YY_BREAK
 /* Hexadecimal number (68k). */
 case 38:
 YY_RULE_SETUP
-#line 163 "lexical.l"
+#line 117 "lexical.l"
 {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext + 1, yyleng - 1, 16));
+	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
 }
 	YY_BREAK
 /* Binary number (68k). */
 case 39:
 YY_RULE_SETUP
-#line 168 "lexical.l"
+#line 122 "lexical.l"
 {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext + 1, yyleng - 1, 2));
+	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
 	YY_BREAK
 /* Identifier. */
 case 40:
 YY_RULE_SETUP
-#line 173 "lexical.l"
+#line 127 "lexical.l"
 {
 	String string;
 
@@ -1314,7 +1268,7 @@ YY_RULE_SETUP
 /* Local label. */
 case 41:
 YY_RULE_SETUP
-#line 183 "lexical.l"
+#line 137 "lexical.l"
 {
 	String string;
 
@@ -1327,15 +1281,15 @@ YY_RULE_SETUP
 /* Make Bison signal a syntax error for unrecognised symbols */
 case 42:
 YY_RULE_SETUP
-#line 193 "lexical.l"
+#line 147 "lexical.l"
 throw m68kasm::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 195 "lexical.l"
+#line 149 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 1338 "lexical.cpp"
+#line 1292 "lexical.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2465,6 +2419,6 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 195 "lexical.l"
+#line 149 "lexical.l"
 
 

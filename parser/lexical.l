@@ -32,57 +32,11 @@
 void m68kasm_warning(void *scanner, Statement *statement, const char *message);
 void m68kasm_error(void *scanner, Statement *statement, const char *message);
 
-static bool CharacterToInteger(unsigned int* const value, const unsigned int character)
+static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const unsigned long base)
 {
-	if (character >= '0' && character <= '9')
-		*value = 0x0 + (character - '0');
-	else if (character >= 'A' && character <= 'Z')
-		*value = 0xA + (character - 'A');
-	else if (character >= 'a' && character <= 'z')
-		*value = 0xA + (character - 'a');
-	else
-		return false;
-
-	return true;
-}
-
-/* Like `strtoul`, except this one returns a truncated value when parsing a number that is too large. */
-// TODO: Replace this with 'std::from_chars' or something.
-static bool StringTo32BitInteger(unsigned long* const value, const char* const string_start, const char** const string_end, const unsigned long base)
-{
-	bool success = true;
-	const unsigned long limit = 0xFFFFFFFF / base;
-	const char* string_pointer;
-
-	*value = 0;
-
-	for (string_pointer = string_start; ; ++string_pointer)
-	{
-		unsigned int digit;
-		if (!CharacterToInteger(&digit, *string_pointer) || digit >= base)
-			break;
-
-		if (*value > limit)
-			success = false;
-
-		*value *= base;
-		*value += digit;
-	}
-
-	*string_end = string_pointer;
-	return success;
-}
-
-static unsigned long ParseNumber(void* const scanner, const char* const string_start, const size_t string_length, const unsigned long base)
-{
-	unsigned long value;
-	const char *string_end;
-
-	if (!StringTo32BitInteger(&value, string_start, &string_end, base))
-	{
-		/* S.N. 68k silently truncates values that are too large. This is relied upon by old versions of the Sonic 2 August 21st prototype disassembly. */
-		m68kasm_warning(scanner, NULL, "Number is too large and will be truncated.");
-	}
+	// TODO: Replace this with 'std::from_chars' or something.
+	char *string_end;
+	const unsigned long value = strtoul(string_start, &string_end, base);
 
 	if (string_end != string_start + string_length)
 		throw m68kasm::parser::syntax_error("Number is invalid and cannot be parsed.");
@@ -155,17 +109,17 @@ even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 
  /* Decimal number. */
 {decimal} {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext, yyleng, 10));
+	return m68kasm::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
 }
 
  /* Hexadecimal number (68k). */
 \${hexadecimal} {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext + 1, yyleng - 1, 16));
+	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
 }
 
  /* Binary number (68k). */
 \%{binary} {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yyscanner, yytext + 1, yyleng - 1, 2));
+	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
 
  /* Identifier. */
