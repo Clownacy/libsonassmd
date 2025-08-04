@@ -19,7 +19,7 @@
 %option nounistd
 %option nounput noinput noyywrap
 %option reentrant
-%option prefix="m68kasm_"
+%option prefix="libsonassmd_code_reader_yy"
 %option caseless
 
 %{
@@ -30,14 +30,12 @@
 
 #include "syntactic.h"
 
-void m68kasm_error(const std::string &message);
-
 static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const int base)
 {
 	unsigned long value;
 
 	if (std::from_chars(string_start, string_start + string_length, value, base).ec != std::errc{})
-		throw m68kasm::parser::syntax_error("Number is invalid and cannot be parsed.");
+		throw libsonassmd::CodeReader::parser::syntax_error("Number is invalid and cannot be parsed.");
 
 	return value;
 }
@@ -61,78 +59,78 @@ hexadecimal       {hexadecimal_digit}+
 ;.*?$           ;
 
  /* Terminate at end of file. When terminating, revert to initial state. */
-<<EOF>>         return m68kasm::parser::make_YYEOF();
+<<EOF>>         return libsonassmd::CodeReader::parser::make_YYEOF();
 
  /* Directives. */
-dc              return m68kasm::parser::make_DIRECTIVE_DC();
-even            return m68kasm::parser::make_DIRECTIVE_EVEN();
+dc              return libsonassmd::CodeReader::parser::make_DIRECTIVE_DC();
+even            return libsonassmd::CodeReader::parser::make_DIRECTIVE_EVEN();
 
  /* Sizes. */
-".b"            return m68kasm::parser::make_SIZE_BYTE();
-".s"            return m68kasm::parser::make_SIZE_SHORT();
-".w"            return m68kasm::parser::make_SIZE_WORD();
-".l"            return m68kasm::parser::make_SIZE_LONGWORD();
+".b"            return libsonassmd::CodeReader::parser::make_SIZE_BYTE();
+".s"            return libsonassmd::CodeReader::parser::make_SIZE_SHORT();
+".w"            return libsonassmd::CodeReader::parser::make_SIZE_WORD();
+".l"            return libsonassmd::CodeReader::parser::make_SIZE_LONGWORD();
 
  /* Misc. symbols. */
-"."             return m68kasm::parser::make_PERIOD();
-","             return m68kasm::parser::make_COMMA();
-"("             return m68kasm::parser::make_PARENTHESIS_LEFT();
-")"             return m68kasm::parser::make_PARENTHESIS_RIGHT();
-"$"             return m68kasm::parser::make_DOLLAR();
-"+"             return m68kasm::parser::make_PLUS();
-"-"             return m68kasm::parser::make_MINUS();
-"*"             return m68kasm::parser::make_ASTERIX();
-"/"             return m68kasm::parser::make_FORWARD_SLASH();
-"="             return m68kasm::parser::make_EQUAL();
-"@"             return m68kasm::parser::make_AT();
-"<"             return m68kasm::parser::make_LESS();
-">"             return m68kasm::parser::make_MORE();
-"%"             return m68kasm::parser::make_PERCENT();
-"&"             return m68kasm::parser::make_AMPERSAND();
-"!"             return m68kasm::parser::make_EXCLAMATION();
-"|"             return m68kasm::parser::make_VERTICAL_BAR();
-"^"             return m68kasm::parser::make_CARET();
-"~"             return m68kasm::parser::make_TILDE();
-":"             return m68kasm::parser::make_COLON();
+"."             return libsonassmd::CodeReader::parser::make_PERIOD();
+","             return libsonassmd::CodeReader::parser::make_COMMA();
+"("             return libsonassmd::CodeReader::parser::make_PARENTHESIS_LEFT();
+")"             return libsonassmd::CodeReader::parser::make_PARENTHESIS_RIGHT();
+"$"             return libsonassmd::CodeReader::parser::make_DOLLAR();
+"+"             return libsonassmd::CodeReader::parser::make_PLUS();
+"-"             return libsonassmd::CodeReader::parser::make_MINUS();
+"*"             return libsonassmd::CodeReader::parser::make_ASTERIX();
+"/"             return libsonassmd::CodeReader::parser::make_FORWARD_SLASH();
+"="             return libsonassmd::CodeReader::parser::make_EQUAL();
+"@"             return libsonassmd::CodeReader::parser::make_AT();
+"<"             return libsonassmd::CodeReader::parser::make_LESS();
+">"             return libsonassmd::CodeReader::parser::make_MORE();
+"%"             return libsonassmd::CodeReader::parser::make_PERCENT();
+"&"             return libsonassmd::CodeReader::parser::make_AMPERSAND();
+"!"             return libsonassmd::CodeReader::parser::make_EXCLAMATION();
+"|"             return libsonassmd::CodeReader::parser::make_VERTICAL_BAR();
+"^"             return libsonassmd::CodeReader::parser::make_CARET();
+"~"             return libsonassmd::CodeReader::parser::make_TILDE();
+":"             return libsonassmd::CodeReader::parser::make_COLON();
 
  /* Operators. */
-"&&"            return m68kasm::parser::make_LOGICAL_AND();
-"||"            return m68kasm::parser::make_LOGICAL_OR();
-"=="            return m68kasm::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
-"!="            return m68kasm::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
-"<>"            return m68kasm::parser::make_INEQUALITY();
-"><"            return m68kasm::parser::make_INEQUALITY();
-"<="            return m68kasm::parser::make_LESS_OR_EQUAL();
-">="            return m68kasm::parser::make_MORE_OR_EQUAL();
-"<<"            return m68kasm::parser::make_LEFT_SHIFT();
-">>"            return m68kasm::parser::make_RIGHT_SHIFT();
+"&&"            return libsonassmd::CodeReader::parser::make_LOGICAL_AND();
+"||"            return libsonassmd::CodeReader::parser::make_LOGICAL_OR();
+"=="            return libsonassmd::CodeReader::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
+"!="            return libsonassmd::CodeReader::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
+"<>"            return libsonassmd::CodeReader::parser::make_INEQUALITY();
+"><"            return libsonassmd::CodeReader::parser::make_INEQUALITY();
+"<="            return libsonassmd::CodeReader::parser::make_LESS_OR_EQUAL();
+">="            return libsonassmd::CodeReader::parser::make_MORE_OR_EQUAL();
+"<<"            return libsonassmd::CodeReader::parser::make_LEFT_SHIFT();
+">>"            return libsonassmd::CodeReader::parser::make_RIGHT_SHIFT();
 
  /* Decimal number. */
 {decimal} {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
 }
 
  /* Hexadecimal number (68k). */
 \${hexadecimal} {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
 }
 
  /* Binary number (68k). */
 \%{binary} {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
 
  /* Identifier. */
 [A-Za-z_][A-Za-z_0-9\?]* {
-	return m68kasm::parser::make_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
 }
 
  /* Local label. */
 [@\.][A-Za-z_0-9\?]+ {
-	return m68kasm::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
-.       throw m68kasm::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
+.       throw libsonassmd::CodeReader::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
 
 %%

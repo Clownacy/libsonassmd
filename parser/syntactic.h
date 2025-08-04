@@ -33,7 +33,7 @@
 
 /**
  ** \file syntactic.h
- ** Define the m68kasm::parser class.
+ ** Define the libsonassmd::CodeReader::parser class.
  */
 
 // C++ LALR(1) parser skeleton written by Akim Demaille.
@@ -42,8 +42,8 @@
 // especially those whose name start with YY_ or yy_.  They are
 // private implementation details that can be changed or removed.
 
-#ifndef YY_M68KASM_SYNTACTIC_H_INCLUDED
-# define YY_M68KASM_SYNTACTIC_H_INCLUDED
+#ifndef YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
+# define YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 // "%code requires" blocks.
 #line 36 "syntactic.y"
 
@@ -83,7 +83,6 @@ struct Statement
 	struct MappingFrame
 	{
 		std::string label;
-		// TODO: No 'libsonassmd'.
 		libsonassmd::SpriteFrame frame;
 	};
 
@@ -92,7 +91,7 @@ struct Statement
 };
 
 
-#line 96 "syntactic.h"
+#line 95 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -222,21 +221,21 @@ struct Statement
 # endif
 
 /* Debug traces.  */
-#ifndef M68KASM_DEBUG
+#ifndef LIBSONASSMD_CODE_READER_YYDEBUG
 # if defined YYDEBUG
 #if YYDEBUG
-#   define M68KASM_DEBUG 1
+#   define LIBSONASSMD_CODE_READER_YYDEBUG 1
 #  else
-#   define M68KASM_DEBUG 0
+#   define LIBSONASSMD_CODE_READER_YYDEBUG 0
 #  endif
 # else /* ! defined YYDEBUG */
-#  define M68KASM_DEBUG 1
+#  define LIBSONASSMD_CODE_READER_YYDEBUG 1
 # endif /* ! defined YYDEBUG */
-#endif  /* ! defined M68KASM_DEBUG */
+#endif  /* ! defined LIBSONASSMD_CODE_READER_YYDEBUG */
 
 #line 24 "syntactic.y"
-namespace m68kasm {
-#line 240 "syntactic.h"
+namespace libsonassmd { namespace CodeReader {
+#line 239 "syntactic.h"
 
 
 
@@ -245,11 +244,11 @@ namespace m68kasm {
   class parser
   {
   public:
-#ifdef M68KASM_STYPE
+#ifdef LIBSONASSMD_CODE_READER_YYSTYPE
 # ifdef __GNUC__
-#  pragma GCC message "bison: do not #define M68KASM_STYPE in C++, use %define api.value.type"
+#  pragma GCC message "bison: do not #define LIBSONASSMD_CODE_READER_YYSTYPE in C++, use %define api.value.type"
 # endif
-    typedef M68KASM_STYPE value_type;
+    typedef LIBSONASSMD_CODE_READER_YYSTYPE value_type;
 #else
   /// A buffer to store and retrieve objects.
   ///
@@ -510,10 +509,10 @@ namespace m68kasm {
     {
       enum token_kind_type
       {
-        TOKEN_M68KASM_EMPTY = -2,
+        TOKEN_LIBSONASSMD_CODE_READER_YYEMPTY = -2,
     TOKEN_YYEOF = 0,               // "end of file"
-    TOKEN_M68KASM_error = 1,       // error
-    TOKEN_M68KASM_UNDEF = 2,       // "invalid token"
+    TOKEN_LIBSONASSMD_CODE_READER_YYerror = 1, // error
+    TOKEN_LIBSONASSMD_CODE_READER_YYUNDEF = 2, // "invalid token"
     TOKEN_DIRECTIVE_DC = 3,        // DIRECTIVE_DC
     TOKEN_DIRECTIVE_EVEN = 4,      // DIRECTIVE_EVEN
     TOKEN_SIZE_BYTE = 5,           // SIZE_BYTE
@@ -1045,7 +1044,7 @@ switch (yykind)
     /// \returns  0 iff parsing succeeded.
     virtual int parse ();
 
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
     /// The current debugging stream.
     std::ostream& debug_stream () const YY_ATTRIBUTE_PURE;
     /// Set the current debugging stream.
@@ -1089,31 +1088,31 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_M68KASM_error ()
+      make_LIBSONASSMD_CODE_READER_YYerror ()
       {
-        return symbol_type (token::TOKEN_M68KASM_error);
+        return symbol_type (token::TOKEN_LIBSONASSMD_CODE_READER_YYerror);
       }
 #else
       static
       symbol_type
-      make_M68KASM_error ()
+      make_LIBSONASSMD_CODE_READER_YYerror ()
       {
-        return symbol_type (token::TOKEN_M68KASM_error);
+        return symbol_type (token::TOKEN_LIBSONASSMD_CODE_READER_YYerror);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_M68KASM_UNDEF ()
+      make_LIBSONASSMD_CODE_READER_YYUNDEF ()
       {
-        return symbol_type (token::TOKEN_M68KASM_UNDEF);
+        return symbol_type (token::TOKEN_LIBSONASSMD_CODE_READER_YYUNDEF);
       }
 #else
       static
       symbol_type
-      make_M68KASM_UNDEF ()
+      make_LIBSONASSMD_CODE_READER_YYUNDEF ()
       {
-        return symbol_type (token::TOKEN_M68KASM_UNDEF);
+        return symbol_type (token::TOKEN_LIBSONASSMD_CODE_READER_YYUNDEF);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1770,7 +1769,7 @@ switch (yykind)
     static const signed char yyr2_[];
 
 
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
     static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
@@ -2220,18 +2219,18 @@ switch (yykind)
 
 
 #line 24 "syntactic.y"
-} // m68kasm
-#line 2225 "syntactic.h"
+} } // libsonassmd::CodeReader
+#line 2224 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 83 "syntactic.y"
+#line 82 "syntactic.y"
 
 
-#define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
+#define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 
-#line 2235 "syntactic.h"
+#line 2234 "syntactic.h"
 
 
-#endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED
+#endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

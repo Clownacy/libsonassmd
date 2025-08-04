@@ -15,213 +15,213 @@
 #endif
 
 #ifdef yy_create_buffer
-#define m68kasm__create_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_create_buffer_ALREADY_DEFINED
 #else
-#define yy_create_buffer m68kasm__create_buffer
+#define yy_create_buffer libsonassmd_code_reader_yy_create_buffer
 #endif
 
 #ifdef yy_delete_buffer
-#define m68kasm__delete_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_delete_buffer_ALREADY_DEFINED
 #else
-#define yy_delete_buffer m68kasm__delete_buffer
+#define yy_delete_buffer libsonassmd_code_reader_yy_delete_buffer
 #endif
 
 #ifdef yy_scan_buffer
-#define m68kasm__scan_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_scan_buffer_ALREADY_DEFINED
 #else
-#define yy_scan_buffer m68kasm__scan_buffer
+#define yy_scan_buffer libsonassmd_code_reader_yy_scan_buffer
 #endif
 
 #ifdef yy_scan_string
-#define m68kasm__scan_string_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_scan_string_ALREADY_DEFINED
 #else
-#define yy_scan_string m68kasm__scan_string
+#define yy_scan_string libsonassmd_code_reader_yy_scan_string
 #endif
 
 #ifdef yy_scan_bytes
-#define m68kasm__scan_bytes_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_scan_bytes_ALREADY_DEFINED
 #else
-#define yy_scan_bytes m68kasm__scan_bytes
+#define yy_scan_bytes libsonassmd_code_reader_yy_scan_bytes
 #endif
 
 #ifdef yy_init_buffer
-#define m68kasm__init_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_init_buffer_ALREADY_DEFINED
 #else
-#define yy_init_buffer m68kasm__init_buffer
+#define yy_init_buffer libsonassmd_code_reader_yy_init_buffer
 #endif
 
 #ifdef yy_flush_buffer
-#define m68kasm__flush_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_flush_buffer_ALREADY_DEFINED
 #else
-#define yy_flush_buffer m68kasm__flush_buffer
+#define yy_flush_buffer libsonassmd_code_reader_yy_flush_buffer
 #endif
 
 #ifdef yy_load_buffer_state
-#define m68kasm__load_buffer_state_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_load_buffer_state_ALREADY_DEFINED
 #else
-#define yy_load_buffer_state m68kasm__load_buffer_state
+#define yy_load_buffer_state libsonassmd_code_reader_yy_load_buffer_state
 #endif
 
 #ifdef yy_switch_to_buffer
-#define m68kasm__switch_to_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_switch_to_buffer_ALREADY_DEFINED
 #else
-#define yy_switch_to_buffer m68kasm__switch_to_buffer
+#define yy_switch_to_buffer libsonassmd_code_reader_yy_switch_to_buffer
 #endif
 
 #ifdef yypush_buffer_state
-#define m68kasm_push_buffer_state_ALREADY_DEFINED
+#define libsonassmd_code_reader_yypush_buffer_state_ALREADY_DEFINED
 #else
-#define yypush_buffer_state m68kasm_push_buffer_state
+#define yypush_buffer_state libsonassmd_code_reader_yypush_buffer_state
 #endif
 
 #ifdef yypop_buffer_state
-#define m68kasm_pop_buffer_state_ALREADY_DEFINED
+#define libsonassmd_code_reader_yypop_buffer_state_ALREADY_DEFINED
 #else
-#define yypop_buffer_state m68kasm_pop_buffer_state
+#define yypop_buffer_state libsonassmd_code_reader_yypop_buffer_state
 #endif
 
 #ifdef yyensure_buffer_stack
-#define m68kasm_ensure_buffer_stack_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyensure_buffer_stack_ALREADY_DEFINED
 #else
-#define yyensure_buffer_stack m68kasm_ensure_buffer_stack
+#define yyensure_buffer_stack libsonassmd_code_reader_yyensure_buffer_stack
 #endif
 
 #ifdef yylex
-#define m68kasm_lex_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_ALREADY_DEFINED
 #else
-#define yylex m68kasm_lex
+#define yylex libsonassmd_code_reader_yylex
 #endif
 
 #ifdef yyrestart
-#define m68kasm_restart_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyrestart_ALREADY_DEFINED
 #else
-#define yyrestart m68kasm_restart
+#define yyrestart libsonassmd_code_reader_yyrestart
 #endif
 
 #ifdef yylex_init
-#define m68kasm_lex_init_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_init_ALREADY_DEFINED
 #else
-#define yylex_init m68kasm_lex_init
+#define yylex_init libsonassmd_code_reader_yylex_init
 #endif
 
 #ifdef yylex_init_extra
-#define m68kasm_lex_init_extra_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_init_extra_ALREADY_DEFINED
 #else
-#define yylex_init_extra m68kasm_lex_init_extra
+#define yylex_init_extra libsonassmd_code_reader_yylex_init_extra
 #endif
 
 #ifdef yylex_destroy
-#define m68kasm_lex_destroy_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_destroy_ALREADY_DEFINED
 #else
-#define yylex_destroy m68kasm_lex_destroy
+#define yylex_destroy libsonassmd_code_reader_yylex_destroy
 #endif
 
 #ifdef yyget_debug
-#define m68kasm_get_debug_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_debug_ALREADY_DEFINED
 #else
-#define yyget_debug m68kasm_get_debug
+#define yyget_debug libsonassmd_code_reader_yyget_debug
 #endif
 
 #ifdef yyset_debug
-#define m68kasm_set_debug_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_debug_ALREADY_DEFINED
 #else
-#define yyset_debug m68kasm_set_debug
+#define yyset_debug libsonassmd_code_reader_yyset_debug
 #endif
 
 #ifdef yyget_extra
-#define m68kasm_get_extra_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_extra_ALREADY_DEFINED
 #else
-#define yyget_extra m68kasm_get_extra
+#define yyget_extra libsonassmd_code_reader_yyget_extra
 #endif
 
 #ifdef yyset_extra
-#define m68kasm_set_extra_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_extra_ALREADY_DEFINED
 #else
-#define yyset_extra m68kasm_set_extra
+#define yyset_extra libsonassmd_code_reader_yyset_extra
 #endif
 
 #ifdef yyget_in
-#define m68kasm_get_in_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_in_ALREADY_DEFINED
 #else
-#define yyget_in m68kasm_get_in
+#define yyget_in libsonassmd_code_reader_yyget_in
 #endif
 
 #ifdef yyset_in
-#define m68kasm_set_in_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_in_ALREADY_DEFINED
 #else
-#define yyset_in m68kasm_set_in
+#define yyset_in libsonassmd_code_reader_yyset_in
 #endif
 
 #ifdef yyget_out
-#define m68kasm_get_out_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_out_ALREADY_DEFINED
 #else
-#define yyget_out m68kasm_get_out
+#define yyget_out libsonassmd_code_reader_yyget_out
 #endif
 
 #ifdef yyset_out
-#define m68kasm_set_out_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_out_ALREADY_DEFINED
 #else
-#define yyset_out m68kasm_set_out
+#define yyset_out libsonassmd_code_reader_yyset_out
 #endif
 
 #ifdef yyget_leng
-#define m68kasm_get_leng_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_leng_ALREADY_DEFINED
 #else
-#define yyget_leng m68kasm_get_leng
+#define yyget_leng libsonassmd_code_reader_yyget_leng
 #endif
 
 #ifdef yyget_text
-#define m68kasm_get_text_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_text_ALREADY_DEFINED
 #else
-#define yyget_text m68kasm_get_text
+#define yyget_text libsonassmd_code_reader_yyget_text
 #endif
 
 #ifdef yyget_lineno
-#define m68kasm_get_lineno_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_lineno_ALREADY_DEFINED
 #else
-#define yyget_lineno m68kasm_get_lineno
+#define yyget_lineno libsonassmd_code_reader_yyget_lineno
 #endif
 
 #ifdef yyset_lineno
-#define m68kasm_set_lineno_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_lineno_ALREADY_DEFINED
 #else
-#define yyset_lineno m68kasm_set_lineno
+#define yyset_lineno libsonassmd_code_reader_yyset_lineno
 #endif
 
 #ifdef yyget_column
-#define m68kasm_get_column_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_column_ALREADY_DEFINED
 #else
-#define yyget_column m68kasm_get_column
+#define yyget_column libsonassmd_code_reader_yyget_column
 #endif
 
 #ifdef yyset_column
-#define m68kasm_set_column_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_column_ALREADY_DEFINED
 #else
-#define yyset_column m68kasm_set_column
+#define yyset_column libsonassmd_code_reader_yyset_column
 #endif
 
 #ifdef yywrap
-#define m68kasm_wrap_ALREADY_DEFINED
+#define libsonassmd_code_reader_yywrap_ALREADY_DEFINED
 #else
-#define yywrap m68kasm_wrap
+#define yywrap libsonassmd_code_reader_yywrap
 #endif
 
 #ifdef yyalloc
-#define m68kasm_alloc_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyalloc_ALREADY_DEFINED
 #else
-#define yyalloc m68kasm_alloc
+#define yyalloc libsonassmd_code_reader_yyalloc
 #endif
 
 #ifdef yyrealloc
-#define m68kasm_realloc_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyrealloc_ALREADY_DEFINED
 #else
-#define yyrealloc m68kasm_realloc
+#define yyrealloc libsonassmd_code_reader_yyrealloc
 #endif
 
 #ifdef yyfree
-#define m68kasm_free_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyfree_ALREADY_DEFINED
 #else
-#define yyfree m68kasm_free
+#define yyfree libsonassmd_code_reader_yyfree
 #endif
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
@@ -527,7 +527,7 @@ void yyfree ( void * , yyscan_t yyscanner );
 
 /* Begin user sect3 */
 
-#define m68kasm_wrap(yyscanner) (/*CONSTCOND*/1)
+#define libsonassmd_code_reader_yywrap(yyscanner) (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
 
@@ -703,21 +703,19 @@ static const flex_int16_t yy_chk[141] =
 
 #include "syntactic.h"
 
-void m68kasm_error(const std::string &message);
-
 static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const int base)
 {
 	unsigned long value;
 
 	if (std::from_chars(string_start, string_start + string_length, value, base).ec != std::errc{})
-		throw m68kasm::parser::syntax_error("Number is invalid and cannot be parsed.");
+		throw libsonassmd::CodeReader::parser::syntax_error("Number is invalid and cannot be parsed.");
 
 	return value;
 }
 
-#line 718 "lexical.cpp"
+#line 716 "lexical.cpp"
 /* Regular expression. */
-#line 720 "lexical.cpp"
+#line 718 "lexical.cpp"
 
 #define INITIAL 0
 
@@ -975,12 +973,12 @@ YY_DECL
 		}
 
 	{
-#line 55 "lexical.l"
+#line 53 "lexical.l"
 
 
-#line 58 "lexical.l"
+#line 56 "lexical.l"
  /* Ignore whitespace */
-#line 983 "lexical.cpp"
+#line 981 "lexical.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1035,7 +1033,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 59 "lexical.l"
+#line 57 "lexical.l"
 ;
 	YY_BREAK
 /* Ignore comments */
@@ -1044,250 +1042,250 @@ case 2:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 62 "lexical.l"
+#line 60 "lexical.l"
 ;
 	YY_BREAK
 /* Terminate at end of file. When terminating, revert to initial state. */
 case YY_STATE_EOF(INITIAL):
-#line 65 "lexical.l"
-return m68kasm::parser::make_YYEOF();
+#line 63 "lexical.l"
+return libsonassmd::CodeReader::parser::make_YYEOF();
 	YY_BREAK
 /* Directives. */
 case 3:
 YY_RULE_SETUP
-#line 68 "lexical.l"
-return m68kasm::parser::make_DIRECTIVE_DC();
+#line 66 "lexical.l"
+return libsonassmd::CodeReader::parser::make_DIRECTIVE_DC();
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 69 "lexical.l"
-return m68kasm::parser::make_DIRECTIVE_EVEN();
+#line 67 "lexical.l"
+return libsonassmd::CodeReader::parser::make_DIRECTIVE_EVEN();
 	YY_BREAK
 /* Sizes. */
 case 5:
 YY_RULE_SETUP
-#line 72 "lexical.l"
-return m68kasm::parser::make_SIZE_BYTE();
+#line 70 "lexical.l"
+return libsonassmd::CodeReader::parser::make_SIZE_BYTE();
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "lexical.l"
-return m68kasm::parser::make_SIZE_SHORT();
+#line 71 "lexical.l"
+return libsonassmd::CodeReader::parser::make_SIZE_SHORT();
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "lexical.l"
-return m68kasm::parser::make_SIZE_WORD();
+#line 72 "lexical.l"
+return libsonassmd::CodeReader::parser::make_SIZE_WORD();
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 75 "lexical.l"
-return m68kasm::parser::make_SIZE_LONGWORD();
+#line 73 "lexical.l"
+return libsonassmd::CodeReader::parser::make_SIZE_LONGWORD();
 	YY_BREAK
 /* Misc. symbols. */
 case 9:
 YY_RULE_SETUP
-#line 78 "lexical.l"
-return m68kasm::parser::make_PERIOD();
+#line 76 "lexical.l"
+return libsonassmd::CodeReader::parser::make_PERIOD();
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 79 "lexical.l"
-return m68kasm::parser::make_COMMA();
+#line 77 "lexical.l"
+return libsonassmd::CodeReader::parser::make_COMMA();
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 80 "lexical.l"
-return m68kasm::parser::make_PARENTHESIS_LEFT();
+#line 78 "lexical.l"
+return libsonassmd::CodeReader::parser::make_PARENTHESIS_LEFT();
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 81 "lexical.l"
-return m68kasm::parser::make_PARENTHESIS_RIGHT();
+#line 79 "lexical.l"
+return libsonassmd::CodeReader::parser::make_PARENTHESIS_RIGHT();
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 82 "lexical.l"
-return m68kasm::parser::make_DOLLAR();
+#line 80 "lexical.l"
+return libsonassmd::CodeReader::parser::make_DOLLAR();
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 83 "lexical.l"
-return m68kasm::parser::make_PLUS();
+#line 81 "lexical.l"
+return libsonassmd::CodeReader::parser::make_PLUS();
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 84 "lexical.l"
-return m68kasm::parser::make_MINUS();
+#line 82 "lexical.l"
+return libsonassmd::CodeReader::parser::make_MINUS();
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 85 "lexical.l"
-return m68kasm::parser::make_ASTERIX();
+#line 83 "lexical.l"
+return libsonassmd::CodeReader::parser::make_ASTERIX();
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 86 "lexical.l"
-return m68kasm::parser::make_FORWARD_SLASH();
+#line 84 "lexical.l"
+return libsonassmd::CodeReader::parser::make_FORWARD_SLASH();
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 87 "lexical.l"
-return m68kasm::parser::make_EQUAL();
+#line 85 "lexical.l"
+return libsonassmd::CodeReader::parser::make_EQUAL();
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 88 "lexical.l"
-return m68kasm::parser::make_AT();
+#line 86 "lexical.l"
+return libsonassmd::CodeReader::parser::make_AT();
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 89 "lexical.l"
-return m68kasm::parser::make_LESS();
+#line 87 "lexical.l"
+return libsonassmd::CodeReader::parser::make_LESS();
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 90 "lexical.l"
-return m68kasm::parser::make_MORE();
+#line 88 "lexical.l"
+return libsonassmd::CodeReader::parser::make_MORE();
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 91 "lexical.l"
-return m68kasm::parser::make_PERCENT();
+#line 89 "lexical.l"
+return libsonassmd::CodeReader::parser::make_PERCENT();
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 92 "lexical.l"
-return m68kasm::parser::make_AMPERSAND();
+#line 90 "lexical.l"
+return libsonassmd::CodeReader::parser::make_AMPERSAND();
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 93 "lexical.l"
-return m68kasm::parser::make_EXCLAMATION();
+#line 91 "lexical.l"
+return libsonassmd::CodeReader::parser::make_EXCLAMATION();
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 94 "lexical.l"
-return m68kasm::parser::make_VERTICAL_BAR();
+#line 92 "lexical.l"
+return libsonassmd::CodeReader::parser::make_VERTICAL_BAR();
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 95 "lexical.l"
-return m68kasm::parser::make_CARET();
+#line 93 "lexical.l"
+return libsonassmd::CodeReader::parser::make_CARET();
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 96 "lexical.l"
-return m68kasm::parser::make_TILDE();
+#line 94 "lexical.l"
+return libsonassmd::CodeReader::parser::make_TILDE();
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 97 "lexical.l"
-return m68kasm::parser::make_COLON();
+#line 95 "lexical.l"
+return libsonassmd::CodeReader::parser::make_COLON();
 	YY_BREAK
 /* Operators. */
 case 29:
 YY_RULE_SETUP
-#line 100 "lexical.l"
-return m68kasm::parser::make_LOGICAL_AND();
+#line 98 "lexical.l"
+return libsonassmd::CodeReader::parser::make_LOGICAL_AND();
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 101 "lexical.l"
-return m68kasm::parser::make_LOGICAL_OR();
+#line 99 "lexical.l"
+return libsonassmd::CodeReader::parser::make_LOGICAL_OR();
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 102 "lexical.l"
-return m68kasm::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
+#line 100 "lexical.l"
+return libsonassmd::CodeReader::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 103 "lexical.l"
-return m68kasm::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
+#line 101 "lexical.l"
+return libsonassmd::CodeReader::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 104 "lexical.l"
-return m68kasm::parser::make_INEQUALITY();
+#line 102 "lexical.l"
+return libsonassmd::CodeReader::parser::make_INEQUALITY();
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 105 "lexical.l"
-return m68kasm::parser::make_INEQUALITY();
+#line 103 "lexical.l"
+return libsonassmd::CodeReader::parser::make_INEQUALITY();
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 106 "lexical.l"
-return m68kasm::parser::make_LESS_OR_EQUAL();
+#line 104 "lexical.l"
+return libsonassmd::CodeReader::parser::make_LESS_OR_EQUAL();
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 107 "lexical.l"
-return m68kasm::parser::make_MORE_OR_EQUAL();
+#line 105 "lexical.l"
+return libsonassmd::CodeReader::parser::make_MORE_OR_EQUAL();
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 108 "lexical.l"
-return m68kasm::parser::make_LEFT_SHIFT();
+#line 106 "lexical.l"
+return libsonassmd::CodeReader::parser::make_LEFT_SHIFT();
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 109 "lexical.l"
-return m68kasm::parser::make_RIGHT_SHIFT();
+#line 107 "lexical.l"
+return libsonassmd::CodeReader::parser::make_RIGHT_SHIFT();
 	YY_BREAK
 /* Decimal number. */
 case 39:
 YY_RULE_SETUP
-#line 112 "lexical.l"
+#line 110 "lexical.l"
 {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
 }
 	YY_BREAK
 /* Hexadecimal number (68k). */
 case 40:
 YY_RULE_SETUP
-#line 117 "lexical.l"
+#line 115 "lexical.l"
 {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
 }
 	YY_BREAK
 /* Binary number (68k). */
 case 41:
 YY_RULE_SETUP
-#line 122 "lexical.l"
+#line 120 "lexical.l"
 {
-	return m68kasm::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
 	YY_BREAK
 /* Identifier. */
 case 42:
 YY_RULE_SETUP
-#line 127 "lexical.l"
+#line 125 "lexical.l"
 {
-	return m68kasm::parser::make_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
 }
 	YY_BREAK
 /* Local label. */
 case 43:
 YY_RULE_SETUP
-#line 132 "lexical.l"
+#line 130 "lexical.l"
 {
-	return m68kasm::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
 }
 	YY_BREAK
 /* Make Bison signal a syntax error for unrecognised symbols */
 case 44:
 YY_RULE_SETUP
-#line 137 "lexical.l"
-throw m68kasm::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
+#line 135 "lexical.l"
+throw libsonassmd::CodeReader::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 139 "lexical.l"
+#line 137 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 1290 "lexical.cpp"
+#line 1288 "lexical.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2417,6 +2415,6 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 139 "lexical.l"
+#line 137 "lexical.l"
 
 

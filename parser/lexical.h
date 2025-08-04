@@ -1,6 +1,6 @@
-#ifndef m68kasm_HEADER_H
-#define m68kasm_HEADER_H 1
-#define m68kasm_IN_HEADER 1
+#ifndef libsonassmd_code_reader_yyHEADER_H
+#define libsonassmd_code_reader_yyHEADER_H 1
+#define libsonassmd_code_reader_yyIN_HEADER 1
 
 #line 5 "lexical.h"
 
@@ -19,213 +19,213 @@
 #endif
 
 #ifdef yy_create_buffer
-#define m68kasm__create_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_create_buffer_ALREADY_DEFINED
 #else
-#define yy_create_buffer m68kasm__create_buffer
+#define yy_create_buffer libsonassmd_code_reader_yy_create_buffer
 #endif
 
 #ifdef yy_delete_buffer
-#define m68kasm__delete_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_delete_buffer_ALREADY_DEFINED
 #else
-#define yy_delete_buffer m68kasm__delete_buffer
+#define yy_delete_buffer libsonassmd_code_reader_yy_delete_buffer
 #endif
 
 #ifdef yy_scan_buffer
-#define m68kasm__scan_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_scan_buffer_ALREADY_DEFINED
 #else
-#define yy_scan_buffer m68kasm__scan_buffer
+#define yy_scan_buffer libsonassmd_code_reader_yy_scan_buffer
 #endif
 
 #ifdef yy_scan_string
-#define m68kasm__scan_string_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_scan_string_ALREADY_DEFINED
 #else
-#define yy_scan_string m68kasm__scan_string
+#define yy_scan_string libsonassmd_code_reader_yy_scan_string
 #endif
 
 #ifdef yy_scan_bytes
-#define m68kasm__scan_bytes_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_scan_bytes_ALREADY_DEFINED
 #else
-#define yy_scan_bytes m68kasm__scan_bytes
+#define yy_scan_bytes libsonassmd_code_reader_yy_scan_bytes
 #endif
 
 #ifdef yy_init_buffer
-#define m68kasm__init_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_init_buffer_ALREADY_DEFINED
 #else
-#define yy_init_buffer m68kasm__init_buffer
+#define yy_init_buffer libsonassmd_code_reader_yy_init_buffer
 #endif
 
 #ifdef yy_flush_buffer
-#define m68kasm__flush_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_flush_buffer_ALREADY_DEFINED
 #else
-#define yy_flush_buffer m68kasm__flush_buffer
+#define yy_flush_buffer libsonassmd_code_reader_yy_flush_buffer
 #endif
 
 #ifdef yy_load_buffer_state
-#define m68kasm__load_buffer_state_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_load_buffer_state_ALREADY_DEFINED
 #else
-#define yy_load_buffer_state m68kasm__load_buffer_state
+#define yy_load_buffer_state libsonassmd_code_reader_yy_load_buffer_state
 #endif
 
 #ifdef yy_switch_to_buffer
-#define m68kasm__switch_to_buffer_ALREADY_DEFINED
+#define libsonassmd_code_reader_yy_switch_to_buffer_ALREADY_DEFINED
 #else
-#define yy_switch_to_buffer m68kasm__switch_to_buffer
+#define yy_switch_to_buffer libsonassmd_code_reader_yy_switch_to_buffer
 #endif
 
 #ifdef yypush_buffer_state
-#define m68kasm_push_buffer_state_ALREADY_DEFINED
+#define libsonassmd_code_reader_yypush_buffer_state_ALREADY_DEFINED
 #else
-#define yypush_buffer_state m68kasm_push_buffer_state
+#define yypush_buffer_state libsonassmd_code_reader_yypush_buffer_state
 #endif
 
 #ifdef yypop_buffer_state
-#define m68kasm_pop_buffer_state_ALREADY_DEFINED
+#define libsonassmd_code_reader_yypop_buffer_state_ALREADY_DEFINED
 #else
-#define yypop_buffer_state m68kasm_pop_buffer_state
+#define yypop_buffer_state libsonassmd_code_reader_yypop_buffer_state
 #endif
 
 #ifdef yyensure_buffer_stack
-#define m68kasm_ensure_buffer_stack_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyensure_buffer_stack_ALREADY_DEFINED
 #else
-#define yyensure_buffer_stack m68kasm_ensure_buffer_stack
+#define yyensure_buffer_stack libsonassmd_code_reader_yyensure_buffer_stack
 #endif
 
 #ifdef yylex
-#define m68kasm_lex_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_ALREADY_DEFINED
 #else
-#define yylex m68kasm_lex
+#define yylex libsonassmd_code_reader_yylex
 #endif
 
 #ifdef yyrestart
-#define m68kasm_restart_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyrestart_ALREADY_DEFINED
 #else
-#define yyrestart m68kasm_restart
+#define yyrestart libsonassmd_code_reader_yyrestart
 #endif
 
 #ifdef yylex_init
-#define m68kasm_lex_init_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_init_ALREADY_DEFINED
 #else
-#define yylex_init m68kasm_lex_init
+#define yylex_init libsonassmd_code_reader_yylex_init
 #endif
 
 #ifdef yylex_init_extra
-#define m68kasm_lex_init_extra_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_init_extra_ALREADY_DEFINED
 #else
-#define yylex_init_extra m68kasm_lex_init_extra
+#define yylex_init_extra libsonassmd_code_reader_yylex_init_extra
 #endif
 
 #ifdef yylex_destroy
-#define m68kasm_lex_destroy_ALREADY_DEFINED
+#define libsonassmd_code_reader_yylex_destroy_ALREADY_DEFINED
 #else
-#define yylex_destroy m68kasm_lex_destroy
+#define yylex_destroy libsonassmd_code_reader_yylex_destroy
 #endif
 
 #ifdef yyget_debug
-#define m68kasm_get_debug_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_debug_ALREADY_DEFINED
 #else
-#define yyget_debug m68kasm_get_debug
+#define yyget_debug libsonassmd_code_reader_yyget_debug
 #endif
 
 #ifdef yyset_debug
-#define m68kasm_set_debug_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_debug_ALREADY_DEFINED
 #else
-#define yyset_debug m68kasm_set_debug
+#define yyset_debug libsonassmd_code_reader_yyset_debug
 #endif
 
 #ifdef yyget_extra
-#define m68kasm_get_extra_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_extra_ALREADY_DEFINED
 #else
-#define yyget_extra m68kasm_get_extra
+#define yyget_extra libsonassmd_code_reader_yyget_extra
 #endif
 
 #ifdef yyset_extra
-#define m68kasm_set_extra_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_extra_ALREADY_DEFINED
 #else
-#define yyset_extra m68kasm_set_extra
+#define yyset_extra libsonassmd_code_reader_yyset_extra
 #endif
 
 #ifdef yyget_in
-#define m68kasm_get_in_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_in_ALREADY_DEFINED
 #else
-#define yyget_in m68kasm_get_in
+#define yyget_in libsonassmd_code_reader_yyget_in
 #endif
 
 #ifdef yyset_in
-#define m68kasm_set_in_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_in_ALREADY_DEFINED
 #else
-#define yyset_in m68kasm_set_in
+#define yyset_in libsonassmd_code_reader_yyset_in
 #endif
 
 #ifdef yyget_out
-#define m68kasm_get_out_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_out_ALREADY_DEFINED
 #else
-#define yyget_out m68kasm_get_out
+#define yyget_out libsonassmd_code_reader_yyget_out
 #endif
 
 #ifdef yyset_out
-#define m68kasm_set_out_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_out_ALREADY_DEFINED
 #else
-#define yyset_out m68kasm_set_out
+#define yyset_out libsonassmd_code_reader_yyset_out
 #endif
 
 #ifdef yyget_leng
-#define m68kasm_get_leng_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_leng_ALREADY_DEFINED
 #else
-#define yyget_leng m68kasm_get_leng
+#define yyget_leng libsonassmd_code_reader_yyget_leng
 #endif
 
 #ifdef yyget_text
-#define m68kasm_get_text_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_text_ALREADY_DEFINED
 #else
-#define yyget_text m68kasm_get_text
+#define yyget_text libsonassmd_code_reader_yyget_text
 #endif
 
 #ifdef yyget_lineno
-#define m68kasm_get_lineno_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_lineno_ALREADY_DEFINED
 #else
-#define yyget_lineno m68kasm_get_lineno
+#define yyget_lineno libsonassmd_code_reader_yyget_lineno
 #endif
 
 #ifdef yyset_lineno
-#define m68kasm_set_lineno_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_lineno_ALREADY_DEFINED
 #else
-#define yyset_lineno m68kasm_set_lineno
+#define yyset_lineno libsonassmd_code_reader_yyset_lineno
 #endif
 
 #ifdef yyget_column
-#define m68kasm_get_column_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyget_column_ALREADY_DEFINED
 #else
-#define yyget_column m68kasm_get_column
+#define yyget_column libsonassmd_code_reader_yyget_column
 #endif
 
 #ifdef yyset_column
-#define m68kasm_set_column_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyset_column_ALREADY_DEFINED
 #else
-#define yyset_column m68kasm_set_column
+#define yyset_column libsonassmd_code_reader_yyset_column
 #endif
 
 #ifdef yywrap
-#define m68kasm_wrap_ALREADY_DEFINED
+#define libsonassmd_code_reader_yywrap_ALREADY_DEFINED
 #else
-#define yywrap m68kasm_wrap
+#define yywrap libsonassmd_code_reader_yywrap
 #endif
 
 #ifdef yyalloc
-#define m68kasm_alloc_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyalloc_ALREADY_DEFINED
 #else
-#define yyalloc m68kasm_alloc
+#define yyalloc libsonassmd_code_reader_yyalloc
 #endif
 
 #ifdef yyrealloc
-#define m68kasm_realloc_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyrealloc_ALREADY_DEFINED
 #else
-#define yyrealloc m68kasm_realloc
+#define yyrealloc libsonassmd_code_reader_yyrealloc
 #endif
 
 #ifdef yyfree
-#define m68kasm_free_ALREADY_DEFINED
+#define libsonassmd_code_reader_yyfree_ALREADY_DEFINED
 #else
-#define yyfree m68kasm_free
+#define yyfree libsonassmd_code_reader_yyfree
 #endif
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
@@ -426,7 +426,7 @@ void yyfree ( void * , yyscan_t yyscanner );
 
 /* Begin user sect3 */
 
-#define m68kasm_wrap(yyscanner) (/*CONSTCOND*/1)
+#define libsonassmd_code_reader_yywrap(yyscanner) (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 
 #define yytext_ptr yytext_r
@@ -549,154 +549,154 @@ extern int yylex (yyscan_t yyscanner);
 #undef YY_DECL
 #endif
 
-#ifndef m68kasm__create_buffer_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_create_buffer_ALREADY_DEFINED
 #undef yy_create_buffer
 #endif
-#ifndef m68kasm__delete_buffer_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_delete_buffer_ALREADY_DEFINED
 #undef yy_delete_buffer
 #endif
-#ifndef m68kasm__scan_buffer_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_scan_buffer_ALREADY_DEFINED
 #undef yy_scan_buffer
 #endif
-#ifndef m68kasm__scan_string_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_scan_string_ALREADY_DEFINED
 #undef yy_scan_string
 #endif
-#ifndef m68kasm__scan_bytes_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_scan_bytes_ALREADY_DEFINED
 #undef yy_scan_bytes
 #endif
-#ifndef m68kasm__init_buffer_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_init_buffer_ALREADY_DEFINED
 #undef yy_init_buffer
 #endif
-#ifndef m68kasm__flush_buffer_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_flush_buffer_ALREADY_DEFINED
 #undef yy_flush_buffer
 #endif
-#ifndef m68kasm__load_buffer_state_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_load_buffer_state_ALREADY_DEFINED
 #undef yy_load_buffer_state
 #endif
-#ifndef m68kasm__switch_to_buffer_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_switch_to_buffer_ALREADY_DEFINED
 #undef yy_switch_to_buffer
 #endif
-#ifndef m68kasm_push_buffer_state_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yypush_buffer_state_ALREADY_DEFINED
 #undef yypush_buffer_state
 #endif
-#ifndef m68kasm_pop_buffer_state_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yypop_buffer_state_ALREADY_DEFINED
 #undef yypop_buffer_state
 #endif
-#ifndef m68kasm_ensure_buffer_stack_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyensure_buffer_stack_ALREADY_DEFINED
 #undef yyensure_buffer_stack
 #endif
-#ifndef m68kasm_lex_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yylex_ALREADY_DEFINED
 #undef yylex
 #endif
-#ifndef m68kasm_restart_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyrestart_ALREADY_DEFINED
 #undef yyrestart
 #endif
-#ifndef m68kasm_lex_init_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yylex_init_ALREADY_DEFINED
 #undef yylex_init
 #endif
-#ifndef m68kasm_lex_init_extra_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yylex_init_extra_ALREADY_DEFINED
 #undef yylex_init_extra
 #endif
-#ifndef m68kasm_lex_destroy_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yylex_destroy_ALREADY_DEFINED
 #undef yylex_destroy
 #endif
-#ifndef m68kasm_get_debug_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_debug_ALREADY_DEFINED
 #undef yyget_debug
 #endif
-#ifndef m68kasm_set_debug_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_debug_ALREADY_DEFINED
 #undef yyset_debug
 #endif
-#ifndef m68kasm_get_extra_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_extra_ALREADY_DEFINED
 #undef yyget_extra
 #endif
-#ifndef m68kasm_set_extra_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_extra_ALREADY_DEFINED
 #undef yyset_extra
 #endif
-#ifndef m68kasm_get_in_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_in_ALREADY_DEFINED
 #undef yyget_in
 #endif
-#ifndef m68kasm_set_in_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_in_ALREADY_DEFINED
 #undef yyset_in
 #endif
-#ifndef m68kasm_get_out_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_out_ALREADY_DEFINED
 #undef yyget_out
 #endif
-#ifndef m68kasm_set_out_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_out_ALREADY_DEFINED
 #undef yyset_out
 #endif
-#ifndef m68kasm_get_leng_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_leng_ALREADY_DEFINED
 #undef yyget_leng
 #endif
-#ifndef m68kasm_get_text_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_text_ALREADY_DEFINED
 #undef yyget_text
 #endif
-#ifndef m68kasm_get_lineno_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_lineno_ALREADY_DEFINED
 #undef yyget_lineno
 #endif
-#ifndef m68kasm_set_lineno_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_lineno_ALREADY_DEFINED
 #undef yyset_lineno
 #endif
-#ifndef m68kasm_get_column_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_column_ALREADY_DEFINED
 #undef yyget_column
 #endif
-#ifndef m68kasm_set_column_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_column_ALREADY_DEFINED
 #undef yyset_column
 #endif
-#ifndef m68kasm_wrap_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yywrap_ALREADY_DEFINED
 #undef yywrap
 #endif
-#ifndef m68kasm_get_lval_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_lval_ALREADY_DEFINED
 #undef yyget_lval
 #endif
-#ifndef m68kasm_set_lval_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_lval_ALREADY_DEFINED
 #undef yyset_lval
 #endif
-#ifndef m68kasm_get_lloc_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyget_lloc_ALREADY_DEFINED
 #undef yyget_lloc
 #endif
-#ifndef m68kasm_set_lloc_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyset_lloc_ALREADY_DEFINED
 #undef yyset_lloc
 #endif
-#ifndef m68kasm_alloc_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyalloc_ALREADY_DEFINED
 #undef yyalloc
 #endif
-#ifndef m68kasm_realloc_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyrealloc_ALREADY_DEFINED
 #undef yyrealloc
 #endif
-#ifndef m68kasm_free_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyfree_ALREADY_DEFINED
 #undef yyfree
 #endif
-#ifndef m68kasm_text_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yytext_ALREADY_DEFINED
 #undef yytext
 #endif
-#ifndef m68kasm_leng_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyleng_ALREADY_DEFINED
 #undef yyleng
 #endif
-#ifndef m68kasm_in_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyin_ALREADY_DEFINED
 #undef yyin
 #endif
-#ifndef m68kasm_out_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyout_ALREADY_DEFINED
 #undef yyout
 #endif
-#ifndef m68kasm__flex_debug_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yy_flex_debug_ALREADY_DEFINED
 #undef yy_flex_debug
 #endif
-#ifndef m68kasm_lineno_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yylineno_ALREADY_DEFINED
 #undef yylineno
 #endif
-#ifndef m68kasm_tables_fload_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yytables_fload_ALREADY_DEFINED
 #undef yytables_fload
 #endif
-#ifndef m68kasm_tables_destroy_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yytables_destroy_ALREADY_DEFINED
 #undef yytables_destroy
 #endif
-#ifndef m68kasm_TABLES_NAME_ALREADY_DEFINED
+#ifndef libsonassmd_code_reader_yyTABLES_NAME_ALREADY_DEFINED
 #undef yyTABLES_NAME
 #endif
 
-#line 139 "lexical.l"
+#line 137 "lexical.l"
 
 
 #line 700 "lexical.h"
-#undef m68kasm_IN_HEADER
-#endif /* m68kasm_HEADER_H */
+#undef libsonassmd_code_reader_yyIN_HEADER
+#endif /* libsonassmd_code_reader_yyHEADER_H */

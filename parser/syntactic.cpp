@@ -36,7 +36,7 @@
 
 
 // Take the name prefix into account.
-#define yylex   m68kasm_lex
+#define yylex   libsonassmd_code_reader_yylex
 
 
 
@@ -44,18 +44,18 @@
 
 
 // Unqualified %code blocks.
-#line 89 "syntactic.y"
+#line 88 "syntactic.y"
 
 
 #include <cassert>
 #include <initializer_list>
 
 YY_DECL;
-void m68kasm_error(const std::string &message);
+void libsonassmd_yyerror(const std::string &message);
 
-void m68kasm::parser::error(const std::string &message)
+void libsonassmd::CodeReader::parser::error(const std::string &message)
 {
-	m68kasm_error(message);
+	libsonassmd_yyerror(message);
 }
 
 
@@ -87,7 +87,7 @@ void m68kasm::parser::error(const std::string &message)
 
 
 // Enable debugging if requested.
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
 
 // A pseudo ostream that takes yydebug_ into account.
 # define YYCDEBUG if (yydebug_) (*yycdebug_)
@@ -114,14 +114,14 @@ void m68kasm::parser::error(const std::string &message)
       yy_stack_print_ ();                \
   } while (false)
 
-#else // !M68KASM_DEBUG
+#else // !LIBSONASSMD_CODE_READER_YYDEBUG
 
 # define YYCDEBUG if (false) std::cerr
 # define YY_SYMBOL_PRINT(Title, Symbol)  YY_USE (Symbol)
 # define YY_REDUCE_PRINT(Rule)           static_cast<void> (0)
 # define YY_STACK_PRINT()                static_cast<void> (0)
 
-#endif // !M68KASM_DEBUG
+#endif // !LIBSONASSMD_CODE_READER_YYDEBUG
 
 #define yyerrok         (yyerrstatus_ = 0)
 #define yyclearin       (yyla.clear ())
@@ -132,12 +132,12 @@ void m68kasm::parser::error(const std::string &message)
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 #line 24 "syntactic.y"
-namespace m68kasm {
+namespace libsonassmd { namespace CodeReader {
 #line 137 "syntactic.cpp"
 
   /// Build a parser object.
   parser::parser (void *scanner_yyarg, std::vector<Statement> &statement_list_yyarg)
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
     : yydebug_ (false),
       yycdebug_ (&std::cerr),
 #else
@@ -459,7 +459,7 @@ namespace m68kasm {
       YY_SYMBOL_PRINT (yymsg, yysym);
   }
 
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
   template <typename Base>
   void
   parser::yy_print_ (std::ostream& yyo, const basic_symbol<Base>& yysym) const
@@ -504,7 +504,7 @@ namespace m68kasm {
     yystack_.pop (n);
   }
 
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
   std::ostream&
   parser::debug_stream () const
   {
@@ -529,7 +529,7 @@ namespace m68kasm {
   {
     yydebug_ = l;
   }
-#endif // M68KASM_DEBUG
+#endif // LIBSONASSMD_CODE_READER_YYDEBUG
 
   parser::state_type
   parser::yy_lr_goto_state_ (state_type yystate, int yysym)
@@ -759,7 +759,7 @@ namespace m68kasm {
           switch (yyn)
             {
   case 2: // output: statement_list
-#line 161 "syntactic.y"
+#line 160 "syntactic.y"
         {
 		statement_list = std::move(yystack_[0].value.as < std::vector<Statement> > ());
 	}
@@ -767,7 +767,7 @@ namespace m68kasm {
     break;
 
   case 3: // statement_list: offset_table
-#line 168 "syntactic.y"
+#line 167 "syntactic.y"
         {
 		// A label-less offset table can occur at the start of the file, but no later.
 		// This restriction is important for avoiding shift-reduce conflicts.
@@ -780,7 +780,7 @@ namespace m68kasm {
     break;
 
   case 4: // statement_list: statement
-#line 177 "syntactic.y"
+#line 176 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
 	}
@@ -788,7 +788,7 @@ namespace m68kasm {
     break;
 
   case 5: // statement_list: statement_list statement
-#line 181 "syntactic.y"
+#line 180 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Statement> > () = std::move(yystack_[1].value.as < std::vector<Statement> > ());
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
@@ -797,7 +797,7 @@ namespace m68kasm {
     break;
 
   case 6: // statement: label offset_table
-#line 189 "syntactic.y"
+#line 188 "syntactic.y"
         {
 		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_OFFSET_TABLE;
 		yylhs.value.as < Statement > ().shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
@@ -806,7 +806,7 @@ namespace m68kasm {
     break;
 
   case 7: // statement: mapping_frame
-#line 194 "syntactic.y"
+#line 193 "syntactic.y"
         {
 		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_MAPPING_FRAME;
 		yylhs.value.as < Statement > ().shared.emplace<Statement::MappingFrame>(std::move(yystack_[0].value.as < Statement::MappingFrame > ()));
@@ -815,7 +815,7 @@ namespace m68kasm {
     break;
 
   case 8: // statement: DIRECTIVE_EVEN
-#line 199 "syntactic.y"
+#line 198 "syntactic.y"
         {
 		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_EVEN;
 	}
@@ -823,7 +823,7 @@ namespace m68kasm {
     break;
 
   case 9: // label: IDENTIFIER ":"
-#line 206 "syntactic.y"
+#line 205 "syntactic.y"
         {
 		yylhs.value.as < std::string > () = std::move(yystack_[1].value.as < std::string > ());
 	}
@@ -831,7 +831,7 @@ namespace m68kasm {
     break;
 
   case 10: // offset_table: offset_table_entry
-#line 213 "syntactic.y"
+#line 212 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
@@ -839,7 +839,7 @@ namespace m68kasm {
     break;
 
   case 11: // offset_table: offset_table offset_table_entry
-#line 217 "syntactic.y"
+#line 216 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > () = std::move(yystack_[1].value.as < std::vector<std::string> > ());
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
@@ -848,7 +848,7 @@ namespace m68kasm {
     break;
 
   case 12: // dc: DIRECTIVE_DC size
-#line 225 "syntactic.y"
+#line 224 "syntactic.y"
         {
 		yylhs.value.as < Size > () = yystack_[0].value.as < Size > ();
 	}
@@ -856,7 +856,7 @@ namespace m68kasm {
     break;
 
   case 13: // offset_table_entry: dc IDENTIFIER "-" IDENTIFIER
-#line 232 "syntactic.y"
+#line 231 "syntactic.y"
         {
 		static_cast<void>(yystack_[0].value.as < std::string > ());
 		yylhs.value.as < std::string > () = std::move(yystack_[2].value.as < std::string > ());
@@ -865,7 +865,7 @@ namespace m68kasm {
     break;
 
   case 14: // mapping_frame: label bytes
-#line 240 "syntactic.y"
+#line 239 "syntactic.y"
         {
 		yylhs.value.as < Statement::MappingFrame > ().label = std::move(yystack_[1].value.as < std::string > ());
 		// TODO: Not this junk.
@@ -876,7 +876,7 @@ namespace m68kasm {
     break;
 
   case 15: // bytes: dc expression_list
-#line 250 "syntactic.y"
+#line 249 "syntactic.y"
         {
 		for (const auto &value : yystack_[0].value.as < std::vector<unsigned long> > ())
 		{
@@ -905,7 +905,7 @@ namespace m68kasm {
     break;
 
   case 16: // bytes: bytes dc expression_list
-#line 275 "syntactic.y"
+#line 274 "syntactic.y"
         {
 		yylhs.value.as < std::stringstream > () = std::move(yystack_[2].value.as < std::stringstream > ());
 
@@ -937,7 +937,7 @@ namespace m68kasm {
     break;
 
   case 17: // expression_list: expression
-#line 306 "syntactic.y"
+#line 305 "syntactic.y"
         {
 		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
 	}
@@ -945,7 +945,7 @@ namespace m68kasm {
     break;
 
   case 18: // expression_list: expression_list "," expression
-#line 310 "syntactic.y"
+#line 309 "syntactic.y"
         {
 		yylhs.value.as < std::vector<unsigned long> > () = std::move(yystack_[2].value.as < std::vector<unsigned long> > ());
 		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
@@ -954,7 +954,7 @@ namespace m68kasm {
     break;
 
   case 19: // size: SIZE_BYTE
-#line 318 "syntactic.y"
+#line 317 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_BYTE;
 	}
@@ -962,7 +962,7 @@ namespace m68kasm {
     break;
 
   case 20: // size: SIZE_SHORT
-#line 322 "syntactic.y"
+#line 321 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_SHORT;
 	}
@@ -970,7 +970,7 @@ namespace m68kasm {
     break;
 
   case 21: // size: SIZE_WORD
-#line 326 "syntactic.y"
+#line 325 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_WORD;
 	}
@@ -978,7 +978,7 @@ namespace m68kasm {
     break;
 
   case 22: // size: SIZE_LONGWORD
-#line 330 "syntactic.y"
+#line 329 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_LONGWORD;
 	}
@@ -986,7 +986,7 @@ namespace m68kasm {
     break;
 
   case 23: // expression: expression1
-#line 337 "syntactic.y"
+#line 336 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -994,7 +994,7 @@ namespace m68kasm {
     break;
 
   case 24: // expression: expression LOGICAL_AND expression1
-#line 342 "syntactic.y"
+#line 341 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () && yystack_[0].value.as < unsigned long > ();
 	}
@@ -1002,7 +1002,7 @@ namespace m68kasm {
     break;
 
   case 25: // expression: expression LOGICAL_OR expression1
-#line 347 "syntactic.y"
+#line 346 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () || yystack_[0].value.as < unsigned long > ();
 	}
@@ -1010,7 +1010,7 @@ namespace m68kasm {
     break;
 
   case 26: // expression1: expression2
-#line 354 "syntactic.y"
+#line 353 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1018,7 +1018,7 @@ namespace m68kasm {
     break;
 
   case 27: // expression1: expression1 "=" expression2
-#line 358 "syntactic.y"
+#line 357 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
 	}
@@ -1026,7 +1026,7 @@ namespace m68kasm {
     break;
 
   case 28: // expression1: expression1 EQUALITY expression2
-#line 362 "syntactic.y"
+#line 361 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
 	}
@@ -1034,7 +1034,7 @@ namespace m68kasm {
     break;
 
   case 29: // expression1: expression1 INEQUALITY expression2
-#line 366 "syntactic.y"
+#line 365 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () != yystack_[0].value.as < unsigned long > ();
 	}
@@ -1042,7 +1042,7 @@ namespace m68kasm {
     break;
 
   case 30: // expression2: expression3
-#line 373 "syntactic.y"
+#line 372 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1050,7 +1050,7 @@ namespace m68kasm {
     break;
 
   case 31: // expression2: expression2 "<" expression3
-#line 377 "syntactic.y"
+#line 376 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () < yystack_[0].value.as < unsigned long > ();
 	}
@@ -1058,7 +1058,7 @@ namespace m68kasm {
     break;
 
   case 32: // expression2: expression2 LESS_OR_EQUAL expression3
-#line 381 "syntactic.y"
+#line 380 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () <= yystack_[0].value.as < unsigned long > ();
 	}
@@ -1066,7 +1066,7 @@ namespace m68kasm {
     break;
 
   case 33: // expression2: expression2 ">" expression3
-#line 385 "syntactic.y"
+#line 384 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () > yystack_[0].value.as < unsigned long > ();
 	}
@@ -1074,7 +1074,7 @@ namespace m68kasm {
     break;
 
   case 34: // expression2: expression2 MORE_OR_EQUAL expression3
-#line 389 "syntactic.y"
+#line 388 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >= yystack_[0].value.as < unsigned long > ();
 	}
@@ -1082,7 +1082,7 @@ namespace m68kasm {
     break;
 
   case 35: // expression3: expression4
-#line 396 "syntactic.y"
+#line 395 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1090,7 +1090,7 @@ namespace m68kasm {
     break;
 
   case 36: // expression3: expression3 "+" expression4
-#line 400 "syntactic.y"
+#line 399 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () + yystack_[0].value.as < unsigned long > ();
 	}
@@ -1098,7 +1098,7 @@ namespace m68kasm {
     break;
 
   case 37: // expression3: expression3 "-" expression4
-#line 404 "syntactic.y"
+#line 403 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () - yystack_[0].value.as < unsigned long > ();
 	}
@@ -1106,7 +1106,7 @@ namespace m68kasm {
     break;
 
   case 38: // expression4: expression5
-#line 411 "syntactic.y"
+#line 410 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1114,7 +1114,7 @@ namespace m68kasm {
     break;
 
   case 39: // expression4: expression4 "*" expression5
-#line 415 "syntactic.y"
+#line 414 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () * yystack_[0].value.as < unsigned long > ();
 	}
@@ -1122,7 +1122,7 @@ namespace m68kasm {
     break;
 
   case 40: // expression4: expression4 "/" expression5
-#line 419 "syntactic.y"
+#line 418 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () / yystack_[0].value.as < unsigned long > ();
 	}
@@ -1130,7 +1130,7 @@ namespace m68kasm {
     break;
 
   case 41: // expression4: expression4 "%" expression5
-#line 423 "syntactic.y"
+#line 422 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () % yystack_[0].value.as < unsigned long > ();
 	}
@@ -1138,7 +1138,7 @@ namespace m68kasm {
     break;
 
   case 42: // expression5: expression6
-#line 430 "syntactic.y"
+#line 429 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1146,7 +1146,7 @@ namespace m68kasm {
     break;
 
   case 43: // expression5: expression5 "&" expression6
-#line 434 "syntactic.y"
+#line 433 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () & yystack_[0].value.as < unsigned long > ();
 	}
@@ -1154,7 +1154,7 @@ namespace m68kasm {
     break;
 
   case 44: // expression5: expression5 "!" expression6
-#line 438 "syntactic.y"
+#line 437 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
 	}
@@ -1162,7 +1162,7 @@ namespace m68kasm {
     break;
 
   case 45: // expression5: expression5 "|" expression6
-#line 442 "syntactic.y"
+#line 441 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
 	}
@@ -1170,7 +1170,7 @@ namespace m68kasm {
     break;
 
   case 46: // expression5: expression5 "^" expression6
-#line 446 "syntactic.y"
+#line 445 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () ^ yystack_[0].value.as < unsigned long > ();
 	}
@@ -1178,7 +1178,7 @@ namespace m68kasm {
     break;
 
   case 47: // expression6: expression7
-#line 453 "syntactic.y"
+#line 452 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1186,7 +1186,7 @@ namespace m68kasm {
     break;
 
   case 48: // expression6: expression6 LEFT_SHIFT expression7
-#line 457 "syntactic.y"
+#line 456 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () << yystack_[0].value.as < unsigned long > ();
 	}
@@ -1194,7 +1194,7 @@ namespace m68kasm {
     break;
 
   case 49: // expression6: expression6 RIGHT_SHIFT expression7
-#line 461 "syntactic.y"
+#line 460 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >> yystack_[0].value.as < unsigned long > ();
 	}
@@ -1202,7 +1202,7 @@ namespace m68kasm {
     break;
 
   case 50: // expression7: expression8
-#line 468 "syntactic.y"
+#line 467 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1210,7 +1210,7 @@ namespace m68kasm {
     break;
 
   case 51: // expression7: "+" expression7
-#line 472 "syntactic.y"
+#line 471 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1218,7 +1218,7 @@ namespace m68kasm {
     break;
 
   case 52: // expression7: "-" expression7
-#line 476 "syntactic.y"
+#line 475 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = -yystack_[0].value.as < unsigned long > ();
 	}
@@ -1226,7 +1226,7 @@ namespace m68kasm {
     break;
 
   case 53: // expression7: "~" expression7
-#line 480 "syntactic.y"
+#line 479 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = ~yystack_[0].value.as < unsigned long > ();
 	}
@@ -1234,7 +1234,7 @@ namespace m68kasm {
     break;
 
   case 54: // expression7: "!" expression7
-#line 485 "syntactic.y"
+#line 484 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = !yystack_[0].value.as < unsigned long > ();
 	}
@@ -1242,7 +1242,7 @@ namespace m68kasm {
     break;
 
   case 55: // expression8: NUMBER
-#line 492 "syntactic.y"
+#line 491 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1250,7 +1250,7 @@ namespace m68kasm {
     break;
 
   case 56: // expression8: "(" expression ")"
-#line 496 "syntactic.y"
+#line 495 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[1].value.as < unsigned long > ();
 	}
@@ -1722,7 +1722,7 @@ namespace m68kasm {
   };
 
 
-#if M68KASM_DEBUG || 1
+#if LIBSONASSMD_CODE_READER_YYDEBUG || 1
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
   // First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
   const char*
@@ -1744,16 +1744,16 @@ namespace m68kasm {
 #endif
 
 
-#if M68KASM_DEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
   const short
   parser::yyrline_[] =
   {
-       0,   160,   160,   167,   176,   180,   188,   193,   198,   205,
-     212,   216,   224,   231,   239,   249,   274,   305,   309,   317,
-     321,   325,   329,   336,   341,   346,   353,   357,   361,   365,
-     372,   376,   380,   384,   388,   395,   399,   403,   410,   414,
-     418,   422,   429,   433,   437,   441,   445,   452,   456,   460,
-     467,   471,   475,   479,   484,   491,   495
+       0,   159,   159,   166,   175,   179,   187,   192,   197,   204,
+     211,   215,   223,   230,   238,   248,   273,   304,   308,   316,
+     320,   324,   328,   335,   340,   345,   352,   356,   360,   364,
+     371,   375,   379,   383,   387,   394,   398,   402,   409,   413,
+     417,   421,   428,   432,   436,   440,   444,   451,   455,   459,
+     466,   470,   474,   478,   483,   490,   494
   };
 
   void
@@ -1781,12 +1781,12 @@ namespace m68kasm {
       YY_SYMBOL_PRINT ("   $" << yyi + 1 << " =",
                        yystack_[(yynrhs) - (yyi + 1)]);
   }
-#endif // M68KASM_DEBUG
+#endif // LIBSONASSMD_CODE_READER_YYDEBUG
 
 
 #line 24 "syntactic.y"
-} // m68kasm
+} } // libsonassmd::CodeReader
 #line 1790 "syntactic.cpp"
 
-#line 501 "syntactic.y"
+#line 500 "syntactic.y"
 

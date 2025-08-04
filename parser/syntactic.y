@@ -20,8 +20,8 @@
 
 %require "3.2"
 
-%define api.prefix {m68kasm_}
-%define api.namespace {m68kasm}
+%define api.prefix {libsonassmd_code_reader_yy}
+%define api.namespace {libsonassmd::CodeReader}
 
 %define api.token.raw
 %define api.token.constructor 
@@ -70,7 +70,6 @@ struct Statement
 	struct MappingFrame
 	{
 		std::string label;
-		// TODO: No 'libsonassmd'.
 		libsonassmd::SpriteFrame frame;
 	};
 
@@ -82,7 +81,7 @@ struct Statement
 
 %code provides {
 
-#define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
+#define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 }
 
@@ -92,11 +91,11 @@ struct Statement
 #include <initializer_list>
 
 YY_DECL;
-void m68kasm_error(const std::string &message);
+void libsonassmd_yyerror(const std::string &message);
 
-void m68kasm::parser::error(const std::string &message)
+void libsonassmd::CodeReader::parser::error(const std::string &message)
 {
-	m68kasm_error(message);
+	libsonassmd_yyerror(message);
 }
 
 }

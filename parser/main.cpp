@@ -5,7 +5,7 @@
 #include "syntactic.h"
 #include "lexical.h"
 
-void m68kasm_error(const std::string &message)
+void libsonassmd_yyerror(const std::string &message)
 {
 	std::cerr << message << '\n';
 }
@@ -15,9 +15,9 @@ static std::vector<Statement> statement_list;
 
 int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 {
-	if (m68kasm_lex_init_extra(NULL, &flex_state) != 0)
+	if (libsonassmd_code_reader_yylex_init_extra(NULL, &flex_state) != 0)
 	{
-		//InternalError(&state, "m68kasm_lex_init failed.");
+		//InternalError(&state, "libsonassmd_code_reader_yylex_init failed.");
 	}
 
 	const char* const input_file_path = argv[1];
@@ -30,20 +30,20 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 		return EXIT_FAILURE;
 	}
 
-	const YY_BUFFER_STATE buffer = m68kasm__create_buffer(file, YY_BUF_SIZE, flex_state);
-	m68kasm__switch_to_buffer(buffer, flex_state);
-	m68kasm::parser parser(flex_state, statement_list);
-#ifdef M68KASM_DEBUG
+	const YY_BUFFER_STATE buffer = libsonassmd_code_reader_yy_create_buffer(file, YY_BUF_SIZE, flex_state);
+	libsonassmd_code_reader_yy_switch_to_buffer(buffer, flex_state);
+	libsonassmd::CodeReader::parser parser(flex_state, statement_list);
+#ifdef LIBSONASSMD_CODE_READER_YYDEBUG
 	parser.set_debug_level(1);
 #endif
 	const int parse_result = parser.parse();
-	m68kasm__delete_buffer(buffer, flex_state);
+	libsonassmd_code_reader_yy_delete_buffer(buffer, flex_state);
 
 	std::fclose(file);
 
-	if (m68kasm_lex_destroy(flex_state) != 0)
+	if (libsonassmd_code_reader_yylex_destroy(flex_state) != 0)
 	{
-		//InternalError(&state, "m68kasm_lex_destroy failed.");
+		//InternalError(&state, "libsonassmd_code_reader_yylex_destroy failed.");
 	}
 
 	std::cerr << std::format("There are {} blocks.\n", std::size(statement_list));
