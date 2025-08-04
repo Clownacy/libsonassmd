@@ -65,7 +65,9 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 			{
 				std::cerr << "Block type: Mapping frame\n";
 
-				std::cerr << std::format("\tLabel: {}\n", frame.label);
+				std::cerr << "\tLabels:\n";
+				for (const auto &label : frame.labels)
+					std::cerr << std::format("\t\t{}\n", label);
 				std::cerr << "\tData:\n";
 				frame.frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
 			}

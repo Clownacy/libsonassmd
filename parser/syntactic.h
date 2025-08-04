@@ -68,10 +68,11 @@ namespace libsonassmd
 		};
 
 		class OffsetTable : public std::vector<std::string> {};
+		class Labels : public std::vector<std::string> {};
 
 		struct MappingFrame
 		{
-			std::string label;
+			Labels labels;
 			libsonassmd::SpriteFrame frame;
 		};
 
@@ -81,7 +82,7 @@ namespace libsonassmd
 }
 
 
-#line 85 "syntactic.h"
+#line 86 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -225,7 +226,7 @@ namespace libsonassmd
 
 #line 24 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
-#line 229 "syntactic.h"
+#line 230 "syntactic.h"
 
 
 
@@ -427,27 +428,30 @@ namespace libsonassmd { namespace CodeReader {
       // block_list
       char dummy2[sizeof (BlockList)];
 
+      // labels
+      char dummy3[sizeof (Labels)];
+
       // mapping_frame
-      char dummy3[sizeof (MappingFrame)];
+      char dummy4[sizeof (MappingFrame)];
+
+      // offset_table
+      char dummy5[sizeof (OffsetTable)];
 
       // dc
       // size
-      char dummy4[sizeof (Size)];
+      char dummy6[sizeof (Size)];
 
       // IDENTIFIER
       // LOCAL_IDENTIFIER
       // label
       // offset_table_entry
-      char dummy5[sizeof (std::string)];
+      char dummy7[sizeof (std::string)];
 
       // bytes
-      char dummy6[sizeof (std::stringstream)];
-
-      // offset_table
-      char dummy7[sizeof (std::vector<std::string>)];
+      char dummy8[sizeof (std::stringstream)];
 
       // expression_list
-      char dummy8[sizeof (std::vector<unsigned long>)];
+      char dummy9[sizeof (std::vector<unsigned long>)];
 
       // NUMBER
       // expression
@@ -459,7 +463,7 @@ namespace libsonassmd { namespace CodeReader {
       // expression6
       // expression7
       // expression8
-      char dummy9[sizeof (unsigned long)];
+      char dummy10[sizeof (unsigned long)];
     };
 
     /// The size of the largest semantic type.
@@ -601,22 +605,23 @@ namespace libsonassmd { namespace CodeReader {
         S_block_list = 41,                       // block_list
         S_block = 42,                            // block
         S_label = 43,                            // label
-        S_offset_table = 44,                     // offset_table
-        S_dc = 45,                               // dc
-        S_offset_table_entry = 46,               // offset_table_entry
-        S_mapping_frame = 47,                    // mapping_frame
-        S_bytes = 48,                            // bytes
-        S_expression_list = 49,                  // expression_list
-        S_size = 50,                             // size
-        S_expression = 51,                       // expression
-        S_expression1 = 52,                      // expression1
-        S_expression2 = 53,                      // expression2
-        S_expression3 = 54,                      // expression3
-        S_expression4 = 55,                      // expression4
-        S_expression5 = 56,                      // expression5
-        S_expression6 = 57,                      // expression6
-        S_expression7 = 58,                      // expression7
-        S_expression8 = 59                       // expression8
+        S_labels = 44,                           // labels
+        S_offset_table = 45,                     // offset_table
+        S_dc = 46,                               // dc
+        S_offset_table_entry = 47,               // offset_table_entry
+        S_mapping_frame = 48,                    // mapping_frame
+        S_bytes = 49,                            // bytes
+        S_expression_list = 50,                  // expression_list
+        S_size = 51,                             // size
+        S_expression = 52,                       // expression
+        S_expression1 = 53,                      // expression1
+        S_expression2 = 54,                      // expression2
+        S_expression3 = 55,                      // expression3
+        S_expression4 = 56,                      // expression4
+        S_expression5 = 57,                      // expression5
+        S_expression6 = 58,                      // expression6
+        S_expression7 = 59,                      // expression7
+        S_expression8 = 60                       // expression8
       };
     };
 
@@ -659,8 +664,16 @@ namespace libsonassmd { namespace CodeReader {
         value.move< BlockList > (std::move (that.value));
         break;
 
+      case symbol_kind::S_labels: // labels
+        value.move< Labels > (std::move (that.value));
+        break;
+
       case symbol_kind::S_mapping_frame: // mapping_frame
         value.move< MappingFrame > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_offset_table: // offset_table
+        value.move< OffsetTable > (std::move (that.value));
         break;
 
       case symbol_kind::S_dc: // dc
@@ -677,10 +690,6 @@ namespace libsonassmd { namespace CodeReader {
 
       case symbol_kind::S_bytes: // bytes
         value.move< std::stringstream > (std::move (that.value));
-        break;
-
-      case symbol_kind::S_offset_table: // offset_table
-        value.move< std::vector<std::string> > (std::move (that.value));
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -746,12 +755,36 @@ namespace libsonassmd { namespace CodeReader {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Labels&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Labels& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, MappingFrame&& v)
         : Base (t)
         , value (std::move (v))
       {}
 #else
       basic_symbol (typename Base::kind_type t, const MappingFrame& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, OffsetTable&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const OffsetTable& v)
         : Base (t)
         , value (v)
       {}
@@ -788,18 +821,6 @@ namespace libsonassmd { namespace CodeReader {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const std::stringstream& v)
-        : Base (t)
-        , value (v)
-      {}
-#endif
-
-#if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, std::vector<std::string>&& v)
-        : Base (t)
-        , value (std::move (v))
-      {}
-#else
-      basic_symbol (typename Base::kind_type t, const std::vector<std::string>& v)
         : Base (t)
         , value (v)
       {}
@@ -861,8 +882,16 @@ switch (yykind)
         value.template destroy< BlockList > ();
         break;
 
+      case symbol_kind::S_labels: // labels
+        value.template destroy< Labels > ();
+        break;
+
       case symbol_kind::S_mapping_frame: // mapping_frame
         value.template destroy< MappingFrame > ();
+        break;
+
+      case symbol_kind::S_offset_table: // offset_table
+        value.template destroy< OffsetTable > ();
         break;
 
       case symbol_kind::S_dc: // dc
@@ -879,10 +908,6 @@ switch (yykind)
 
       case symbol_kind::S_bytes: // bytes
         value.template destroy< std::stringstream > ();
-        break;
-
-      case symbol_kind::S_offset_table: // offset_table
-        value.template destroy< std::vector<std::string> > ();
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -1971,9 +1996,9 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 82,     ///< Last index in yytable_.
-      yynnts_ = 21,  ///< Number of nonterminal symbols.
-      yyfinal_ = 17 ///< Termination state number.
+      yylast_ = 83,     ///< Last index in yytable_.
+      yynnts_ = 22,  ///< Number of nonterminal symbols.
+      yyfinal_ = 18 ///< Termination state number.
     };
 
 
@@ -2007,8 +2032,16 @@ switch (yykind)
         value.copy< BlockList > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_labels: // labels
+        value.copy< Labels > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_mapping_frame: // mapping_frame
         value.copy< MappingFrame > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_offset_table: // offset_table
+        value.copy< OffsetTable > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_dc: // dc
@@ -2025,10 +2058,6 @@ switch (yykind)
 
       case symbol_kind::S_bytes: // bytes
         value.copy< std::stringstream > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S_offset_table: // offset_table
-        value.copy< std::vector<std::string> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -2087,8 +2116,16 @@ switch (yykind)
         value.move< BlockList > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_labels: // labels
+        value.move< Labels > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_mapping_frame: // mapping_frame
         value.move< MappingFrame > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_offset_table: // offset_table
+        value.move< OffsetTable > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_dc: // dc
@@ -2105,10 +2142,6 @@ switch (yykind)
 
       case symbol_kind::S_bytes: // bytes
         value.move< std::stringstream > (YY_MOVE (s.value));
-        break;
-
-      case symbol_kind::S_offset_table: // offset_table
-        value.move< std::vector<std::string> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -2194,17 +2227,17 @@ switch (yykind)
 
 #line 24 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2198 "syntactic.h"
+#line 2231 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 73 "syntactic.y"
+#line 74 "syntactic.y"
 
 
 #define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 
-#line 2208 "syntactic.h"
+#line 2241 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

@@ -56,10 +56,11 @@ namespace libsonassmd
 		};
 
 		class OffsetTable : public std::vector<std::string> {};
+		class Labels : public std::vector<std::string> {};
 
 		struct MappingFrame
 		{
-			std::string label;
+			Labels labels;
 			libsonassmd::SpriteFrame frame;
 		};
 
@@ -131,8 +132,9 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 
 %type<BlockList> block_list
 %type<Block> block
-%type<std::vector<std::string>> offset_table
+%type<OffsetTable> offset_table
 %type<std::string> label offset_table_entry
+%type<Labels> labels
 %type<std::vector<unsigned long>> expression_list
 %type<MappingFrame> mapping_frame
 %type<std::stringstream> bytes
@@ -172,7 +174,7 @@ block_list
 	;
 
 block
-	: label offset_table
+	: labels offset_table
 	{
 		$$.emplace<OffsetTable>(std::move($2));
 	}
@@ -186,6 +188,18 @@ label
 	: IDENTIFIER ":"
 	{
 		$$ = std::move($1);
+	}
+	;
+
+labels
+	: label
+	{
+		$$.emplace_back(std::move($1));
+	}
+	| labels label
+	{
+		$$ = std::move($1);
+		$$.emplace_back(std::move($2));
 	}
 	;
 
@@ -217,9 +231,9 @@ offset_table_entry
 	;
 
 mapping_frame
-	: label bytes
+	: labels bytes
 	{
-		$$.label = std::move($1);
+		$$.labels = std::move($1);
 		// TODO: Not this junk.
 		// TODO: Catch exceptions?
 		$$.frame = libsonassmd::SpriteFrame($2, game);
