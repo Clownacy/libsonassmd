@@ -30,6 +30,7 @@
 %param {void *scanner}
 
 %parse-param {BlockList &block_list}
+%parse-param {Game game}
 
 %define parse.error verbose
 
@@ -221,7 +222,7 @@ mapping_frame
 		$$.label = std::move($1);
 		// TODO: Not this junk.
 		// TODO: Catch exceptions?
-		$$.frame = libsonassmd::SpriteFrame($2, libsonassmd::Game::SONIC_1);
+		$$.frame = libsonassmd::SpriteFrame($2, game);
 	}
 	;
 
