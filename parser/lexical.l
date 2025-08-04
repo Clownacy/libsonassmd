@@ -105,6 +105,12 @@ even            ; // Just get rid of this junk; we don't need it.
 "<<"            return libsonassmd::CodeReader::parser::make_LEFT_SHIFT();
 ">>"            return libsonassmd::CodeReader::parser::make_RIGHT_SHIFT();
 
+ /* MapMacros. */
+"mappingsTable"      return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE();
+"mappingsTableEntry" return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE_ENTRY();
+"spriteHeader"       return libsonassmd::CodeReader::parser::make_SPRITE_HEADER();
+"spritePiece"        return libsonassmd::CodeReader::parser::make_SPRITE_PIECE();
+
  /* Decimal number. */
 {decimal} {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));

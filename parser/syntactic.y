@@ -15,7 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-
 %language "c++"
 
 %require "3.2"
@@ -125,6 +124,10 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %token CARET "^"
 %token TILDE "~"
 %token COLON ":"
+%token MAPPINGS_TABLE
+%token MAPPINGS_TABLE_ENTRY
+%token SPRITE_HEADER
+%token SPRITE_PIECE
 
 %type<Mappings> mappings
 %type<StringList> offset_table
@@ -132,6 +135,8 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %type<StringList> labels
 %type<std::vector<unsigned long>> expression_list
 %type<std::stringstream> bytes
+%type<SpritePiece> sprite_piece;
+%type<SpriteFrame> sprite_frame;
 %type<Size> size
 %type<Size> dc
 %type<unsigned long> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
@@ -166,6 +171,11 @@ mappings
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
+	| labels SPRITE_HEADER sprite_frame IDENTIFIER
+	{
+		for (const auto &label : $1)
+			$$.frames.insert({label, $3});
+	}
 	| mappings labels offset_table
 	{
 		$$ = std::move($1);
@@ -178,6 +188,12 @@ mappings
 		const SpriteFrame frame($3, game);
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
+	}
+	| mappings labels SPRITE_HEADER sprite_frame IDENTIFIER
+	{
+		$$ = std::move($1);
+		for (const auto &label : $2)
+			$$.frames.insert({label, $4});
 	}
 	;
 
@@ -210,6 +226,35 @@ offset_table
 		$$ = std::move($1);
 		$$.emplace_back(std::move($2));
 	}
+	| MAPPINGS_TABLE
+	{}
+	;
+
+sprite_piece
+	: SPRITE_PIECE expression "," expression "," expression "," expression "," expression "," expression "," expression "," expression "," expression
+	{
+		$$.x = $2;
+		$$.y = $4;
+		$$.width = $6;
+		$$.height = $8;
+		$$.tile_index = $10;
+		$$.x_flip = $12;
+		$$.y_flip = $14;
+		$$.palette_line = $16;
+		$$.priority = $18;
+	}
+	;
+
+sprite_frame
+	: sprite_piece
+	{
+		$$.pieces.emplace_back(std::move($1));
+	}
+	| sprite_frame sprite_piece
+	{
+		$$ = std::move($1);
+		$$.pieces.emplace_back(std::move($2));
+	}
 	;
 
 dc
@@ -224,6 +269,10 @@ offset_table_entry
 	{
 		static_cast<void>($4);
 		$$ = std::move($2);
+	}
+	| MAPPINGS_TABLE_ENTRY size IDENTIFIER
+	{
+		$$ = std::move($3);
 	}
 	;
 

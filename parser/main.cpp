@@ -34,7 +34,7 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 	libsonassmd_code_reader_yy_switch_to_buffer(buffer, flex_state);
 	libsonassmd::CodeReader::parser parser(flex_state, mappings, libsonassmd::Game::SONIC_3_AND_KNUCKLES);
 #ifdef LIBSONASSMD_CODE_READER_YYDEBUG
-	//parser.set_debug_level(1);
+	parser.set_debug_level(1);
 #endif
 	const int parse_result = parser.parse();
 	libsonassmd_code_reader_yy_delete_buffer(buffer, flex_state);
