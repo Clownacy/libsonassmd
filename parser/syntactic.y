@@ -128,6 +128,8 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %token MAPPINGS_TABLE_ENTRY
 %token SPRITE_HEADER
 %token SPRITE_PIECE
+%token<std::string> LABEL
+%token<std::string> LOCAL_LABEL
 
 %type<Mappings> mappings
 %type<StringList> offset_table
@@ -171,7 +173,7 @@ mappings
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
-	| labels SPRITE_HEADER sprite_frame IDENTIFIER
+	| labels SPRITE_HEADER sprite_frame label
 	{
 		for (const auto &label : $1)
 			$$.frames.insert({label, $3});
@@ -189,7 +191,7 @@ mappings
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
 	}
-	| mappings labels SPRITE_HEADER sprite_frame IDENTIFIER
+	| mappings labels SPRITE_HEADER sprite_frame label
 	{
 		$$ = std::move($1);
 		for (const auto &label : $2)
@@ -198,7 +200,11 @@ mappings
 	;
 
 label
-	: IDENTIFIER ":"
+	: LABEL
+	{
+		$$ = std::move($1);
+	}
+	| LOCAL_LABEL
 	{
 		$$ = std::move($1);
 	}

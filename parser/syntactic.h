@@ -45,7 +45,7 @@
 #ifndef YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 # define YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 // "%code requires" blocks.
-#line 37 "syntactic.y"
+#line 36 "syntactic.y"
 
 
 #include <map>
@@ -220,7 +220,7 @@ namespace libsonassmd
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined LIBSONASSMD_CODE_READER_YYDEBUG */
 
-#line 24 "syntactic.y"
+#line 23 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
 #line 226 "syntactic.h"
 
@@ -437,6 +437,8 @@ namespace libsonassmd { namespace CodeReader {
 
       // IDENTIFIER
       // LOCAL_IDENTIFIER
+      // LABEL
+      // LOCAL_LABEL
       // label
       // offset_table_entry
       char dummy6[sizeof (std::string)];
@@ -540,7 +542,9 @@ namespace libsonassmd { namespace CodeReader {
     TOKEN_MAPPINGS_TABLE = 39,     // MAPPINGS_TABLE
     TOKEN_MAPPINGS_TABLE_ENTRY = 40, // MAPPINGS_TABLE_ENTRY
     TOKEN_SPRITE_HEADER = 41,      // SPRITE_HEADER
-    TOKEN_SPRITE_PIECE = 42        // SPRITE_PIECE
+    TOKEN_SPRITE_PIECE = 42,       // SPRITE_PIECE
+    TOKEN_LABEL = 43,              // LABEL
+    TOKEN_LOCAL_LABEL = 44         // LOCAL_LABEL
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -557,7 +561,7 @@ namespace libsonassmd { namespace CodeReader {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 43, ///< Number of tokens.
+        YYNTOKENS = 45, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -602,28 +606,30 @@ namespace libsonassmd { namespace CodeReader {
         S_MAPPINGS_TABLE_ENTRY = 40,             // MAPPINGS_TABLE_ENTRY
         S_SPRITE_HEADER = 41,                    // SPRITE_HEADER
         S_SPRITE_PIECE = 42,                     // SPRITE_PIECE
-        S_YYACCEPT = 43,                         // $accept
-        S_output = 44,                           // output
-        S_mappings = 45,                         // mappings
-        S_label = 46,                            // label
-        S_labels = 47,                           // labels
-        S_offset_table = 48,                     // offset_table
-        S_sprite_piece = 49,                     // sprite_piece
-        S_sprite_frame = 50,                     // sprite_frame
-        S_dc = 51,                               // dc
-        S_offset_table_entry = 52,               // offset_table_entry
-        S_bytes = 53,                            // bytes
-        S_expression_list = 54,                  // expression_list
-        S_size = 55,                             // size
-        S_expression = 56,                       // expression
-        S_expression1 = 57,                      // expression1
-        S_expression2 = 58,                      // expression2
-        S_expression3 = 59,                      // expression3
-        S_expression4 = 60,                      // expression4
-        S_expression5 = 61,                      // expression5
-        S_expression6 = 62,                      // expression6
-        S_expression7 = 63,                      // expression7
-        S_expression8 = 64                       // expression8
+        S_LABEL = 43,                            // LABEL
+        S_LOCAL_LABEL = 44,                      // LOCAL_LABEL
+        S_YYACCEPT = 45,                         // $accept
+        S_output = 46,                           // output
+        S_mappings = 47,                         // mappings
+        S_label = 48,                            // label
+        S_labels = 49,                           // labels
+        S_offset_table = 50,                     // offset_table
+        S_sprite_piece = 51,                     // sprite_piece
+        S_sprite_frame = 52,                     // sprite_frame
+        S_dc = 53,                               // dc
+        S_offset_table_entry = 54,               // offset_table_entry
+        S_bytes = 55,                            // bytes
+        S_expression_list = 56,                  // expression_list
+        S_size = 57,                             // size
+        S_expression = 58,                       // expression
+        S_expression1 = 59,                      // expression1
+        S_expression2 = 60,                      // expression2
+        S_expression3 = 61,                      // expression3
+        S_expression4 = 62,                      // expression4
+        S_expression5 = 63,                      // expression5
+        S_expression6 = 64,                      // expression6
+        S_expression7 = 65,                      // expression7
+        S_expression8 = 66                       // expression8
       };
     };
 
@@ -682,6 +688,8 @@ namespace libsonassmd { namespace CodeReader {
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+      case symbol_kind::S_LABEL: // LABEL
+      case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
         value.move< std::string > (std::move (that.value));
@@ -885,6 +893,8 @@ switch (yykind)
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+      case symbol_kind::S_LABEL: // LABEL
+      case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
         value.template destroy< std::string > ();
@@ -1712,6 +1722,36 @@ switch (yykind)
         return symbol_type (token::TOKEN_SPRITE_PIECE);
       }
 #endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LABEL (std::string v)
+      {
+        return symbol_type (token::TOKEN_LABEL, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_LABEL (const std::string& v)
+      {
+        return symbol_type (token::TOKEN_LABEL, v);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LOCAL_LABEL (std::string v)
+      {
+        return symbol_type (token::TOKEN_LOCAL_LABEL, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_LOCAL_LABEL (const std::string& v)
+      {
+        return symbol_type (token::TOKEN_LOCAL_LABEL, v);
+      }
+#endif
 
 
     class context
@@ -2040,7 +2080,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 153,     ///< Last index in yytable_.
+      yylast_ = 160,     ///< Last index in yytable_.
       yynnts_ = 22,  ///< Number of nonterminal symbols.
       yyfinal_ = 19 ///< Termination state number.
     };
@@ -2092,6 +2132,8 @@ switch (yykind)
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+      case symbol_kind::S_LABEL: // LABEL
+      case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
         value.copy< std::string > (YY_MOVE (that.value));
@@ -2173,6 +2215,8 @@ switch (yykind)
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
+      case symbol_kind::S_LABEL: // LABEL
+      case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
         value.move< std::string > (YY_MOVE (s.value));
@@ -2263,19 +2307,19 @@ switch (yykind)
   }
 
 
-#line 24 "syntactic.y"
+#line 23 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2269 "syntactic.h"
+#line 2313 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 70 "syntactic.y"
+#line 69 "syntactic.y"
 
 
 #define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 
-#line 2279 "syntactic.h"
+#line 2323 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

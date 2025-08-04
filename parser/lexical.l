@@ -50,6 +50,9 @@ binary            {binary_digit}+
 decimal           {decimal_digit}+
 hexadecimal       {hexadecimal_digit}+
 
+identifier        [A-Za-z_][A-Za-z_0-9\?]*
+local_identifier  [@\.][A-Za-z_0-9\?]+
+
 %%
 
  /* Ignore whitespace */
@@ -126,13 +129,38 @@ even            ; // Just get rid of this junk; we don't need it.
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
 
+ /* Labels. */
+{identifier}: {
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext, yyleng - 1));
+}
+
+{local_identifier}:  {
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext, yyleng - 1));
+}
+
+[\r\n]{identifier} {
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 1));
+}
+
+[\r\n]{local_identifier} {
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 1));
+}
+
+[\r\n]{identifier}: {
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 2));
+}
+
+[\r\n]{local_identifier}: {
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 2));
+}
+
  /* Identifier. */
-[A-Za-z_][A-Za-z_0-9\?]* {
+{identifier} {
 	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
 }
 
- /* Local label. */
-[@\.][A-Za-z_0-9\?]+ {
+ /* Local identifier. */
+{local_identifier} {
 	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
 }
 
