@@ -40,16 +40,6 @@
 #include <variant>
 #include <vector>
 
-// Temporary junk!
-#define YYNOMEM YYERROR
-
-#define CREATE_LIST_TYPE(TYPE)\
-typedef struct TYPE\
-{\
-	TYPE##Node *head;\
-	TYPE##Node *tail;\
-} TYPE
-
 typedef enum Size
 {
 	SIZE_BYTE      = 1 << 0,
@@ -91,15 +81,6 @@ typedef struct Expression
 	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
 } Expression;
 
-typedef struct IdentifierListNode
-{
-	struct IdentifierListNode *next;
-
-	std::string identifier;
-} IdentifierListNode;
-
-CREATE_LIST_TYPE(IdentifierList);
-
 typedef struct StatementDc
 {
 	Size size;
@@ -129,10 +110,6 @@ typedef struct Statement
 
 %code {
 
-#include <assert.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
 #include <initializer_list>
 
 YY_DECL;

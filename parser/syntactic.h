@@ -52,16 +52,6 @@
 #include <variant>
 #include <vector>
 
-// Temporary junk!
-#define YYNOMEM YYERROR
-
-#define CREATE_LIST_TYPE(TYPE)\
-typedef struct TYPE\
-{\
-	TYPE##Node *head;\
-	TYPE##Node *tail;\
-} TYPE
-
 typedef enum Size
 {
 	SIZE_BYTE      = 1 << 0,
@@ -103,15 +93,6 @@ typedef struct Expression
 	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
 } Expression;
 
-typedef struct IdentifierListNode
-{
-	struct IdentifierListNode *next;
-
-	std::string identifier;
-} IdentifierListNode;
-
-CREATE_LIST_TYPE(IdentifierList);
-
 typedef struct StatementDc
 {
 	Size size;
@@ -132,7 +113,7 @@ typedef struct Statement
 } Statement;
 
 
-#line 136 "syntactic.h"
+#line 117 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -276,7 +257,7 @@ typedef struct Statement
 
 #line 25 "syntactic.y"
 namespace m68kasm {
-#line 280 "syntactic.h"
+#line 261 "syntactic.h"
 
 
 
@@ -2092,17 +2073,17 @@ switch (yykind)
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 2096 "syntactic.h"
+#line 2077 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 124 "syntactic.y"
+#line 105 "syntactic.y"
 
 
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
 
-#line 2106 "syntactic.h"
+#line 2087 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED
