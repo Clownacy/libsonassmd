@@ -24,21 +24,18 @@
 
 %{
 
-#include <stdlib.h>
-#include <string.h>
+#include <charconv>
 
 #include "syntactic.h"
 
 void m68kasm_warning(void *scanner, Statement *statement, const char *message);
 void m68kasm_error(void *scanner, Statement *statement, const char *message);
 
-static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const unsigned long base)
+static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const int base)
 {
-	// TODO: Replace this with 'std::from_chars' or something.
-	char *string_end;
-	const unsigned long value = strtoul(string_start, &string_end, base);
+	unsigned long value;
 
-	if (string_end != string_start + string_length)
+	if (std::from_chars(string_start, string_start + string_length, value, base).ec != std::errc{})
 		throw m68kasm::parser::syntax_error("Number is invalid and cannot be parsed.");
 
 	return value;
