@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-/*%define parse.trace*/
+%define parse.trace
 
 %language "c++"
 
@@ -90,14 +90,14 @@ struct StatementDc
 enum StatementType
 {
 	STATEMENT_TYPE_EMPTY,
-	STATEMENT_TYPE_DC,
+	STATEMENT_TYPE_OFFSET_TABLE,
 	STATEMENT_TYPE_EVEN
 };
 
 struct Statement
 {
 	StatementType type;
-	std::variant<std::monostate, StatementDc, Expression, std::string> shared;
+	std::variant<std::monostate, StatementDc, Expression, std::string, std::vector<std::string>> shared;
 };
 
 }
@@ -168,6 +168,8 @@ void m68kasm::parser::error(const std::string &message)
 %token TILDE "~"
 
 %type<Size> size
+%type<std::vector<std::string>> offset_table
+%type<std::string> label offset_table_entry
 %type<std::vector<Expression>> expression_list
 %type<Expression> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
 
@@ -180,14 +182,46 @@ statement
 	{
 		statement->type = STATEMENT_TYPE_EMPTY;
 	}
-	| DIRECTIVE_DC size expression_list
+	| label offset_table
 	{
-		statement->type = STATEMENT_TYPE_DC;
-		statement->shared.emplace<StatementDc>($2, std::move($3));
+		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
+		statement->shared.emplace<std::vector<std::string>>(std::move($2));
+	}
+	| offset_table
+	{
+		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
+		statement->shared.emplace<std::vector<std::string>>(std::move($1));
 	}
 	| DIRECTIVE_EVEN
 	{
 		statement->type = STATEMENT_TYPE_EVEN;
+	}
+	;
+
+label
+	: IDENTIFIER ":"
+	{
+		$$ = std::move($1);
+	}
+	;
+
+offset_table
+	: offset_table_entry
+	{
+		$$.emplace_back(std::move($1));
+	}
+	| offset_table offset_table_entry
+	{
+		$$ = std::move($1);
+		$$.emplace_back(std::move($2));
+	}
+	;
+
+offset_table_entry
+	: DIRECTIVE_DC size IDENTIFIER "-" IDENTIFIER
+	{
+		static_cast<void>($5);
+		$$ = std::move($3);
 	}
 	;
 

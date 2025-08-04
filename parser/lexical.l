@@ -64,6 +64,7 @@ hexadecimal       {hexadecimal_digit}+
 <<EOF>>         return m68kasm::parser::make_YYEOF();
 
  /* Directives. */
+dc              return m68kasm::parser::make_DIRECTIVE_DC();
 even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 
  /* Sizes. */
