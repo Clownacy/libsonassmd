@@ -11,7 +11,7 @@ void libsonassmd_yyerror(const std::string &message)
 }
 
 static yyscan_t flex_state;
-static std::vector<Statement> statement_list;
+static std::vector<libsonassmd::CodeReader::Statement> statement_list;
 
 int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 {
@@ -52,7 +52,7 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 	{
 		switch (statement.type)
 		{
-			case STATEMENT_TYPE_OFFSET_TABLE:
+			case libsonassmd::CodeReader::STATEMENT_TYPE_OFFSET_TABLE:
 			{
 				std::cerr << "Block type: Offset table\n";
 
@@ -63,11 +63,11 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 				break;
 			}
 
-			case STATEMENT_TYPE_MAPPING_FRAME:
+			case libsonassmd::CodeReader::STATEMENT_TYPE_MAPPING_FRAME:
 			{
 				std::cerr << "Block type: Mapping frame\n";
 
-				const auto &frame = std::get<Statement::MappingFrame>(statement.shared);
+				const auto &frame = std::get<libsonassmd::CodeReader::Statement::MappingFrame>(statement.shared);
 				std::cerr << std::format("\tLabel: {}\n", frame.label);
 				std::cerr << "\tData:\n";
 				frame.frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);

@@ -55,43 +55,49 @@
 
 #include "../sprite-frame.h"
 
-enum Size
+namespace libsonassmd
 {
-	SIZE_BYTE      = 1 << 0,
-	SIZE_SHORT     = 1 << 1,
-	SIZE_WORD      = 1 << 2,
-	SIZE_LONGWORD  = 1 << 3,
-	SIZE_UNDEFINED = 1 << 4
-};
-
-struct StatementDc
-{
-	Size size;
-	std::vector<unsigned long> values;
-};
-
-enum StatementType
-{
-	STATEMENT_TYPE_EMPTY,
-	STATEMENT_TYPE_OFFSET_TABLE,
-	STATEMENT_TYPE_MAPPING_FRAME,
-	STATEMENT_TYPE_EVEN
-};
-
-struct Statement
-{
-	struct MappingFrame
+	namespace CodeReader
 	{
-		std::string label;
-		libsonassmd::SpriteFrame frame;
-	};
+		enum Size
+		{
+			SIZE_BYTE      = 1 << 0,
+			SIZE_SHORT     = 1 << 1,
+			SIZE_WORD      = 1 << 2,
+			SIZE_LONGWORD  = 1 << 3,
+			SIZE_UNDEFINED = 1 << 4
+		};
 
-	StatementType type;
-	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
-};
+		struct StatementDc
+		{
+			Size size;
+			std::vector<unsigned long> values;
+		};
+
+		enum StatementType
+		{
+			STATEMENT_TYPE_EMPTY,
+			STATEMENT_TYPE_OFFSET_TABLE,
+			STATEMENT_TYPE_MAPPING_FRAME,
+			STATEMENT_TYPE_EVEN
+		};
+
+		struct Statement
+		{
+			struct MappingFrame
+			{
+				std::string label;
+				libsonassmd::SpriteFrame frame;
+			};
+
+			StatementType type;
+			std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
+		};
+	}
+}
 
 
-#line 95 "syntactic.h"
+#line 101 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -235,7 +241,7 @@ struct Statement
 
 #line 24 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
-#line 239 "syntactic.h"
+#line 245 "syntactic.h"
 
 
 
@@ -2220,17 +2226,17 @@ switch (yykind)
 
 #line 24 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2224 "syntactic.h"
+#line 2230 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 82 "syntactic.y"
+#line 88 "syntactic.y"
 
 
 #define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 
-#line 2234 "syntactic.h"
+#line 2240 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

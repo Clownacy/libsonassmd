@@ -44,7 +44,7 @@
 
 
 // Unqualified %code blocks.
-#line 88 "syntactic.y"
+#line 94 "syntactic.y"
 
 
 #include <cassert>
@@ -759,7 +759,7 @@ namespace libsonassmd { namespace CodeReader {
           switch (yyn)
             {
   case 2: // output: statement_list
-#line 160 "syntactic.y"
+#line 166 "syntactic.y"
         {
 		statement_list = std::move(yystack_[0].value.as < std::vector<Statement> > ());
 	}
@@ -767,7 +767,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 3: // statement_list: offset_table
-#line 167 "syntactic.y"
+#line 173 "syntactic.y"
         {
 		// A label-less offset table can occur at the start of the file, but no later.
 		// This restriction is important for avoiding shift-reduce conflicts.
@@ -780,7 +780,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 4: // statement_list: statement
-#line 176 "syntactic.y"
+#line 182 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
 	}
@@ -788,7 +788,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 5: // statement_list: statement_list statement
-#line 180 "syntactic.y"
+#line 186 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Statement> > () = std::move(yystack_[1].value.as < std::vector<Statement> > ());
 		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
@@ -797,7 +797,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 6: // statement: label offset_table
-#line 188 "syntactic.y"
+#line 194 "syntactic.y"
         {
 		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_OFFSET_TABLE;
 		yylhs.value.as < Statement > ().shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
@@ -806,7 +806,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 7: // statement: mapping_frame
-#line 193 "syntactic.y"
+#line 199 "syntactic.y"
         {
 		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_MAPPING_FRAME;
 		yylhs.value.as < Statement > ().shared.emplace<Statement::MappingFrame>(std::move(yystack_[0].value.as < Statement::MappingFrame > ()));
@@ -815,7 +815,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 8: // statement: DIRECTIVE_EVEN
-#line 198 "syntactic.y"
+#line 204 "syntactic.y"
         {
 		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_EVEN;
 	}
@@ -823,7 +823,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 9: // label: IDENTIFIER ":"
-#line 205 "syntactic.y"
+#line 211 "syntactic.y"
         {
 		yylhs.value.as < std::string > () = std::move(yystack_[1].value.as < std::string > ());
 	}
@@ -831,7 +831,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 10: // offset_table: offset_table_entry
-#line 212 "syntactic.y"
+#line 218 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
@@ -839,7 +839,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 11: // offset_table: offset_table offset_table_entry
-#line 216 "syntactic.y"
+#line 222 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > () = std::move(yystack_[1].value.as < std::vector<std::string> > ());
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
@@ -848,7 +848,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 12: // dc: DIRECTIVE_DC size
-#line 224 "syntactic.y"
+#line 230 "syntactic.y"
         {
 		yylhs.value.as < Size > () = yystack_[0].value.as < Size > ();
 	}
@@ -856,7 +856,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 13: // offset_table_entry: dc IDENTIFIER "-" IDENTIFIER
-#line 231 "syntactic.y"
+#line 237 "syntactic.y"
         {
 		static_cast<void>(yystack_[0].value.as < std::string > ());
 		yylhs.value.as < std::string > () = std::move(yystack_[2].value.as < std::string > ());
@@ -865,7 +865,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 14: // mapping_frame: label bytes
-#line 239 "syntactic.y"
+#line 245 "syntactic.y"
         {
 		yylhs.value.as < Statement::MappingFrame > ().label = std::move(yystack_[1].value.as < std::string > ());
 		// TODO: Not this junk.
@@ -876,7 +876,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 15: // bytes: dc expression_list
-#line 249 "syntactic.y"
+#line 255 "syntactic.y"
         {
 		for (const auto &value : yystack_[0].value.as < std::vector<unsigned long> > ())
 		{
@@ -905,7 +905,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 16: // bytes: bytes dc expression_list
-#line 274 "syntactic.y"
+#line 280 "syntactic.y"
         {
 		yylhs.value.as < std::stringstream > () = std::move(yystack_[2].value.as < std::stringstream > ());
 
@@ -937,7 +937,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 17: // expression_list: expression
-#line 305 "syntactic.y"
+#line 311 "syntactic.y"
         {
 		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
 	}
@@ -945,7 +945,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 18: // expression_list: expression_list "," expression
-#line 309 "syntactic.y"
+#line 315 "syntactic.y"
         {
 		yylhs.value.as < std::vector<unsigned long> > () = std::move(yystack_[2].value.as < std::vector<unsigned long> > ());
 		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
@@ -954,7 +954,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 19: // size: SIZE_BYTE
-#line 317 "syntactic.y"
+#line 323 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_BYTE;
 	}
@@ -962,7 +962,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 20: // size: SIZE_SHORT
-#line 321 "syntactic.y"
+#line 327 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_SHORT;
 	}
@@ -970,7 +970,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 21: // size: SIZE_WORD
-#line 325 "syntactic.y"
+#line 331 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_WORD;
 	}
@@ -978,7 +978,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 22: // size: SIZE_LONGWORD
-#line 329 "syntactic.y"
+#line 335 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_LONGWORD;
 	}
@@ -986,7 +986,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 23: // expression: expression1
-#line 336 "syntactic.y"
+#line 342 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -994,7 +994,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 24: // expression: expression LOGICAL_AND expression1
-#line 341 "syntactic.y"
+#line 347 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () && yystack_[0].value.as < unsigned long > ();
 	}
@@ -1002,7 +1002,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 25: // expression: expression LOGICAL_OR expression1
-#line 346 "syntactic.y"
+#line 352 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () || yystack_[0].value.as < unsigned long > ();
 	}
@@ -1010,7 +1010,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 26: // expression1: expression2
-#line 353 "syntactic.y"
+#line 359 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1018,7 +1018,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 27: // expression1: expression1 "=" expression2
-#line 357 "syntactic.y"
+#line 363 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
 	}
@@ -1026,7 +1026,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 28: // expression1: expression1 EQUALITY expression2
-#line 361 "syntactic.y"
+#line 367 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
 	}
@@ -1034,7 +1034,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 29: // expression1: expression1 INEQUALITY expression2
-#line 365 "syntactic.y"
+#line 371 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () != yystack_[0].value.as < unsigned long > ();
 	}
@@ -1042,7 +1042,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 30: // expression2: expression3
-#line 372 "syntactic.y"
+#line 378 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1050,7 +1050,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 31: // expression2: expression2 "<" expression3
-#line 376 "syntactic.y"
+#line 382 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () < yystack_[0].value.as < unsigned long > ();
 	}
@@ -1058,7 +1058,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 32: // expression2: expression2 LESS_OR_EQUAL expression3
-#line 380 "syntactic.y"
+#line 386 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () <= yystack_[0].value.as < unsigned long > ();
 	}
@@ -1066,7 +1066,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 33: // expression2: expression2 ">" expression3
-#line 384 "syntactic.y"
+#line 390 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () > yystack_[0].value.as < unsigned long > ();
 	}
@@ -1074,7 +1074,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 34: // expression2: expression2 MORE_OR_EQUAL expression3
-#line 388 "syntactic.y"
+#line 394 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >= yystack_[0].value.as < unsigned long > ();
 	}
@@ -1082,7 +1082,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 35: // expression3: expression4
-#line 395 "syntactic.y"
+#line 401 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1090,7 +1090,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 36: // expression3: expression3 "+" expression4
-#line 399 "syntactic.y"
+#line 405 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () + yystack_[0].value.as < unsigned long > ();
 	}
@@ -1098,7 +1098,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 37: // expression3: expression3 "-" expression4
-#line 403 "syntactic.y"
+#line 409 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () - yystack_[0].value.as < unsigned long > ();
 	}
@@ -1106,7 +1106,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 38: // expression4: expression5
-#line 410 "syntactic.y"
+#line 416 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1114,7 +1114,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 39: // expression4: expression4 "*" expression5
-#line 414 "syntactic.y"
+#line 420 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () * yystack_[0].value.as < unsigned long > ();
 	}
@@ -1122,7 +1122,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 40: // expression4: expression4 "/" expression5
-#line 418 "syntactic.y"
+#line 424 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () / yystack_[0].value.as < unsigned long > ();
 	}
@@ -1130,7 +1130,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 41: // expression4: expression4 "%" expression5
-#line 422 "syntactic.y"
+#line 428 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () % yystack_[0].value.as < unsigned long > ();
 	}
@@ -1138,7 +1138,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 42: // expression5: expression6
-#line 429 "syntactic.y"
+#line 435 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1146,7 +1146,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 43: // expression5: expression5 "&" expression6
-#line 433 "syntactic.y"
+#line 439 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () & yystack_[0].value.as < unsigned long > ();
 	}
@@ -1154,7 +1154,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 44: // expression5: expression5 "!" expression6
-#line 437 "syntactic.y"
+#line 443 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
 	}
@@ -1162,7 +1162,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 45: // expression5: expression5 "|" expression6
-#line 441 "syntactic.y"
+#line 447 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
 	}
@@ -1170,7 +1170,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 46: // expression5: expression5 "^" expression6
-#line 445 "syntactic.y"
+#line 451 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () ^ yystack_[0].value.as < unsigned long > ();
 	}
@@ -1178,7 +1178,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 47: // expression6: expression7
-#line 452 "syntactic.y"
+#line 458 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1186,7 +1186,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 48: // expression6: expression6 LEFT_SHIFT expression7
-#line 456 "syntactic.y"
+#line 462 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () << yystack_[0].value.as < unsigned long > ();
 	}
@@ -1194,7 +1194,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 49: // expression6: expression6 RIGHT_SHIFT expression7
-#line 460 "syntactic.y"
+#line 466 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >> yystack_[0].value.as < unsigned long > ();
 	}
@@ -1202,7 +1202,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 50: // expression7: expression8
-#line 467 "syntactic.y"
+#line 473 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1210,7 +1210,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 51: // expression7: "+" expression7
-#line 471 "syntactic.y"
+#line 477 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1218,7 +1218,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 52: // expression7: "-" expression7
-#line 475 "syntactic.y"
+#line 481 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = -yystack_[0].value.as < unsigned long > ();
 	}
@@ -1226,7 +1226,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 53: // expression7: "~" expression7
-#line 479 "syntactic.y"
+#line 485 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = ~yystack_[0].value.as < unsigned long > ();
 	}
@@ -1234,7 +1234,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 54: // expression7: "!" expression7
-#line 484 "syntactic.y"
+#line 490 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = !yystack_[0].value.as < unsigned long > ();
 	}
@@ -1242,7 +1242,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 55: // expression8: NUMBER
-#line 491 "syntactic.y"
+#line 497 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
 	}
@@ -1250,7 +1250,7 @@ namespace libsonassmd { namespace CodeReader {
     break;
 
   case 56: // expression8: "(" expression ")"
-#line 495 "syntactic.y"
+#line 501 "syntactic.y"
         {
 		yylhs.value.as < unsigned long > () = yystack_[1].value.as < unsigned long > ();
 	}
@@ -1748,12 +1748,12 @@ namespace libsonassmd { namespace CodeReader {
   const short
   parser::yyrline_[] =
   {
-       0,   159,   159,   166,   175,   179,   187,   192,   197,   204,
-     211,   215,   223,   230,   238,   248,   273,   304,   308,   316,
-     320,   324,   328,   335,   340,   345,   352,   356,   360,   364,
-     371,   375,   379,   383,   387,   394,   398,   402,   409,   413,
-     417,   421,   428,   432,   436,   440,   444,   451,   455,   459,
-     466,   470,   474,   478,   483,   490,   494
+       0,   165,   165,   172,   181,   185,   193,   198,   203,   210,
+     217,   221,   229,   236,   244,   254,   279,   310,   314,   322,
+     326,   330,   334,   341,   346,   351,   358,   362,   366,   370,
+     377,   381,   385,   389,   393,   400,   404,   408,   415,   419,
+     423,   427,   434,   438,   442,   446,   450,   457,   461,   465,
+     472,   476,   480,   484,   489,   496,   500
   };
 
   void
@@ -1788,5 +1788,5 @@ namespace libsonassmd { namespace CodeReader {
 } } // libsonassmd::CodeReader
 #line 1790 "syntactic.cpp"
 
-#line 500 "syntactic.y"
+#line 506 "syntactic.y"
 

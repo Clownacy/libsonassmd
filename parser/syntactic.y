@@ -42,40 +42,46 @@
 
 #include "../sprite-frame.h"
 
-enum Size
+namespace libsonassmd
 {
-	SIZE_BYTE      = 1 << 0,
-	SIZE_SHORT     = 1 << 1,
-	SIZE_WORD      = 1 << 2,
-	SIZE_LONGWORD  = 1 << 3,
-	SIZE_UNDEFINED = 1 << 4
-};
-
-struct StatementDc
-{
-	Size size;
-	std::vector<unsigned long> values;
-};
-
-enum StatementType
-{
-	STATEMENT_TYPE_EMPTY,
-	STATEMENT_TYPE_OFFSET_TABLE,
-	STATEMENT_TYPE_MAPPING_FRAME,
-	STATEMENT_TYPE_EVEN
-};
-
-struct Statement
-{
-	struct MappingFrame
+	namespace CodeReader
 	{
-		std::string label;
-		libsonassmd::SpriteFrame frame;
-	};
+		enum Size
+		{
+			SIZE_BYTE      = 1 << 0,
+			SIZE_SHORT     = 1 << 1,
+			SIZE_WORD      = 1 << 2,
+			SIZE_LONGWORD  = 1 << 3,
+			SIZE_UNDEFINED = 1 << 4
+		};
 
-	StatementType type;
-	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
-};
+		struct StatementDc
+		{
+			Size size;
+			std::vector<unsigned long> values;
+		};
+
+		enum StatementType
+		{
+			STATEMENT_TYPE_EMPTY,
+			STATEMENT_TYPE_OFFSET_TABLE,
+			STATEMENT_TYPE_MAPPING_FRAME,
+			STATEMENT_TYPE_EVEN
+		};
+
+		struct Statement
+		{
+			struct MappingFrame
+			{
+				std::string label;
+				libsonassmd::SpriteFrame frame;
+			};
+
+			StatementType type;
+			std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
+		};
+	}
+}
 
 }
 
