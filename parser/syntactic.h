@@ -48,10 +48,9 @@
 #line 37 "syntactic.y"
 
 
+#include <string>
 #include <variant>
 #include <vector>
-
-#include "string.h"
 
 // Temporary junk!
 #define YYNOMEM YYERROR
@@ -101,14 +100,14 @@ typedef enum ExpressionType
 typedef struct Expression
 {
 	ExpressionType type;
-	std::variant<std::monostate, unsigned long, String, std::vector<Expression>> shared;
+	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
 } Expression;
 
 typedef struct IdentifierListNode
 {
 	struct IdentifierListNode *next;
 
-	String identifier;
+	std::string identifier;
 } IdentifierListNode;
 
 CREATE_LIST_TYPE(IdentifierList);
@@ -129,11 +128,11 @@ typedef enum StatementType
 typedef struct Statement
 {
 	StatementType type;
-	std::variant<std::monostate, StatementDc, Expression, String> shared;
+	std::variant<std::monostate, StatementDc, Expression, std::string> shared;
 } Statement;
 
 
-#line 137 "syntactic.h"
+#line 136 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -277,7 +276,7 @@ typedef struct Statement
 
 #line 25 "syntactic.y"
 namespace m68kasm {
-#line 281 "syntactic.h"
+#line 280 "syntactic.h"
 
 
 
@@ -489,7 +488,7 @@ namespace m68kasm {
 
       // IDENTIFIER
       // LOCAL_IDENTIFIER
-      char dummy3[sizeof (String)];
+      char dummy3[sizeof (std::string)];
 
       // expression_list
       char dummy4[sizeof (std::vector<Expression>)];
@@ -697,7 +696,7 @@ namespace m68kasm {
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
-        value.move< String > (std::move (that.value));
+        value.move< std::string > (std::move (that.value));
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -754,12 +753,12 @@ namespace m68kasm {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, String&& v)
+      basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const String& v)
+      basic_symbol (typename Base::kind_type t, const std::string& v)
         : Base (t)
         , value (v)
       {}
@@ -831,7 +830,7 @@ switch (yykind)
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
-        value.template destroy< String > ();
+        value.template destroy< std::string > ();
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -936,10 +935,10 @@ switch (yykind)
 #endif
       {}
 #if 201103L <= YY_CPLUSPLUS
-      symbol_type (int tok, String v)
+      symbol_type (int tok, std::string v)
         : super_type (token_kind_type (tok), std::move (v))
 #else
-      symbol_type (int tok, const String& v)
+      symbol_type (int tok, const std::string& v)
         : super_type (token_kind_type (tok), v)
 #endif
       {}
@@ -1151,14 +1150,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_IDENTIFIER (String v)
+      make_IDENTIFIER (std::string v)
       {
         return symbol_type (token::TOKEN_IDENTIFIER, std::move (v));
       }
 #else
       static
       symbol_type
-      make_IDENTIFIER (const String& v)
+      make_IDENTIFIER (const std::string& v)
       {
         return symbol_type (token::TOKEN_IDENTIFIER, v);
       }
@@ -1166,14 +1165,14 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_LOCAL_IDENTIFIER (String v)
+      make_LOCAL_IDENTIFIER (std::string v)
       {
         return symbol_type (token::TOKEN_LOCAL_IDENTIFIER, std::move (v));
       }
 #else
       static
       symbol_type
-      make_LOCAL_IDENTIFIER (const String& v)
+      make_LOCAL_IDENTIFIER (const std::string& v)
       {
         return symbol_type (token::TOKEN_LOCAL_IDENTIFIER, v);
       }
@@ -1956,7 +1955,7 @@ switch (yykind)
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
-        value.copy< String > (YY_MOVE (that.value));
+        value.copy< std::string > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -2016,7 +2015,7 @@ switch (yykind)
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
-        value.move< String > (YY_MOVE (s.value));
+        value.move< std::string > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_expression_list: // expression_list
@@ -2093,17 +2092,17 @@ switch (yykind)
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 2097 "syntactic.h"
+#line 2096 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 125 "syntactic.y"
+#line 124 "syntactic.y"
 
 
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
 
-#line 2107 "syntactic.h"
+#line 2106 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED

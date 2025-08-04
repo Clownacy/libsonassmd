@@ -25,6 +25,7 @@
 %{
 
 #include <charconv>
+#include <string>
 
 #include "syntactic.h"
 
@@ -121,22 +122,12 @@ even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 
  /* Identifier. */
 [A-Za-z_][A-Za-z_0-9\?]* {
-	String string;
-
-	if (!String_Create(&string, yytext, yyleng))
-		throw m68kasm::parser::syntax_error("Could not allocate memory for generic string.");
-
-	return m68kasm::parser::make_IDENTIFIER(std::move(string));
+	return m68kasm::parser::make_IDENTIFIER(std::string(yytext, yyleng));
 }
 
  /* Local label. */
 [@\.][A-Za-z_0-9\?]+ {
-	String string;
-
-	if (!String_Create(&string, yytext, yyleng))
-		throw m68kasm::parser::syntax_error("Could not allocate memory for generic string.");
-
-	return m68kasm::parser::make_LOCAL_IDENTIFIER(std::move(string));
+	return m68kasm::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */

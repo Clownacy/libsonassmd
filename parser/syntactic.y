@@ -36,10 +36,9 @@
 
 %code requires {
 
+#include <string>
 #include <variant>
 #include <vector>
-
-#include "string.h"
 
 // Temporary junk!
 #define YYNOMEM YYERROR
@@ -89,14 +88,14 @@ typedef enum ExpressionType
 typedef struct Expression
 {
 	ExpressionType type;
-	std::variant<std::monostate, unsigned long, String, std::vector<Expression>> shared;
+	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
 } Expression;
 
 typedef struct IdentifierListNode
 {
 	struct IdentifierListNode *next;
 
-	String identifier;
+	std::string identifier;
 } IdentifierListNode;
 
 CREATE_LIST_TYPE(IdentifierList);
@@ -117,7 +116,7 @@ typedef enum StatementType
 typedef struct Statement
 {
 	StatementType type;
-	std::variant<std::monostate, StatementDc, Expression, String> shared;
+	std::variant<std::monostate, StatementDc, Expression, std::string> shared;
 } Statement;
 
 }
@@ -163,8 +162,8 @@ void m68kasm::parser::error(const std::string &message)
 %token SIZE_WORD
 %token SIZE_LONGWORD
 %token<unsigned long> NUMBER
-%token<String> IDENTIFIER
-%token<String> LOCAL_IDENTIFIER
+%token<std::string> IDENTIFIER
+%token<std::string> LOCAL_IDENTIFIER
 %token LOGICAL_AND
 %token LOGICAL_OR
 %token EQUALITY
