@@ -1059,9 +1059,9 @@ return libsonassmd::CodeReader::parser::make_DIRECTIVE_DC();
 case 4:
 YY_RULE_SETUP
 #line 67 "lexical.l"
-return libsonassmd::CodeReader::parser::make_DIRECTIVE_EVEN();
-	YY_BREAK
+; // Just get rid of this junk; we don't need it.
 /* Sizes. */
+	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 70 "lexical.l"

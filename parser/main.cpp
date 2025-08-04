@@ -11,7 +11,10 @@ void libsonassmd_yyerror(const std::string &message)
 }
 
 static yyscan_t flex_state;
-static std::vector<libsonassmd::CodeReader::Statement> statement_list;
+static libsonassmd::CodeReader::BlockList block_list;
+
+template<class... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
 
 int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 {
@@ -32,7 +35,7 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 
 	const YY_BUFFER_STATE buffer = libsonassmd_code_reader_yy_create_buffer(file, YY_BUF_SIZE, flex_state);
 	libsonassmd_code_reader_yy_switch_to_buffer(buffer, flex_state);
-	libsonassmd::CodeReader::parser parser(flex_state, statement_list);
+	libsonassmd::CodeReader::parser parser(flex_state, block_list);
 #ifdef LIBSONASSMD_CODE_READER_YYDEBUG
 	parser.set_debug_level(1);
 #endif
@@ -46,38 +49,27 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 		//InternalError(&state, "libsonassmd_code_reader_yylex_destroy failed.");
 	}
 
-	std::cerr << std::format("There are {} blocks.\n", std::size(statement_list));
+	std::cerr << std::format("There are {} blocks.\n", std::size(block_list));
 
-	for (const auto &statement : statement_list)
+	for (const auto &block : block_list)
 	{
-		switch (statement.type)
-		{
-			case libsonassmd::CodeReader::StatementType::OFFSET_TABLE:
+		std::visit(overloaded{
+			[](const libsonassmd::CodeReader::OffsetTable &offset_table)
 			{
 				std::cerr << "Block type: Offset table\n";
 
-				const auto &offset_table = std::get<std::vector<std::string>>(statement.shared);
-
 				for (const auto &identifier : offset_table)
-					std::cerr << identifier << '\n';
-				break;
-			}
-
-			case libsonassmd::CodeReader::StatementType::MAPPING_FRAME:
+					std::cerr << std::format("\t{}\n", identifier);
+			},
+			[](const libsonassmd::CodeReader::MappingFrame &frame)
 			{
 				std::cerr << "Block type: Mapping frame\n";
 
-				const auto &frame = std::get<libsonassmd::CodeReader::Statement::MappingFrame>(statement.shared);
 				std::cerr << std::format("\tLabel: {}\n", frame.label);
 				std::cerr << "\tData:\n";
 				frame.frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
-				break;
 			}
-
-			case libsonassmd::CodeReader::StatementType::EVEN:
-				std::cerr << "Block type: Even\n";
-				break;
-		}
+		}, block);
 	}
 
 	return EXIT_SUCCESS;

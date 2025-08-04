@@ -63,7 +63,7 @@ hexadecimal       {hexadecimal_digit}+
 
  /* Directives. */
 dc              return libsonassmd::CodeReader::parser::make_DIRECTIVE_DC();
-even            return libsonassmd::CodeReader::parser::make_DIRECTIVE_EVEN();
+even            ; // Just get rid of this junk; we don't need it.
 
  /* Sizes. */
 ".b"            return libsonassmd::CodeReader::parser::make_SIZE_BYTE();

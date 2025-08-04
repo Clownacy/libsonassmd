@@ -29,7 +29,7 @@
 
 %param {void *scanner}
 
-%parse-param {std::vector<Statement> &statement_list}
+%parse-param {BlockList &block_list}
 
 %define parse.error verbose
 
@@ -54,30 +54,16 @@ namespace libsonassmd
 			LONGWORD
 		};
 
-		struct StatementDc
+		class OffsetTable : public std::vector<std::string> {};
+
+		struct MappingFrame
 		{
-			Size size;
-			std::vector<unsigned long> values;
+			std::string label;
+			libsonassmd::SpriteFrame frame;
 		};
 
-		enum class StatementType
-		{
-			OFFSET_TABLE,
-			MAPPING_FRAME,
-			EVEN
-		};
-
-		struct Statement
-		{
-			struct MappingFrame
-			{
-				std::string label;
-				libsonassmd::SpriteFrame frame;
-			};
-
-			StatementType type;
-			std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
-		};
+		using Block = std::variant<OffsetTable, MappingFrame>;
+		using BlockList = std::vector<Block>;
 	}
 }
 
@@ -106,7 +92,6 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %define api.token.prefix {TOKEN_}
 
 %token DIRECTIVE_DC
-%token DIRECTIVE_EVEN
 %token SIZE_BYTE
 %token SIZE_SHORT
 %token SIZE_WORD
@@ -143,12 +128,12 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %token TILDE "~"
 %token COLON ":"
 
-%type<std::vector<Statement>> statement_list
-%type<Statement> statement
+%type<BlockList> block_list
+%type<Block> block
 %type<std::vector<std::string>> offset_table
 %type<std::string> label offset_table_entry
 %type<std::vector<unsigned long>> expression_list
-%type<Statement::MappingFrame> mapping_frame
+%type<MappingFrame> mapping_frame
 %type<std::stringstream> bytes
 %type<Size> size
 %type<Size> dc
@@ -159,47 +144,40 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %%
 
 output
-	: statement_list
+	: block_list
 	{
-		statement_list = std::move($1);
+		block_list = std::move($1);
 	}
 	;
 
-statement_list
+block_list
 	: offset_table
 	{
 		// A label-less offset table can occur at the start of the file, but no later.
 		// This restriction is important for avoiding shift-reduce conflicts.
-		Statement statement;
-		statement.type = StatementType::OFFSET_TABLE;
-		statement.shared.emplace<std::vector<std::string>>(std::move($1));
-		$$.emplace_back(std::move(statement));
+		Block block;
+		block.emplace<OffsetTable>(std::move($1));
+		$$.emplace_back(std::move(block));
 	}
-	| statement
+	| block
 	{
 		$$.emplace_back(std::move($1));
 	}
-	| statement_list statement
+	| block_list block
 	{
 		$$ = std::move($1);
 		$$.emplace_back(std::move($2));
 	}
 	;
 
-statement
+block
 	: label offset_table
 	{
-		$$.type = StatementType::OFFSET_TABLE;
-		$$.shared.emplace<std::vector<std::string>>(std::move($2));
+		$$.emplace<OffsetTable>(std::move($2));
 	}
 	| mapping_frame
 	{
-		$$.type = StatementType::MAPPING_FRAME;
-		$$.shared.emplace<Statement::MappingFrame>(std::move($1));
-	}
-	| DIRECTIVE_EVEN
-	{
-		$$.type = StatementType::EVEN;
+		$$.emplace<MappingFrame>(std::move($1));
 	}
 	;
 
