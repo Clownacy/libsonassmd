@@ -93,6 +93,7 @@ even            return m68kasm::parser::make_DIRECTIVE_EVEN();
 "|"             return m68kasm::parser::make_VERTICAL_BAR();
 "^"             return m68kasm::parser::make_CARET();
 "~"             return m68kasm::parser::make_TILDE();
+":"             return m68kasm::parser::make_COLON();
 
  /* Operators. */
 "&&"            return m68kasm::parser::make_LOGICAL_AND();

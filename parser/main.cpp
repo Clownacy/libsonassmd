@@ -11,7 +11,7 @@ void m68kasm_error(const std::string &message)
 }
 
 static yyscan_t flex_state;
-static Statement statement;
+static std::vector<Statement> statement_list;
 
 int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 {
@@ -32,7 +32,7 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 
 	const YY_BUFFER_STATE buffer = m68kasm__create_buffer(file, YY_BUF_SIZE, flex_state);
 	m68kasm__switch_to_buffer(buffer, flex_state);
-	m68kasm::parser parser(flex_state, &statement);
+	m68kasm::parser parser(flex_state, statement_list);
 #ifdef M68KASM_DEBUG
 	parser.set_debug_level(1);
 #endif
@@ -44,6 +44,36 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 	if (m68kasm_lex_destroy(flex_state) != 0)
 	{
 		//InternalError(&state, "m68kasm_lex_destroy failed.");
+	}
+
+	std::cerr << std::format("There are {} blocks.\n", std::size(statement_list));
+
+	for (const auto &statement : statement_list)
+	{
+		switch (statement.type)
+		{
+			case STATEMENT_TYPE_OFFSET_TABLE:
+			{
+				std::cerr << "Block type: Offset table\n";
+
+				const auto &offset_table = std::get<std::vector<std::string>>(statement.shared);
+
+				for (const auto &identifier : offset_table)
+					std::cerr << identifier << '\n';
+				break;
+			}
+
+			case STATEMENT_TYPE_MAPPING_FRAME:
+			{
+				std::cerr << "Block type: Mapping frame\n";
+
+				const auto &frame = std::get<Statement::MappingFrame>(statement.shared);
+				std::cerr << std::format("\tLabel: {}\n", frame.label);
+				std::cerr << "\tData:\n";
+				frame.frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
+				break;
+			}
+		}
 	}
 
 	return EXIT_SUCCESS;

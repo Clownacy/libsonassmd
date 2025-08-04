@@ -44,9 +44,10 @@
 
 
 // Unqualified %code blocks.
-#line 79 "syntactic.y"
+#line 89 "syntactic.y"
 
 
+#include <cassert>
 #include <initializer_list>
 
 YY_DECL;
@@ -58,7 +59,7 @@ void m68kasm::parser::error(const std::string &message)
 }
 
 
-#line 62 "syntactic.cpp"
+#line 63 "syntactic.cpp"
 
 
 #ifndef YY_
@@ -130,12 +131,12 @@ void m68kasm::parser::error(const std::string &message)
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 25 "syntactic.y"
+#line 24 "syntactic.y"
 namespace m68kasm {
-#line 136 "syntactic.cpp"
+#line 137 "syntactic.cpp"
 
   /// Build a parser object.
-  parser::parser (void *scanner_yyarg, Statement *statement_yyarg)
+  parser::parser (void *scanner_yyarg, std::vector<Statement> &statement_list_yyarg)
 #if M68KASM_DEBUG
     : yydebug_ (false),
       yycdebug_ (&std::cerr),
@@ -143,7 +144,7 @@ namespace m68kasm {
     :
 #endif
       scanner (scanner_yyarg),
-      statement (statement_yyarg)
+      statement_list (statement_list_yyarg)
   {}
 
   parser::~parser ()
@@ -201,8 +202,17 @@ namespace m68kasm {
   {
     switch (that.kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.YY_MOVE_OR_COPY< Size > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.YY_MOVE_OR_COPY< Statement > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.YY_MOVE_OR_COPY< Statement::MappingFrame > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -212,11 +222,32 @@ namespace m68kasm {
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.YY_MOVE_OR_COPY< std::stringstream > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.YY_MOVE_OR_COPY< std::vector<Statement> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.YY_MOVE_OR_COPY< std::vector<std::string> > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.YY_MOVE_OR_COPY< std::vector<unsigned long> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.YY_MOVE_OR_COPY< unsigned long > (YY_MOVE (that.value));
         break;
 
@@ -235,8 +266,17 @@ namespace m68kasm {
   {
     switch (that.kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.move< Size > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.move< Statement > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.move< Statement::MappingFrame > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -246,11 +286,32 @@ namespace m68kasm {
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.move< std::stringstream > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.move< std::vector<Statement> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.move< std::vector<std::string> > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< std::vector<unsigned long> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.move< unsigned long > (YY_MOVE (that.value));
         break;
 
@@ -269,8 +330,17 @@ namespace m68kasm {
     state = that.state;
     switch (that.kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.copy< Size > (that.value);
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.copy< Statement > (that.value);
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.copy< Statement::MappingFrame > (that.value);
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -280,11 +350,32 @@ namespace m68kasm {
         value.copy< std::string > (that.value);
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.copy< std::stringstream > (that.value);
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.copy< std::vector<Statement> > (that.value);
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.copy< std::vector<std::string> > (that.value);
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.copy< std::vector<unsigned long> > (that.value);
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.copy< unsigned long > (that.value);
         break;
 
@@ -301,8 +392,17 @@ namespace m68kasm {
     state = that.state;
     switch (that.kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.move< Size > (that.value);
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.move< Statement > (that.value);
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.move< Statement::MappingFrame > (that.value);
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -312,11 +412,32 @@ namespace m68kasm {
         value.move< std::string > (that.value);
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.move< std::stringstream > (that.value);
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.move< std::vector<Statement> > (that.value);
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.move< std::vector<std::string> > (that.value);
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< std::vector<unsigned long> > (that.value);
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.move< unsigned long > (that.value);
         break;
 
@@ -574,8 +695,17 @@ namespace m68kasm {
          when using variants.  */
       switch (yyr1_[yyn])
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         yylhs.value.emplace< Size > ();
+        break;
+
+      case symbol_kind::S_statement: // statement
+        yylhs.value.emplace< Statement > ();
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        yylhs.value.emplace< Statement::MappingFrame > ();
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -585,11 +715,32 @@ namespace m68kasm {
         yylhs.value.emplace< std::string > ();
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        yylhs.value.emplace< std::stringstream > ();
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        yylhs.value.emplace< std::vector<Statement> > ();
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         yylhs.value.emplace< std::vector<std::string> > ();
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        yylhs.value.emplace< std::vector<unsigned long> > ();
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         yylhs.value.emplace< unsigned long > ();
         break;
 
@@ -607,108 +758,507 @@ namespace m68kasm {
         {
           switch (yyn)
             {
-  case 2: // statement: %empty
-#line 144 "syntactic.y"
+  case 2: // output: statement_list
+#line 161 "syntactic.y"
         {
-		statement->type = STATEMENT_TYPE_EMPTY;
+		statement_list = std::move(yystack_[0].value.as < std::vector<Statement> > ());
 	}
-#line 616 "syntactic.cpp"
+#line 767 "syntactic.cpp"
     break;
 
-  case 3: // statement: label offset_table
-#line 148 "syntactic.y"
+  case 3: // statement_list: offset_table
+#line 168 "syntactic.y"
         {
-		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
-		statement->shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
+		// A label-less offset table can occur at the start of the file, but no later.
+		// This restriction is important for avoiding shift-reduce conflicts.
+		Statement statement;
+		statement.type = STATEMENT_TYPE_OFFSET_TABLE;
+		statement.shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
+		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(statement));
 	}
-#line 625 "syntactic.cpp"
+#line 780 "syntactic.cpp"
     break;
 
-  case 4: // statement: offset_table
-#line 153 "syntactic.y"
+  case 4: // statement_list: statement
+#line 177 "syntactic.y"
         {
-		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
-		statement->shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
+		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
 	}
-#line 634 "syntactic.cpp"
+#line 788 "syntactic.cpp"
     break;
 
-  case 5: // statement: DIRECTIVE_EVEN
-#line 158 "syntactic.y"
+  case 5: // statement_list: statement_list statement
+#line 181 "syntactic.y"
         {
-		statement->type = STATEMENT_TYPE_EVEN;
+		yylhs.value.as < std::vector<Statement> > () = std::move(yystack_[1].value.as < std::vector<Statement> > ());
+		yylhs.value.as < std::vector<Statement> > ().emplace_back(std::move(yystack_[0].value.as < Statement > ()));
 	}
-#line 642 "syntactic.cpp"
+#line 797 "syntactic.cpp"
     break;
 
-  case 6: // label: IDENTIFIER ":"
-#line 165 "syntactic.y"
+  case 6: // statement: label offset_table
+#line 189 "syntactic.y"
+        {
+		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_OFFSET_TABLE;
+		yylhs.value.as < Statement > ().shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
+	}
+#line 806 "syntactic.cpp"
+    break;
+
+  case 7: // statement: mapping_frame
+#line 194 "syntactic.y"
+        {
+		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_MAPPING_FRAME;
+		yylhs.value.as < Statement > ().shared.emplace<Statement::MappingFrame>(std::move(yystack_[0].value.as < Statement::MappingFrame > ()));
+	}
+#line 815 "syntactic.cpp"
+    break;
+
+  case 8: // statement: DIRECTIVE_EVEN
+#line 199 "syntactic.y"
+        {
+		yylhs.value.as < Statement > ().type = STATEMENT_TYPE_EVEN;
+	}
+#line 823 "syntactic.cpp"
+    break;
+
+  case 9: // label: IDENTIFIER ":"
+#line 206 "syntactic.y"
         {
 		yylhs.value.as < std::string > () = std::move(yystack_[1].value.as < std::string > ());
 	}
-#line 650 "syntactic.cpp"
+#line 831 "syntactic.cpp"
     break;
 
-  case 7: // offset_table: offset_table_entry
-#line 172 "syntactic.y"
+  case 10: // offset_table: offset_table_entry
+#line 213 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
-#line 658 "syntactic.cpp"
+#line 839 "syntactic.cpp"
     break;
 
-  case 8: // offset_table: offset_table offset_table_entry
-#line 176 "syntactic.y"
+  case 11: // offset_table: offset_table offset_table_entry
+#line 217 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > () = std::move(yystack_[1].value.as < std::vector<std::string> > ());
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
-#line 667 "syntactic.cpp"
+#line 848 "syntactic.cpp"
     break;
 
-  case 9: // offset_table_entry: DIRECTIVE_DC size IDENTIFIER "-" IDENTIFIER
-#line 184 "syntactic.y"
+  case 12: // dc: DIRECTIVE_DC size
+#line 225 "syntactic.y"
+        {
+		yylhs.value.as < Size > () = yystack_[0].value.as < Size > ();
+	}
+#line 856 "syntactic.cpp"
+    break;
+
+  case 13: // offset_table_entry: dc IDENTIFIER "-" IDENTIFIER
+#line 232 "syntactic.y"
         {
 		static_cast<void>(yystack_[0].value.as < std::string > ());
 		yylhs.value.as < std::string > () = std::move(yystack_[2].value.as < std::string > ());
 	}
-#line 676 "syntactic.cpp"
+#line 865 "syntactic.cpp"
     break;
 
-  case 10: // size: SIZE_BYTE
-#line 204 "syntactic.y"
+  case 14: // mapping_frame: label bytes
+#line 240 "syntactic.y"
+        {
+		yylhs.value.as < Statement::MappingFrame > ().label = std::move(yystack_[1].value.as < std::string > ());
+		// TODO: Not this junk.
+		// TODO: Catch exceptions?
+		yylhs.value.as < Statement::MappingFrame > ().frame = libsonassmd::SpriteFrame(yystack_[0].value.as < std::stringstream > (), libsonassmd::Game::SONIC_1);
+	}
+#line 876 "syntactic.cpp"
+    break;
+
+  case 15: // bytes: dc expression_list
+#line 250 "syntactic.y"
+        {
+		for (const auto &value : yystack_[0].value.as < std::vector<unsigned long> > ())
+		{
+			switch (yystack_[1].value.as < Size > ())
+			{
+				case SIZE_BYTE:
+					libsonassmd::WriteU8(yylhs.value.as < std::stringstream > (), value);
+					break;
+
+				case SIZE_SHORT:
+				case SIZE_WORD:
+					libsonassmd::WriteU16BE(yylhs.value.as < std::stringstream > (), value);
+					break;
+
+				case SIZE_LONGWORD:
+					libsonassmd::WriteU32BE(yylhs.value.as < std::stringstream > (), value);
+					break;
+
+				case SIZE_UNDEFINED:
+					assert(false);
+					break;
+			}
+		}
+	}
+#line 905 "syntactic.cpp"
+    break;
+
+  case 16: // bytes: bytes dc expression_list
+#line 275 "syntactic.y"
+        {
+		yylhs.value.as < std::stringstream > () = std::move(yystack_[2].value.as < std::stringstream > ());
+
+		// TODO: Deduplicate this.
+		for (const auto &value : yystack_[0].value.as < std::vector<unsigned long> > ())
+		{
+			switch (yystack_[1].value.as < Size > ())
+			{
+				case SIZE_BYTE:
+					libsonassmd::WriteU8(yylhs.value.as < std::stringstream > (), value);
+					break;
+
+				case SIZE_SHORT:
+				case SIZE_WORD:
+					libsonassmd::WriteU16BE(yylhs.value.as < std::stringstream > (), value);
+					break;
+
+				case SIZE_LONGWORD:
+					libsonassmd::WriteU32BE(yylhs.value.as < std::stringstream > (), value);
+					break;
+
+				case SIZE_UNDEFINED:
+					assert(false);
+					break;
+			}
+		}
+	}
+#line 937 "syntactic.cpp"
+    break;
+
+  case 17: // expression_list: expression
+#line 306 "syntactic.y"
+        {
+		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
+	}
+#line 945 "syntactic.cpp"
+    break;
+
+  case 18: // expression_list: expression_list "," expression
+#line 310 "syntactic.y"
+        {
+		yylhs.value.as < std::vector<unsigned long> > () = std::move(yystack_[2].value.as < std::vector<unsigned long> > ());
+		yylhs.value.as < std::vector<unsigned long> > ().emplace_back(std::move(yystack_[0].value.as < unsigned long > ()));
+	}
+#line 954 "syntactic.cpp"
+    break;
+
+  case 19: // size: SIZE_BYTE
+#line 318 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_BYTE;
 	}
-#line 684 "syntactic.cpp"
+#line 962 "syntactic.cpp"
     break;
 
-  case 11: // size: SIZE_SHORT
-#line 208 "syntactic.y"
+  case 20: // size: SIZE_SHORT
+#line 322 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_SHORT;
 	}
-#line 692 "syntactic.cpp"
+#line 970 "syntactic.cpp"
     break;
 
-  case 12: // size: SIZE_WORD
-#line 212 "syntactic.y"
+  case 21: // size: SIZE_WORD
+#line 326 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_WORD;
 	}
-#line 700 "syntactic.cpp"
+#line 978 "syntactic.cpp"
     break;
 
-  case 13: // size: SIZE_LONGWORD
-#line 216 "syntactic.y"
+  case 22: // size: SIZE_LONGWORD
+#line 330 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_LONGWORD;
 	}
-#line 708 "syntactic.cpp"
+#line 986 "syntactic.cpp"
+    break;
+
+  case 23: // expression: expression1
+#line 337 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 994 "syntactic.cpp"
+    break;
+
+  case 24: // expression: expression LOGICAL_AND expression1
+#line 342 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () && yystack_[0].value.as < unsigned long > ();
+	}
+#line 1002 "syntactic.cpp"
+    break;
+
+  case 25: // expression: expression LOGICAL_OR expression1
+#line 347 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () || yystack_[0].value.as < unsigned long > ();
+	}
+#line 1010 "syntactic.cpp"
+    break;
+
+  case 26: // expression1: expression2
+#line 354 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1018 "syntactic.cpp"
+    break;
+
+  case 27: // expression1: expression1 "=" expression2
+#line 358 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
+	}
+#line 1026 "syntactic.cpp"
+    break;
+
+  case 28: // expression1: expression1 EQUALITY expression2
+#line 362 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () == yystack_[0].value.as < unsigned long > ();
+	}
+#line 1034 "syntactic.cpp"
+    break;
+
+  case 29: // expression1: expression1 INEQUALITY expression2
+#line 366 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () != yystack_[0].value.as < unsigned long > ();
+	}
+#line 1042 "syntactic.cpp"
+    break;
+
+  case 30: // expression2: expression3
+#line 373 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1050 "syntactic.cpp"
+    break;
+
+  case 31: // expression2: expression2 "<" expression3
+#line 377 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () < yystack_[0].value.as < unsigned long > ();
+	}
+#line 1058 "syntactic.cpp"
+    break;
+
+  case 32: // expression2: expression2 LESS_OR_EQUAL expression3
+#line 381 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () <= yystack_[0].value.as < unsigned long > ();
+	}
+#line 1066 "syntactic.cpp"
+    break;
+
+  case 33: // expression2: expression2 ">" expression3
+#line 385 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () > yystack_[0].value.as < unsigned long > ();
+	}
+#line 1074 "syntactic.cpp"
+    break;
+
+  case 34: // expression2: expression2 MORE_OR_EQUAL expression3
+#line 389 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >= yystack_[0].value.as < unsigned long > ();
+	}
+#line 1082 "syntactic.cpp"
+    break;
+
+  case 35: // expression3: expression4
+#line 396 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1090 "syntactic.cpp"
+    break;
+
+  case 36: // expression3: expression3 "+" expression4
+#line 400 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () + yystack_[0].value.as < unsigned long > ();
+	}
+#line 1098 "syntactic.cpp"
+    break;
+
+  case 37: // expression3: expression3 "-" expression4
+#line 404 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () - yystack_[0].value.as < unsigned long > ();
+	}
+#line 1106 "syntactic.cpp"
+    break;
+
+  case 38: // expression4: expression5
+#line 411 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1114 "syntactic.cpp"
+    break;
+
+  case 39: // expression4: expression4 "*" expression5
+#line 415 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () * yystack_[0].value.as < unsigned long > ();
+	}
+#line 1122 "syntactic.cpp"
+    break;
+
+  case 40: // expression4: expression4 "/" expression5
+#line 419 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () / yystack_[0].value.as < unsigned long > ();
+	}
+#line 1130 "syntactic.cpp"
+    break;
+
+  case 41: // expression4: expression4 "%" expression5
+#line 423 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () % yystack_[0].value.as < unsigned long > ();
+	}
+#line 1138 "syntactic.cpp"
+    break;
+
+  case 42: // expression5: expression6
+#line 430 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1146 "syntactic.cpp"
+    break;
+
+  case 43: // expression5: expression5 "&" expression6
+#line 434 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () & yystack_[0].value.as < unsigned long > ();
+	}
+#line 1154 "syntactic.cpp"
+    break;
+
+  case 44: // expression5: expression5 "!" expression6
+#line 438 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
+	}
+#line 1162 "syntactic.cpp"
+    break;
+
+  case 45: // expression5: expression5 "|" expression6
+#line 442 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () | yystack_[0].value.as < unsigned long > ();
+	}
+#line 1170 "syntactic.cpp"
+    break;
+
+  case 46: // expression5: expression5 "^" expression6
+#line 446 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () ^ yystack_[0].value.as < unsigned long > ();
+	}
+#line 1178 "syntactic.cpp"
+    break;
+
+  case 47: // expression6: expression7
+#line 453 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1186 "syntactic.cpp"
+    break;
+
+  case 48: // expression6: expression6 LEFT_SHIFT expression7
+#line 457 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () << yystack_[0].value.as < unsigned long > ();
+	}
+#line 1194 "syntactic.cpp"
+    break;
+
+  case 49: // expression6: expression6 RIGHT_SHIFT expression7
+#line 461 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[2].value.as < unsigned long > () >> yystack_[0].value.as < unsigned long > ();
+	}
+#line 1202 "syntactic.cpp"
+    break;
+
+  case 50: // expression7: expression8
+#line 468 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1210 "syntactic.cpp"
+    break;
+
+  case 51: // expression7: "+" expression7
+#line 472 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1218 "syntactic.cpp"
+    break;
+
+  case 52: // expression7: "-" expression7
+#line 476 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = -yystack_[0].value.as < unsigned long > ();
+	}
+#line 1226 "syntactic.cpp"
+    break;
+
+  case 53: // expression7: "~" expression7
+#line 480 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = ~yystack_[0].value.as < unsigned long > ();
+	}
+#line 1234 "syntactic.cpp"
+    break;
+
+  case 54: // expression7: "!" expression7
+#line 485 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = !yystack_[0].value.as < unsigned long > ();
+	}
+#line 1242 "syntactic.cpp"
+    break;
+
+  case 55: // expression8: NUMBER
+#line 492 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[0].value.as < unsigned long > ();
+	}
+#line 1250 "syntactic.cpp"
+    break;
+
+  case 56: // expression8: "(" expression ")"
+#line 496 "syntactic.y"
+        {
+		yylhs.value.as < unsigned long > () = yystack_[1].value.as < unsigned long > ();
+	}
+#line 1258 "syntactic.cpp"
     break;
 
 
-#line 712 "syntactic.cpp"
+#line 1262 "syntactic.cpp"
 
             default:
               break;
@@ -1056,69 +1606,119 @@ namespace m68kasm {
   }
 
 
-  const signed char parser::yypact_ninf_ = -37;
+  const signed char parser::yypact_ninf_ = -32;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-      -2,    -1,   -37,   -36,    10,     8,     8,   -37,   -37,   -37,
-     -37,   -37,     2,   -37,   -37,     8,   -37,   -13,     4,   -37
+      35,    46,   -32,   -31,    18,    40,   -32,    31,    31,    36,
+     -32,   -32,   -32,   -32,   -32,   -32,   -32,   -32,   -32,   -32,
+      31,    -5,    31,   -32,    23,   -32,    -3,    -3,    -3,    -3,
+      -3,    58,     2,    -2,    -7,    48,    15,    21,    57,   -32,
+     -32,    -3,    72,    24,   -32,   -32,   -32,   -32,    -3,    -3,
+      -3,    -3,    -3,    -3,    -3,    -3,    -3,    -3,    -3,    -3,
+      -3,    -3,    -3,    -3,    -3,    -3,    -3,    -3,    -3,    58,
+     -32,   -32,     2,    -2,    -2,    -7,    -7,    -7,    48,    48,
+      48,    48,    15,    15,    21,    21,    21,    57,    57,    57,
+      57,   -32,   -32
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       2,     0,     5,     0,     0,     0,     4,     7,    10,    11,
-      12,    13,     0,     6,     1,     3,     8,     0,     0,     9
+       0,     0,     8,     0,     0,     2,     4,     0,     3,     0,
+      10,     7,    19,    20,    21,    22,    12,     9,     1,     5,
+       6,     0,    14,    11,     0,    55,     0,     0,     0,     0,
+       0,    15,    17,    23,    26,    30,    35,    38,    42,    47,
+      50,     0,     0,     0,    51,    52,    54,    53,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    16,
+      13,    56,    18,    24,    25,    28,    29,    27,    32,    34,
+      31,    33,    36,    37,    39,    40,    41,    43,    44,    45,
+      46,    48,    49
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -37,   -37,   -37,    11,    -6,   -37
+     -32,   -32,   -32,    26,   -32,    76,     4,     8,   -32,   -32,
+      43,   -32,   -19,    28,    16,     5,    22,    10,     0,   -27,
+     -32
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     4,     5,     6,     7,    12
+       0,     4,     5,     6,     7,     8,     9,    10,    11,    22,
+      31,    16,    32,    33,    34,    35,    36,    37,    38,    39,
+      40
   };
 
   const signed char
   parser::yytable_[] =
   {
-      16,     1,     2,    13,     8,     9,    10,    11,     3,    16,
-      14,     1,    17,    18,    19,     0,    15
+      44,    45,    46,    47,    25,    24,    25,    43,    17,    54,
+      55,    21,    51,    52,    49,    50,    23,    26,    18,    26,
+      27,    28,    27,    28,    56,    57,    41,    53,    23,    72,
+      29,    19,    29,    30,     1,    30,    49,    50,     1,     2,
+      91,    92,    60,    61,     2,     3,    24,    71,    62,    42,
+       3,    12,    13,    14,    15,    63,    64,    65,    66,    78,
+      79,    80,    81,    87,    88,    89,    90,    75,    76,    77,
+      84,    85,    86,    58,    59,    67,    68,    73,    74,    48,
+      82,    83,    70,    20,    69
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       6,     3,     4,    39,     5,     6,     7,     8,    10,    15,
-       0,     3,    10,    26,    10,    -1,     5
+      27,    28,    29,    30,     9,    10,     9,    26,    39,    16,
+      17,     7,    14,    15,    12,    13,     8,    22,     0,    22,
+      25,    26,    25,    26,    31,    32,    22,    29,    20,    48,
+      35,     5,    35,    38,     3,    38,    12,    13,     3,     4,
+      67,    68,    27,    28,     4,    10,    10,    23,    33,    26,
+      10,     5,     6,     7,     8,    34,    35,    36,    37,    54,
+      55,    56,    57,    63,    64,    65,    66,    51,    52,    53,
+      60,    61,    62,    25,    26,    18,    19,    49,    50,    21,
+      58,    59,    10,     7,    41
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     3,     4,    10,    41,    42,    43,    44,     5,     6,
-       7,     8,    45,    39,     0,    43,    44,    10,    26,    10
+       0,     3,     4,    10,    41,    42,    43,    44,    45,    46,
+      47,    48,     5,     6,     7,     8,    51,    39,     0,    43,
+      45,    46,    49,    47,    10,     9,    22,    25,    26,    35,
+      38,    50,    52,    53,    54,    55,    56,    57,    58,    59,
+      60,    46,    26,    52,    59,    59,    59,    59,    21,    12,
+      13,    14,    15,    29,    16,    17,    31,    32,    25,    26,
+      27,    28,    33,    34,    35,    36,    37,    18,    19,    50,
+      10,    23,    52,    53,    53,    54,    54,    54,    55,    55,
+      55,    55,    56,    56,    57,    57,    57,    58,    58,    58,
+      58,    59,    59
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    40,    41,    41,    41,    41,    42,    43,    43,    44,
-      45,    45,    45,    45
+       0,    40,    41,    42,    42,    42,    43,    43,    43,    44,
+      45,    45,    46,    47,    48,    49,    49,    50,    50,    51,
+      51,    51,    51,    52,    52,    52,    53,    53,    53,    53,
+      54,    54,    54,    54,    54,    55,    55,    55,    56,    56,
+      56,    56,    57,    57,    57,    57,    57,    58,    58,    58,
+      59,    59,    59,    59,    59,    60,    60
   };
 
   const signed char
   parser::yyr2_[] =
   {
-       0,     2,     0,     2,     1,     1,     2,     1,     2,     5,
-       1,     1,     1,     1
+       0,     2,     1,     1,     1,     2,     2,     1,     1,     2,
+       1,     2,     2,     4,     2,     2,     3,     1,     3,     1,
+       1,     1,     1,     1,     3,     3,     1,     3,     3,     3,
+       1,     3,     3,     3,     3,     1,     3,     3,     1,     3,
+       3,     3,     1,     3,     3,     3,     3,     1,     3,     3,
+       1,     2,     2,     2,     2,     1,     3
   };
 
 
@@ -1135,18 +1735,25 @@ namespace m68kasm {
   "MORE_OR_EQUAL", "LEFT_SHIFT", "RIGHT_SHIFT", "\".\"", "\",\"", "\"(\"",
   "\")\"", "\"$\"", "\"+\"", "\"-\"", "\"*\"", "\"/\"", "\"=\"", "\"@\"",
   "\"<\"", "\">\"", "\"%\"", "\"&\"", "\"!\"", "\"|\"", "\"^\"", "\"~\"",
-  "\":\"", "$accept", "statement", "label", "offset_table",
-  "offset_table_entry", "size", YY_NULLPTR
+  "\":\"", "$accept", "output", "statement_list", "statement", "label",
+  "offset_table", "dc", "offset_table_entry", "mapping_frame", "bytes",
+  "expression_list", "size", "expression", "expression1", "expression2",
+  "expression3", "expression4", "expression5", "expression6",
+  "expression7", "expression8", YY_NULLPTR
   };
 #endif
 
 
 #if M68KASM_DEBUG
-  const unsigned char
+  const short
   parser::yyrline_[] =
   {
-       0,   144,   144,   147,   152,   157,   164,   171,   175,   183,
-     203,   207,   211,   215
+       0,   160,   160,   167,   176,   180,   188,   193,   198,   205,
+     212,   216,   224,   231,   239,   249,   274,   305,   309,   317,
+     321,   325,   329,   336,   341,   346,   353,   357,   361,   365,
+     372,   376,   380,   384,   388,   395,   399,   403,   410,   414,
+     418,   422,   429,   433,   437,   441,   445,   452,   456,   460,
+     467,   471,   475,   479,   484,   491,   495
   };
 
   void
@@ -1177,9 +1784,9 @@ namespace m68kasm {
 #endif // M68KASM_DEBUG
 
 
-#line 25 "syntactic.y"
+#line 24 "syntactic.y"
 } // m68kasm
-#line 1183 "syntactic.cpp"
+#line 1790 "syntactic.cpp"
 
-#line 393 "syntactic.y"
+#line 501 "syntactic.y"
 

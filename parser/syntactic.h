@@ -45,12 +45,15 @@
 #ifndef YY_M68KASM_SYNTACTIC_H_INCLUDED
 # define YY_M68KASM_SYNTACTIC_H_INCLUDED
 // "%code requires" blocks.
-#line 37 "syntactic.y"
+#line 36 "syntactic.y"
 
 
+#include <sstream>
 #include <string>
 #include <variant>
 #include <vector>
+
+#include "../sprite-frame.h"
 
 enum Size
 {
@@ -71,17 +74,25 @@ enum StatementType
 {
 	STATEMENT_TYPE_EMPTY,
 	STATEMENT_TYPE_OFFSET_TABLE,
+	STATEMENT_TYPE_MAPPING_FRAME,
 	STATEMENT_TYPE_EVEN
 };
 
 struct Statement
 {
+	struct MappingFrame
+	{
+		std::string label;
+		// TODO: No 'libsonassmd'.
+		libsonassmd::SpriteFrame frame;
+	};
+
 	StatementType type;
-	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>> shared;
+	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
 };
 
 
-#line 85 "syntactic.h"
+#line 96 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -223,9 +234,9 @@ struct Statement
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined M68KASM_DEBUG */
 
-#line 25 "syntactic.y"
+#line 24 "syntactic.y"
 namespace m68kasm {
-#line 229 "syntactic.h"
+#line 240 "syntactic.h"
 
 
 
@@ -421,20 +432,45 @@ namespace m68kasm {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // dc
       // size
       char dummy1[sizeof (Size)];
+
+      // statement
+      char dummy2[sizeof (Statement)];
+
+      // mapping_frame
+      char dummy3[sizeof (Statement::MappingFrame)];
 
       // IDENTIFIER
       // LOCAL_IDENTIFIER
       // label
       // offset_table_entry
-      char dummy2[sizeof (std::string)];
+      char dummy4[sizeof (std::string)];
+
+      // bytes
+      char dummy5[sizeof (std::stringstream)];
+
+      // statement_list
+      char dummy6[sizeof (std::vector<Statement>)];
 
       // offset_table
-      char dummy3[sizeof (std::vector<std::string>)];
+      char dummy7[sizeof (std::vector<std::string>)];
+
+      // expression_list
+      char dummy8[sizeof (std::vector<unsigned long>)];
 
       // NUMBER
-      char dummy4[sizeof (unsigned long)];
+      // expression
+      // expression1
+      // expression2
+      // expression3
+      // expression4
+      // expression5
+      // expression6
+      // expression7
+      // expression8
+      char dummy9[sizeof (unsigned long)];
     };
 
     /// The size of the largest semantic type.
@@ -513,7 +549,8 @@ namespace m68kasm {
     TOKEN_EXCLAMATION = 35,        // "!"
     TOKEN_VERTICAL_BAR = 36,       // "|"
     TOKEN_CARET = 37,              // "^"
-    TOKEN_TILDE = 38               // "~"
+    TOKEN_TILDE = 38,              // "~"
+    TOKEN_COLON = 39               // ":"
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -571,13 +608,28 @@ namespace m68kasm {
         S_VERTICAL_BAR = 36,                     // "|"
         S_CARET = 37,                            // "^"
         S_TILDE = 38,                            // "~"
-        S_39_ = 39,                              // ":"
+        S_COLON = 39,                            // ":"
         S_YYACCEPT = 40,                         // $accept
-        S_statement = 41,                        // statement
-        S_label = 42,                            // label
-        S_offset_table = 43,                     // offset_table
-        S_offset_table_entry = 44,               // offset_table_entry
-        S_size = 45                              // size
+        S_output = 41,                           // output
+        S_statement_list = 42,                   // statement_list
+        S_statement = 43,                        // statement
+        S_label = 44,                            // label
+        S_offset_table = 45,                     // offset_table
+        S_dc = 46,                               // dc
+        S_offset_table_entry = 47,               // offset_table_entry
+        S_mapping_frame = 48,                    // mapping_frame
+        S_bytes = 49,                            // bytes
+        S_expression_list = 50,                  // expression_list
+        S_size = 51,                             // size
+        S_expression = 52,                       // expression
+        S_expression1 = 53,                      // expression1
+        S_expression2 = 54,                      // expression2
+        S_expression3 = 55,                      // expression3
+        S_expression4 = 56,                      // expression4
+        S_expression5 = 57,                      // expression5
+        S_expression6 = 58,                      // expression6
+        S_expression7 = 59,                      // expression7
+        S_expression8 = 60                       // expression8
       };
     };
 
@@ -612,8 +664,17 @@ namespace m68kasm {
       {
         switch (this->kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.move< Size > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.move< Statement > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.move< Statement::MappingFrame > (std::move (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -623,11 +684,32 @@ namespace m68kasm {
         value.move< std::string > (std::move (that.value));
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.move< std::stringstream > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.move< std::vector<Statement> > (std::move (that.value));
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.move< std::vector<std::string> > (std::move (that.value));
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< std::vector<unsigned long> > (std::move (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.move< unsigned long > (std::move (that.value));
         break;
 
@@ -665,6 +747,30 @@ namespace m68kasm {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Statement&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Statement& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, Statement::MappingFrame&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const Statement::MappingFrame& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
@@ -677,12 +783,48 @@ namespace m68kasm {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::stringstream&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::stringstream& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<Statement>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<Statement>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::vector<std::string>&& v)
         : Base (t)
         , value (std::move (v))
       {}
 #else
       basic_symbol (typename Base::kind_type t, const std::vector<std::string>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<unsigned long>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<unsigned long>& v)
         : Base (t)
         , value (v)
       {}
@@ -724,8 +866,17 @@ namespace m68kasm {
         // Value type destructor.
 switch (yykind)
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.template destroy< Size > ();
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.template destroy< Statement > ();
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.template destroy< Statement::MappingFrame > ();
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -735,11 +886,32 @@ switch (yykind)
         value.template destroy< std::string > ();
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.template destroy< std::stringstream > ();
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.template destroy< std::vector<Statement> > ();
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.template destroy< std::vector<std::string> > ();
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.template destroy< std::vector<unsigned long> > ();
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.template destroy< unsigned long > ();
         break;
 
@@ -855,7 +1027,7 @@ switch (yykind)
     };
 
     /// Build a parser object.
-    parser (void *scanner_yyarg, Statement *statement_yyarg);
+    parser (void *scanner_yyarg, std::vector<Statement> &statement_list_yyarg);
     virtual ~parser ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -1484,6 +1656,21 @@ switch (yykind)
         return symbol_type (token::TOKEN_TILDE);
       }
 #endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_COLON ()
+      {
+        return symbol_type (token::TOKEN_COLON);
+      }
+#else
+      static
+      symbol_type
+      make_COLON ()
+      {
+        return symbol_type (token::TOKEN_COLON);
+      }
+#endif
 
 
     class context
@@ -1585,7 +1772,7 @@ switch (yykind)
 
 #if M68KASM_DEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const unsigned char yyrline_[];
+    static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r) const;
     /// Print the state stack on the debug stream.
@@ -1812,15 +1999,15 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 16,     ///< Last index in yytable_.
-      yynnts_ = 6,  ///< Number of nonterminal symbols.
-      yyfinal_ = 14 ///< Termination state number.
+      yylast_ = 84,     ///< Last index in yytable_.
+      yynnts_ = 21,  ///< Number of nonterminal symbols.
+      yyfinal_ = 18 ///< Termination state number.
     };
 
 
     // User arguments.
     void *scanner;
-    Statement *statement;
+    std::vector<Statement> &statement_list;
 
   };
 
@@ -1839,8 +2026,17 @@ switch (yykind)
   {
     switch (this->kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.copy< Size > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.copy< Statement > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.copy< Statement::MappingFrame > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -1850,11 +2046,32 @@ switch (yykind)
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.copy< std::stringstream > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.copy< std::vector<Statement> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.copy< std::vector<std::string> > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.copy< std::vector<unsigned long> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.copy< unsigned long > (YY_MOVE (that.value));
         break;
 
@@ -1889,8 +2106,17 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
+      case symbol_kind::S_dc: // dc
       case symbol_kind::S_size: // size
         value.move< Size > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_statement: // statement
+        value.move< Statement > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_mapping_frame: // mapping_frame
+        value.move< Statement::MappingFrame > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
@@ -1900,11 +2126,32 @@ switch (yykind)
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_bytes: // bytes
+        value.move< std::stringstream > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_statement_list: // statement_list
+        value.move< std::vector<Statement> > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_offset_table: // offset_table
         value.move< std::vector<std::string> > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< std::vector<unsigned long> > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_expression: // expression
+      case symbol_kind::S_expression1: // expression1
+      case symbol_kind::S_expression2: // expression2
+      case symbol_kind::S_expression3: // expression3
+      case symbol_kind::S_expression4: // expression4
+      case symbol_kind::S_expression5: // expression5
+      case symbol_kind::S_expression6: // expression6
+      case symbol_kind::S_expression7: // expression7
+      case symbol_kind::S_expression8: // expression8
         value.move< unsigned long > (YY_MOVE (s.value));
         break;
 
@@ -1972,19 +2219,19 @@ switch (yykind)
   }
 
 
-#line 25 "syntactic.y"
+#line 24 "syntactic.y"
 } // m68kasm
-#line 1978 "syntactic.h"
+#line 2225 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 73 "syntactic.y"
+#line 83 "syntactic.y"
 
 
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
 
-#line 1988 "syntactic.h"
+#line 2235 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED

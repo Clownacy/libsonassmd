@@ -22,5 +22,5 @@ lexical.cpp lexical.h: lexical.l syntactic.h
 syntactic.cpp syntactic.h: syntactic.y
 	$(YACC) --output=syntactic.cpp --defines=syntactic.h $(YFLAGS) $<
 
-test: main.cpp lexical.cpp syntactic.cpp
+test: main.cpp lexical.cpp syntactic.cpp ../sprite-frame.cpp ../sprite-piece.cpp ../common.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@

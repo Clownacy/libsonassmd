@@ -15,7 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-%define parse.trace
 
 %language "c++"
 
@@ -30,15 +29,18 @@
 
 %param {void *scanner}
 
-%parse-param {Statement *statement}
+%parse-param {std::vector<Statement> &statement_list}
 
 %define parse.error verbose
 
 %code requires {
 
+#include <sstream>
 #include <string>
 #include <variant>
 #include <vector>
+
+#include "../sprite-frame.h"
 
 enum Size
 {
@@ -59,13 +61,21 @@ enum StatementType
 {
 	STATEMENT_TYPE_EMPTY,
 	STATEMENT_TYPE_OFFSET_TABLE,
+	STATEMENT_TYPE_MAPPING_FRAME,
 	STATEMENT_TYPE_EVEN
 };
 
 struct Statement
 {
+	struct MappingFrame
+	{
+		std::string label;
+		// TODO: No 'libsonassmd'.
+		libsonassmd::SpriteFrame frame;
+	};
+
 	StatementType type;
-	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>> shared;
+	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>, MappingFrame> shared;
 };
 
 }
@@ -78,6 +88,7 @@ struct Statement
 
 %code {
 
+#include <cassert>
 #include <initializer_list>
 
 YY_DECL;
@@ -128,35 +139,65 @@ void m68kasm::parser::error(const std::string &message)
 %token VERTICAL_BAR "|"
 %token CARET "^"
 %token TILDE "~"
+%token COLON ":"
 
-%type<Size> size
+%type<std::vector<Statement>> statement_list
+%type<Statement> statement
 %type<std::vector<std::string>> offset_table
 %type<std::string> label offset_table_entry
 %type<std::vector<unsigned long>> expression_list
+%type<Statement::MappingFrame> mapping_frame
+%type<std::stringstream> bytes
+%type<Size> size
+%type<Size> dc
 %type<unsigned long> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
 
-%start statement
+%start output
 
 %%
 
+output
+	: statement_list
+	{
+		statement_list = std::move($1);
+	}
+	;
+
+statement_list
+	: offset_table
+	{
+		// A label-less offset table can occur at the start of the file, but no later.
+		// This restriction is important for avoiding shift-reduce conflicts.
+		Statement statement;
+		statement.type = STATEMENT_TYPE_OFFSET_TABLE;
+		statement.shared.emplace<std::vector<std::string>>(std::move($1));
+		$$.emplace_back(std::move(statement));
+	}
+	| statement
+	{
+		$$.emplace_back(std::move($1));
+	}
+	| statement_list statement
+	{
+		$$ = std::move($1);
+		$$.emplace_back(std::move($2));
+	}
+	;
+
 statement
-	:
+	: label offset_table
 	{
-		statement->type = STATEMENT_TYPE_EMPTY;
+		$$.type = STATEMENT_TYPE_OFFSET_TABLE;
+		$$.shared.emplace<std::vector<std::string>>(std::move($2));
 	}
-	| label offset_table
+	| mapping_frame
 	{
-		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
-		statement->shared.emplace<std::vector<std::string>>(std::move($2));
-	}
-	| offset_table
-	{
-		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
-		statement->shared.emplace<std::vector<std::string>>(std::move($1));
+		$$.type = STATEMENT_TYPE_MAPPING_FRAME;
+		$$.shared.emplace<Statement::MappingFrame>(std::move($1));
 	}
 	| DIRECTIVE_EVEN
 	{
-		statement->type = STATEMENT_TYPE_EVEN;
+		$$.type = STATEMENT_TYPE_EVEN;
 	}
 	;
 
@@ -179,11 +220,84 @@ offset_table
 	}
 	;
 
-offset_table_entry
-	: DIRECTIVE_DC size IDENTIFIER "-" IDENTIFIER
+dc
+	: DIRECTIVE_DC size
 	{
-		static_cast<void>($5);
-		$$ = std::move($3);
+		$$ = $2;
+	}
+	;
+
+offset_table_entry
+	: dc IDENTIFIER "-" IDENTIFIER
+	{
+		static_cast<void>($4);
+		$$ = std::move($2);
+	}
+	;
+
+mapping_frame
+	: label bytes
+	{
+		$$.label = std::move($1);
+		// TODO: Not this junk.
+		// TODO: Catch exceptions?
+		$$.frame = libsonassmd::SpriteFrame($2, libsonassmd::Game::SONIC_1);
+	}
+	;
+
+bytes
+	: dc expression_list
+	{
+		for (const auto &value : $2)
+		{
+			switch ($1)
+			{
+				case SIZE_BYTE:
+					libsonassmd::WriteU8($$, value);
+					break;
+
+				case SIZE_SHORT:
+				case SIZE_WORD:
+					libsonassmd::WriteU16BE($$, value);
+					break;
+
+				case SIZE_LONGWORD:
+					libsonassmd::WriteU32BE($$, value);
+					break;
+
+				case SIZE_UNDEFINED:
+					assert(false);
+					break;
+			}
+		}
+	}
+	| bytes dc expression_list
+	{
+		$$ = std::move($1);
+
+		// TODO: Deduplicate this.
+		for (const auto &value : $3)
+		{
+			switch ($2)
+			{
+				case SIZE_BYTE:
+					libsonassmd::WriteU8($$, value);
+					break;
+
+				case SIZE_SHORT:
+				case SIZE_WORD:
+					libsonassmd::WriteU16BE($$, value);
+					break;
+
+				case SIZE_LONGWORD:
+					libsonassmd::WriteU32BE($$, value);
+					break;
+
+				case SIZE_UNDEFINED:
+					assert(false);
+					break;
+			}
+		}
 	}
 	;
 
@@ -218,12 +332,6 @@ size
 	}
 	;
 
-/*
-number
-	: NUMBER
-	| "$" NUMBER
-	;
-*/
 expression
 	: expression1
 	{
