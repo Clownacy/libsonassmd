@@ -73,6 +73,10 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 				frame.frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
 				break;
 			}
+
+			case libsonassmd::CodeReader::StatementType::EVEN:
+				std::cerr << "Block type: Even\n";
+				break;
 		}
 	}
 
