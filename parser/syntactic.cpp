@@ -50,9 +50,7 @@
 #include <initializer_list>
 
 YY_DECL;
-void m68kasm_warning(void *scanner, Statement *statement, const char *message);
-void m68kasm_warning_pedantic(void *scanner, Statement *statement, const char *message);
-void m68kasm_error(void *scanner, Statement *statement, const char *message);
+void m68kasm_error(const std::string &message);
 
 static void DoExpression(Expression &expression, ExpressionType type, const std::initializer_list<Expression> &subexpressions)
 {
@@ -62,11 +60,11 @@ static void DoExpression(Expression &expression, ExpressionType type, const std:
 
 void m68kasm::parser::error(const std::string &message)
 {
-	m68kasm_error(nullptr, nullptr, message.c_str());
+	m68kasm_error(message);
 }
 
 
-#line 70 "syntactic.cpp"
+#line 68 "syntactic.cpp"
 
 
 #ifndef YY_
@@ -140,7 +138,7 @@ void m68kasm::parser::error(const std::string &message)
 
 #line 25 "syntactic.y"
 namespace m68kasm {
-#line 144 "syntactic.cpp"
+#line 142 "syntactic.cpp"
 
   /// Build a parser object.
   parser::parser (void *scanner_yyarg, Statement *statement_yyarg)
@@ -666,354 +664,354 @@ namespace m68kasm {
           switch (yyn)
             {
   case 2: // statement: %empty
-#line 182 "syntactic.y"
+#line 180 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_EMPTY;
 	}
-#line 674 "syntactic.cpp"
+#line 672 "syntactic.cpp"
     break;
 
   case 3: // statement: DIRECTIVE_DC size expression_list
-#line 186 "syntactic.y"
+#line 184 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_DC;
 		statement->shared.emplace<StatementDc>(yystack_[1].value.as < Size > (), std::move(yystack_[0].value.as < std::vector<Expression> > ()));
 	}
-#line 683 "syntactic.cpp"
+#line 681 "syntactic.cpp"
     break;
 
   case 4: // statement: DIRECTIVE_EVEN
-#line 191 "syntactic.y"
+#line 189 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_EVEN;
 	}
-#line 691 "syntactic.cpp"
+#line 689 "syntactic.cpp"
     break;
 
   case 5: // expression_list: expression
-#line 198 "syntactic.y"
+#line 196 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Expression> > ().emplace_back(std::move(yystack_[0].value.as < Expression > ()));
 	}
-#line 699 "syntactic.cpp"
+#line 697 "syntactic.cpp"
     break;
 
   case 6: // expression_list: expression_list "," expression
-#line 202 "syntactic.y"
+#line 200 "syntactic.y"
         {
 		yylhs.value.as < std::vector<Expression> > () = std::move(yystack_[2].value.as < std::vector<Expression> > ());
 		yylhs.value.as < std::vector<Expression> > ().emplace_back(std::move(yystack_[0].value.as < Expression > ()));
 	}
-#line 708 "syntactic.cpp"
+#line 706 "syntactic.cpp"
     break;
 
   case 7: // size: SIZE_BYTE
-#line 210 "syntactic.y"
+#line 208 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_BYTE;
 	}
-#line 716 "syntactic.cpp"
+#line 714 "syntactic.cpp"
     break;
 
   case 8: // size: SIZE_SHORT
-#line 214 "syntactic.y"
+#line 212 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_SHORT;
 	}
-#line 724 "syntactic.cpp"
+#line 722 "syntactic.cpp"
     break;
 
   case 9: // size: SIZE_WORD
-#line 218 "syntactic.y"
+#line 216 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_WORD;
 	}
-#line 732 "syntactic.cpp"
+#line 730 "syntactic.cpp"
     break;
 
   case 10: // size: SIZE_LONGWORD
-#line 222 "syntactic.y"
+#line 220 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_LONGWORD;
 	}
-#line 740 "syntactic.cpp"
+#line 738 "syntactic.cpp"
     break;
 
   case 11: // expression: expression1
-#line 235 "syntactic.y"
+#line 233 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 748 "syntactic.cpp"
+#line 746 "syntactic.cpp"
     break;
 
   case 12: // expression: expression LOGICAL_AND expression1
-#line 240 "syntactic.y"
+#line 238 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_LOGICAL_AND, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 756 "syntactic.cpp"
+#line 754 "syntactic.cpp"
     break;
 
   case 13: // expression: expression LOGICAL_OR expression1
-#line 245 "syntactic.y"
+#line 243 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_LOGICAL_OR, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 764 "syntactic.cpp"
+#line 762 "syntactic.cpp"
     break;
 
   case 14: // expression1: expression2
-#line 252 "syntactic.y"
+#line 250 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 772 "syntactic.cpp"
+#line 770 "syntactic.cpp"
     break;
 
   case 15: // expression1: expression1 "=" expression2
-#line 256 "syntactic.y"
+#line 254 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_EQUALITY, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 780 "syntactic.cpp"
+#line 778 "syntactic.cpp"
     break;
 
   case 16: // expression1: expression1 EQUALITY expression2
-#line 260 "syntactic.y"
+#line 258 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_EQUALITY, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 788 "syntactic.cpp"
+#line 786 "syntactic.cpp"
     break;
 
   case 17: // expression1: expression1 INEQUALITY expression2
-#line 264 "syntactic.y"
+#line 262 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_INEQUALITY, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 796 "syntactic.cpp"
+#line 794 "syntactic.cpp"
     break;
 
   case 18: // expression2: expression3
-#line 271 "syntactic.y"
+#line 269 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 804 "syntactic.cpp"
+#line 802 "syntactic.cpp"
     break;
 
   case 19: // expression2: expression2 "<" expression3
-#line 275 "syntactic.y"
+#line 273 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_LESS_THAN, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 812 "syntactic.cpp"
+#line 810 "syntactic.cpp"
     break;
 
   case 20: // expression2: expression2 LESS_OR_EQUAL expression3
-#line 279 "syntactic.y"
+#line 277 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_LESS_OR_EQUAL, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 820 "syntactic.cpp"
+#line 818 "syntactic.cpp"
     break;
 
   case 21: // expression2: expression2 ">" expression3
-#line 283 "syntactic.y"
+#line 281 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_MORE_THAN, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 828 "syntactic.cpp"
+#line 826 "syntactic.cpp"
     break;
 
   case 22: // expression2: expression2 MORE_OR_EQUAL expression3
-#line 287 "syntactic.y"
+#line 285 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_MORE_OR_EQUAL, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 836 "syntactic.cpp"
+#line 834 "syntactic.cpp"
     break;
 
   case 23: // expression3: expression4
-#line 294 "syntactic.y"
+#line 292 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 844 "syntactic.cpp"
+#line 842 "syntactic.cpp"
     break;
 
   case 24: // expression3: expression3 "+" expression4
-#line 298 "syntactic.y"
+#line 296 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_ADD, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 852 "syntactic.cpp"
+#line 850 "syntactic.cpp"
     break;
 
   case 25: // expression3: expression3 "-" expression4
-#line 302 "syntactic.y"
+#line 300 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_SUBTRACT, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 860 "syntactic.cpp"
+#line 858 "syntactic.cpp"
     break;
 
   case 26: // expression4: expression5
-#line 309 "syntactic.y"
+#line 307 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 868 "syntactic.cpp"
+#line 866 "syntactic.cpp"
     break;
 
   case 27: // expression4: expression4 "*" expression5
-#line 313 "syntactic.y"
+#line 311 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_MULTIPLY, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 876 "syntactic.cpp"
+#line 874 "syntactic.cpp"
     break;
 
   case 28: // expression4: expression4 "/" expression5
-#line 317 "syntactic.y"
+#line 315 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_DIVIDE, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 884 "syntactic.cpp"
+#line 882 "syntactic.cpp"
     break;
 
   case 29: // expression4: expression4 "%" expression5
-#line 321 "syntactic.y"
+#line 319 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_MODULO, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 892 "syntactic.cpp"
+#line 890 "syntactic.cpp"
     break;
 
   case 30: // expression5: expression6
-#line 328 "syntactic.y"
+#line 326 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 900 "syntactic.cpp"
+#line 898 "syntactic.cpp"
     break;
 
   case 31: // expression5: expression5 "&" expression6
-#line 332 "syntactic.y"
+#line 330 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_BITWISE_AND, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 908 "syntactic.cpp"
+#line 906 "syntactic.cpp"
     break;
 
   case 32: // expression5: expression5 "!" expression6
-#line 336 "syntactic.y"
+#line 334 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_BITWISE_OR, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 916 "syntactic.cpp"
+#line 914 "syntactic.cpp"
     break;
 
   case 33: // expression5: expression5 "|" expression6
-#line 340 "syntactic.y"
+#line 338 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_BITWISE_OR, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 924 "syntactic.cpp"
+#line 922 "syntactic.cpp"
     break;
 
   case 34: // expression5: expression5 "^" expression6
-#line 344 "syntactic.y"
+#line 342 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_BITWISE_XOR, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 932 "syntactic.cpp"
+#line 930 "syntactic.cpp"
     break;
 
   case 35: // expression6: expression7
-#line 351 "syntactic.y"
+#line 349 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 940 "syntactic.cpp"
+#line 938 "syntactic.cpp"
     break;
 
   case 36: // expression6: expression6 LEFT_SHIFT expression7
-#line 355 "syntactic.y"
+#line 353 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_LEFT_SHIFT, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 948 "syntactic.cpp"
+#line 946 "syntactic.cpp"
     break;
 
   case 37: // expression6: expression6 RIGHT_SHIFT expression7
-#line 359 "syntactic.y"
+#line 357 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_RIGHT_SHIFT, {std::move(yystack_[2].value.as < Expression > ()), std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 956 "syntactic.cpp"
+#line 954 "syntactic.cpp"
     break;
 
   case 38: // expression7: expression8
-#line 366 "syntactic.y"
+#line 364 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 964 "syntactic.cpp"
+#line 962 "syntactic.cpp"
     break;
 
   case 39: // expression7: "+" expression7
-#line 370 "syntactic.y"
+#line 368 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[0].value.as < Expression > ();
 	}
-#line 972 "syntactic.cpp"
+#line 970 "syntactic.cpp"
     break;
 
   case 40: // expression7: "-" expression7
-#line 374 "syntactic.y"
+#line 372 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_NEGATE, {std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 980 "syntactic.cpp"
+#line 978 "syntactic.cpp"
     break;
 
   case 41: // expression7: "~" expression7
-#line 378 "syntactic.y"
+#line 376 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_BITWISE_NOT, {std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 988 "syntactic.cpp"
+#line 986 "syntactic.cpp"
     break;
 
   case 42: // expression7: "!" expression7
-#line 383 "syntactic.y"
+#line 381 "syntactic.y"
         {
 		DoExpression(yylhs.value.as < Expression > (), EXPRESSION_LOGICAL_NOT, {std::move(yystack_[0].value.as < Expression > ())});
 	}
-#line 996 "syntactic.cpp"
+#line 994 "syntactic.cpp"
     break;
 
   case 43: // expression8: NUMBER
-#line 390 "syntactic.y"
+#line 388 "syntactic.y"
         {
 		yylhs.value.as < Expression > ().type = EXPRESSION_NUMBER;
 		yylhs.value.as < Expression > ().shared.emplace<unsigned long>(yystack_[0].value.as < unsigned long > ());
 	}
-#line 1005 "syntactic.cpp"
+#line 1003 "syntactic.cpp"
     break;
 
   case 44: // expression8: "(" expression ")"
-#line 395 "syntactic.y"
+#line 393 "syntactic.y"
         {
 		yylhs.value.as < Expression > () = yystack_[1].value.as < Expression > ();
 	}
-#line 1013 "syntactic.cpp"
+#line 1011 "syntactic.cpp"
     break;
 
 
-#line 1017 "syntactic.cpp"
+#line 1015 "syntactic.cpp"
 
             default:
               break;
@@ -1487,11 +1485,11 @@ namespace m68kasm {
   const short
   parser::yyrline_[] =
   {
-       0,   182,   182,   185,   190,   197,   201,   209,   213,   217,
-     221,   234,   239,   244,   251,   255,   259,   263,   270,   274,
-     278,   282,   286,   293,   297,   301,   308,   312,   316,   320,
-     327,   331,   335,   339,   343,   350,   354,   358,   365,   369,
-     373,   377,   382,   389,   394
+       0,   180,   180,   183,   188,   195,   199,   207,   211,   215,
+     219,   232,   237,   242,   249,   253,   257,   261,   268,   272,
+     276,   280,   284,   291,   295,   299,   306,   310,   314,   318,
+     325,   329,   333,   337,   341,   348,   352,   356,   363,   367,
+     371,   375,   380,   387,   392
   };
 
   void
@@ -1524,7 +1522,7 @@ namespace m68kasm {
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 1528 "syntactic.cpp"
+#line 1526 "syntactic.cpp"
 
-#line 400 "syntactic.y"
+#line 398 "syntactic.y"
 

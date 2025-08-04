@@ -5,17 +5,7 @@
 #include "syntactic.h"
 #include "lexical.h"
 
-void m68kasm_warning([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, const char *message)
-{
-	std::cerr << message;
-}
-
-void m68kasm_warning_pedantic([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, const char *message)
-{
-	std::cerr << message;
-}
-
-void m68kasm_error([[maybe_unused]] void *scanner, [[maybe_unused]] Statement *statement, const char *message)
+void m68kasm_error(const std::string &message)
 {
 	std::cerr << message;
 }

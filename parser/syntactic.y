@@ -113,9 +113,7 @@ struct Statement
 #include <initializer_list>
 
 YY_DECL;
-void m68kasm_warning(void *scanner, Statement *statement, const char *message);
-void m68kasm_warning_pedantic(void *scanner, Statement *statement, const char *message);
-void m68kasm_error(void *scanner, Statement *statement, const char *message);
+void m68kasm_error(const std::string &message);
 
 static void DoExpression(Expression &expression, ExpressionType type, const std::initializer_list<Expression> &subexpressions)
 {
@@ -125,7 +123,7 @@ static void DoExpression(Expression &expression, ExpressionType type, const std:
 
 void m68kasm::parser::error(const std::string &message)
 {
-	m68kasm_error(nullptr, nullptr, message.c_str());
+	m68kasm_error(message);
 }
 
 }
