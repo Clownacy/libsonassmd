@@ -29,16 +29,16 @@
 
 %param {void *scanner}
 
-%parse-param {BlockList &block_list}
+%parse-param {Mappings &mappings}
 %parse-param {Game game}
 
 %define parse.error verbose
 
 %code requires {
 
+#include <map>
 #include <sstream>
 #include <string>
-#include <variant>
 #include <vector>
 
 #include "../sprite-frame.h"
@@ -55,17 +55,13 @@ namespace libsonassmd
 			LONGWORD
 		};
 
-		class OffsetTable : public std::vector<std::string> {};
-		class Labels : public std::vector<std::string> {};
+		using StringList = std::vector<std::string>;
 
-		struct MappingFrame
+		struct Mappings
 		{
-			Labels labels;
-			libsonassmd::SpriteFrame frame;
+			std::vector<StringList> offset_tables;
+			std::map<std::string, libsonassmd::SpriteFrame> frames;
 		};
-
-		using Block = std::variant<OffsetTable, MappingFrame>;
-		using BlockList = std::vector<Block>;
 	}
 }
 
@@ -130,13 +126,11 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %token TILDE "~"
 %token COLON ":"
 
-%type<BlockList> block_list
-%type<Block> block
-%type<OffsetTable> offset_table
+%type<Mappings> mappings
+%type<StringList> offset_table
 %type<std::string> label offset_table_entry
-%type<Labels> labels
+%type<StringList> labels
 %type<std::vector<unsigned long>> expression_list
-%type<MappingFrame> mapping_frame
 %type<std::stringstream> bytes
 %type<Size> size
 %type<Size> dc
@@ -147,40 +141,43 @@ void libsonassmd::CodeReader::parser::error(const std::string &message)
 %%
 
 output
-	: block_list
+	: mappings
 	{
-		block_list = std::move($1);
+		mappings = std::move($1);
 	}
 	;
 
-block_list
+mappings
 	: offset_table
 	{
 		// A label-less offset table can occur at the start of the file, but no later.
 		// This restriction is important for avoiding shift-reduce conflicts.
-		Block block;
-		block.emplace<OffsetTable>(std::move($1));
-		$$.emplace_back(std::move(block));
+		$$.offset_tables.emplace_back(std::move($1));
 	}
-	| block
+	| labels offset_table
 	{
-		$$.emplace_back(std::move($1));
+		$$.offset_tables.emplace_back(std::move($2));
 	}
-	| block_list block
+	| labels bytes
+	{
+		// TODO: Catch exceptions?
+		// TODO: Deduplicate this all, dammit!
+		const SpriteFrame frame($2, game);
+		for (const auto &label : $1)
+			$$.frames.insert({label, frame});
+	}
+	| mappings labels offset_table
 	{
 		$$ = std::move($1);
-		$$.emplace_back(std::move($2));
+		$$.offset_tables.emplace_back(std::move($3));
 	}
-	;
-
-block
-	: labels offset_table
+	| mappings labels bytes
 	{
-		$$.emplace<OffsetTable>(std::move($2));
-	}
-	| mapping_frame
-	{
-		$$.emplace<MappingFrame>(std::move($1));
+		$$ = std::move($1);
+		// TODO: Catch exceptions?
+		const SpriteFrame frame($3, game);
+		for (const auto &label : $2)
+			$$.frames.insert({label, frame});
 	}
 	;
 
@@ -227,16 +224,6 @@ offset_table_entry
 	{
 		static_cast<void>($4);
 		$$ = std::move($2);
-	}
-	;
-
-mapping_frame
-	: labels bytes
-	{
-		$$.labels = std::move($1);
-		// TODO: Not this junk.
-		// TODO: Catch exceptions?
-		$$.frame = libsonassmd::SpriteFrame($2, game);
 	}
 	;
 
