@@ -36,6 +36,9 @@
 
 %code requires {
 
+#include <variant>
+#include <vector>
+
 #include "string.h"
 
 // Temporary junk!
@@ -86,22 +89,8 @@ typedef enum ExpressionType
 typedef struct Expression
 {
 	ExpressionType type;
-	union
-	{
-		unsigned long unsigned_long;
-		String string;
-		struct Expression *subexpressions;
-	} shared;
+	std::variant<std::monostate, unsigned long, String, std::vector<Expression>> shared;
 } Expression;
-
-typedef struct ExpressionListNode
-{
-	struct ExpressionListNode *next;
-
-	Expression expression;
-} ExpressionListNode;
-
-CREATE_LIST_TYPE(ExpressionList);
 
 typedef struct IdentifierListNode
 {
@@ -115,7 +104,7 @@ CREATE_LIST_TYPE(IdentifierList);
 typedef struct StatementDc
 {
 	Size size;
-	ExpressionList values;
+	std::vector<Expression> values;
 } StatementDc;
 
 typedef enum StatementType
@@ -128,20 +117,12 @@ typedef enum StatementType
 typedef struct Statement
 {
 	StatementType type;
-	union
-	{
-		StatementDc dc;
-		Expression expression;
-		String string;
-	} shared;
+	std::variant<std::monostate, StatementDc, Expression, String> shared;
 } Statement;
 
 }
 
 %code provides {
-
-void DestroyExpression(Expression *expression);
-void DestroyStatement(Statement *statement);
 
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
@@ -153,15 +134,18 @@ void DestroyStatement(Statement *statement);
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <initializer_list>
 
 YY_DECL;
 void m68kasm_warning(void *scanner, Statement *statement, const char *message);
 void m68kasm_warning_pedantic(void *scanner, Statement *statement, const char *message);
 void m68kasm_error(void *scanner, Statement *statement, const char *message);
 
-static bool DoExpressionTriple(Expression *expression, ExpressionType type, Expression *left_expression, Expression *middle_expression, Expression *right_expression);
-static bool DoExpression(Expression *expression, ExpressionType type, Expression *left_expression, Expression *right_expression);
-static void DestroyExpressionList(ExpressionList *list);
+static void DoExpression(Expression &expression, ExpressionType type, const std::initializer_list<Expression> &subexpressions)
+{
+	expression.type = type;
+	expression.shared.emplace<std::vector<Expression>>(subexpressions);
+}
 
 void m68kasm::parser::error(const std::string &message)
 {
@@ -210,7 +194,7 @@ void m68kasm::parser::error(const std::string &message)
 %token TILDE "~"
 
 %type<Size> size
-%type<ExpressionList> expression_list
+%type<std::vector<Expression>> expression_list
 %type<Expression> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
 
 %start statement
@@ -225,8 +209,7 @@ statement
 	| DIRECTIVE_DC size expression_list
 	{
 		statement->type = STATEMENT_TYPE_DC;
-		statement->shared.dc.size = $2;
-		statement->shared.dc.values = $3;
+		statement->shared.emplace<StatementDc>($2, std::move($3));
 	}
 	| DIRECTIVE_EVEN
 	{
@@ -237,45 +220,12 @@ statement
 expression_list
 	: expression
 	{
-		ExpressionListNode *node = (ExpressionListNode*)malloc(sizeof(ExpressionListNode));
-
-		if (node == NULL)
-		{
-			DestroyExpression(&$1);
-			YYNOMEM;
-		}
-		else
-		{
-			node->expression = $1;
-			node->next = NULL;
-		}
-
-		$$.head = $$.tail = node;
+		$$.emplace_back(std::move($1));
 	}
 	| expression_list "," expression
 	{
-		ExpressionListNode *node = (ExpressionListNode*)malloc(sizeof(ExpressionListNode));
-
-		$$ = $1;
-
-		if (node == NULL)
-		{
-			DestroyExpressionList(&$1);
-			DestroyExpression(&$3);
-			YYNOMEM;
-		}
-		else
-		{
-			node->expression = $3;
-			node->next = NULL;
-
-			if ($$.head == NULL)
-				$$.head = node;
-			else
-				((ExpressionListNode*)$$.tail)->next = node;
-
-			$$.tail = node;
-		}
+		$$ = std::move($1);
+		$$.emplace_back(std::move($3));
 	}
 	;
 
@@ -312,14 +262,12 @@ expression
 	/* This is an assembler extension: asm68k doesn't support this. */
 	| expression LOGICAL_AND expression1
 	{
-		if (!DoExpression(&$$, EXPRESSION_LOGICAL_AND, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_LOGICAL_AND, {std::move($1), std::move($3)});
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
 	| expression LOGICAL_OR expression1
 	{
-		if (!DoExpression(&$$, EXPRESSION_LOGICAL_OR, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_LOGICAL_OR, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -330,18 +278,15 @@ expression1
 	}
 	| expression1 "=" expression2
 	{
-		if (!DoExpression(&$$, EXPRESSION_EQUALITY, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_EQUALITY, {std::move($1), std::move($3)});
 	}
 	| expression1 EQUALITY expression2
 	{
-		if (!DoExpression(&$$, EXPRESSION_EQUALITY, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_EQUALITY, {std::move($1), std::move($3)});
 	}
 	| expression1 INEQUALITY expression2
 	{
-		if (!DoExpression(&$$, EXPRESSION_INEQUALITY, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_INEQUALITY, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -352,23 +297,19 @@ expression2
 	}
 	| expression2 "<" expression3
 	{
-		if (!DoExpression(&$$, EXPRESSION_LESS_THAN, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_LESS_THAN, {std::move($1), std::move($3)});
 	}
 	| expression2 LESS_OR_EQUAL expression3
 	{
-		if (!DoExpression(&$$, EXPRESSION_LESS_OR_EQUAL, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_LESS_OR_EQUAL, {std::move($1), std::move($3)});
 	}
 	| expression2 ">" expression3
 	{
-		if (!DoExpression(&$$, EXPRESSION_MORE_THAN, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_MORE_THAN, {std::move($1), std::move($3)});
 	}
 	| expression2 MORE_OR_EQUAL expression3
 	{
-		if (!DoExpression(&$$, EXPRESSION_MORE_OR_EQUAL, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_MORE_OR_EQUAL, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -379,13 +320,11 @@ expression3
 	}
 	| expression3 "+" expression4
 	{
-		if (!DoExpression(&$$, EXPRESSION_ADD, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_ADD, {std::move($1), std::move($3)});
 	}
 	| expression3 "-" expression4
 	{
-		if (!DoExpression(&$$, EXPRESSION_SUBTRACT, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_SUBTRACT, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -396,18 +335,15 @@ expression4
 	}
 	| expression4 "*" expression5
 	{
-		if (!DoExpression(&$$, EXPRESSION_MULTIPLY, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_MULTIPLY, {std::move($1), std::move($3)});
 	}
 	| expression4 "/" expression5
 	{
-		if (!DoExpression(&$$, EXPRESSION_DIVIDE, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_DIVIDE, {std::move($1), std::move($3)});
 	}
 	| expression4 "%" expression5
 	{
-		if (!DoExpression(&$$, EXPRESSION_MODULO, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_MODULO, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -418,23 +354,19 @@ expression5
 	}
 	| expression5 "&" expression6
 	{
-		if (!DoExpression(&$$, EXPRESSION_BITWISE_AND, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_BITWISE_AND, {std::move($1), std::move($3)});
 	}
 	| expression5 "!" expression6
 	{
-		if (!DoExpression(&$$, EXPRESSION_BITWISE_OR, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_BITWISE_OR, {std::move($1), std::move($3)});
 	}
 	| expression5 "|" expression6
 	{
-		if (!DoExpression(&$$, EXPRESSION_BITWISE_OR, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_BITWISE_OR, {std::move($1), std::move($3)});
 	}
 	| expression5 "^" expression6
 	{
-		if (!DoExpression(&$$, EXPRESSION_BITWISE_XOR, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_BITWISE_XOR, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -445,13 +377,11 @@ expression6
 	}
 	| expression6 LEFT_SHIFT expression7
 	{
-		if (!DoExpression(&$$, EXPRESSION_LEFT_SHIFT, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_LEFT_SHIFT, {std::move($1), std::move($3)});
 	}
 	| expression6 RIGHT_SHIFT expression7
 	{
-		if (!DoExpression(&$$, EXPRESSION_RIGHT_SHIFT, &$1, &$3))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_RIGHT_SHIFT, {std::move($1), std::move($3)});
 	}
 	;
 
@@ -466,19 +396,16 @@ expression7
 	}
 	| "-" expression7
 	{
-		if (!DoExpression(&$$, EXPRESSION_NEGATE, &$2, NULL))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_NEGATE, {std::move($2)});
 	}
 	| "~" expression7
 	{
-		if (!DoExpression(&$$, EXPRESSION_BITWISE_NOT, &$2, NULL))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_BITWISE_NOT, {std::move($2)});
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
 	| "!" expression7
 	{
-		if (!DoExpression(&$$, EXPRESSION_LOGICAL_NOT, &$2, NULL))
-			YYNOMEM;
+		DoExpression($$, EXPRESSION_LOGICAL_NOT, {std::move($2)});
 	}
 	;
 
@@ -486,7 +413,7 @@ expression8
 	: NUMBER
 	{
 		$$.type = EXPRESSION_NUMBER;
-		$$.shared.unsigned_long = $1;
+		$$.shared.emplace<unsigned long>($1);
 	}
 	| "(" expression ")"
 	{
@@ -495,111 +422,3 @@ expression8
 	;
 
 %%
-
-static bool DoExpressionTriple(Expression *expression, ExpressionType type, Expression *left_expression, Expression *middle_expression, Expression *right_expression)
-{
-	bool success = true;
-
-	expression->type = type;
-
-	expression->shared.subexpressions = (Expression*)malloc(sizeof(Expression) * (right_expression != NULL ? 3 : middle_expression != NULL ? 2 : 1));
-
-	if (expression->shared.subexpressions == NULL)
-	{
-		DestroyExpression(left_expression);
-
-		if (middle_expression != NULL)
-			DestroyExpression(middle_expression);
-
-		if (right_expression != NULL)
-			DestroyExpression(right_expression);
-
-		success = false;
-	}
-	else
-	{
-		expression->shared.subexpressions[0] = *left_expression;
-
-		if (middle_expression != NULL)
-			expression->shared.subexpressions[1] = *middle_expression;
-
-		if (right_expression != NULL)
-			expression->shared.subexpressions[2] = *right_expression;
-	}
-
-	return success;
-}
-
-static bool DoExpression(Expression *expression, ExpressionType type, Expression *left_expression, Expression *right_expression)
-{
-	return DoExpressionTriple(expression, type, left_expression, right_expression, NULL);
-}
-
-void DestroyExpression(Expression *expression)
-{
-	switch (expression->type)
-	{
-		case EXPRESSION_SUBTRACT:
-		case EXPRESSION_ADD:
-		case EXPRESSION_MULTIPLY:
-		case EXPRESSION_DIVIDE:
-		case EXPRESSION_MODULO:
-		case EXPRESSION_LOGICAL_OR:
-		case EXPRESSION_LOGICAL_AND:
-		case EXPRESSION_BITWISE_OR:
-		case EXPRESSION_BITWISE_XOR:
-		case EXPRESSION_BITWISE_AND:
-		case EXPRESSION_EQUALITY:
-		case EXPRESSION_INEQUALITY:
-		case EXPRESSION_LESS_THAN:
-		case EXPRESSION_LESS_OR_EQUAL:
-		case EXPRESSION_MORE_THAN:
-		case EXPRESSION_MORE_OR_EQUAL:
-		case EXPRESSION_LEFT_SHIFT:
-		case EXPRESSION_RIGHT_SHIFT:
-			DestroyExpression(&expression->shared.subexpressions[0]);
-			DestroyExpression(&expression->shared.subexpressions[1]);
-			free(expression->shared.subexpressions);
-			break;
-
-		case EXPRESSION_NEGATE:
-		case EXPRESSION_BITWISE_NOT:
-		case EXPRESSION_LOGICAL_NOT:
-			DestroyExpression(&expression->shared.subexpressions[0]);
-			free(expression->shared.subexpressions);
-			break;
-
-		case EXPRESSION_NUMBER:
-			break;
-	}
-}
-
-static void DestroyExpressionList(ExpressionList *list)
-{
-	ExpressionListNode *node = list->head;
-
-	while (node != NULL)
-	{
-		ExpressionListNode* const next_node = node->next;
-
-		DestroyExpression(&node->expression);
-
-		free(node);
-
-		node = next_node;
-	}
-}
-
-void DestroyStatement(Statement *statement)
-{
-	switch (statement->type)
-	{
-		case STATEMENT_TYPE_EMPTY:
-		case STATEMENT_TYPE_EVEN:
-			break;
-
-		case STATEMENT_TYPE_DC:
-			DestroyExpressionList(&statement->shared.dc.values);
-			break;
-	}
-}

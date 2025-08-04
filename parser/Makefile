@@ -1,7 +1,7 @@
 LEX = flex
 YACC = bison
 
-CXXFLAGS = -Wall -Wextra -Wpedantic
+CXXFLAGS = -Wall -Wextra -Wpedantic -std=c++20
 
 ifeq ($(DEBUG),1)
  YFLAGS = --debug

@@ -48,6 +48,9 @@
 #line 37 "syntactic.y"
 
 
+#include <variant>
+#include <vector>
+
 #include "string.h"
 
 // Temporary junk!
@@ -98,22 +101,8 @@ typedef enum ExpressionType
 typedef struct Expression
 {
 	ExpressionType type;
-	union
-	{
-		unsigned long unsigned_long;
-		String string;
-		struct Expression *subexpressions;
-	} shared;
+	std::variant<std::monostate, unsigned long, String, std::vector<Expression>> shared;
 } Expression;
-
-typedef struct ExpressionListNode
-{
-	struct ExpressionListNode *next;
-
-	Expression expression;
-} ExpressionListNode;
-
-CREATE_LIST_TYPE(ExpressionList);
 
 typedef struct IdentifierListNode
 {
@@ -127,7 +116,7 @@ CREATE_LIST_TYPE(IdentifierList);
 typedef struct StatementDc
 {
 	Size size;
-	ExpressionList values;
+	std::vector<Expression> values;
 } StatementDc;
 
 typedef enum StatementType
@@ -140,16 +129,11 @@ typedef enum StatementType
 typedef struct Statement
 {
 	StatementType type;
-	union
-	{
-		StatementDc dc;
-		Expression expression;
-		String string;
-	} shared;
+	std::variant<std::monostate, StatementDc, Expression, String> shared;
 } Statement;
 
 
-#line 153 "syntactic.h"
+#line 137 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -293,7 +277,7 @@ typedef struct Statement
 
 #line 25 "syntactic.y"
 namespace m68kasm {
-#line 297 "syntactic.h"
+#line 281 "syntactic.h"
 
 
 
@@ -500,15 +484,15 @@ namespace m68kasm {
       // expression8
       char dummy1[sizeof (Expression)];
 
-      // expression_list
-      char dummy2[sizeof (ExpressionList)];
-
       // size
-      char dummy3[sizeof (Size)];
+      char dummy2[sizeof (Size)];
 
       // IDENTIFIER
       // LOCAL_IDENTIFIER
-      char dummy4[sizeof (String)];
+      char dummy3[sizeof (String)];
+
+      // expression_list
+      char dummy4[sizeof (std::vector<Expression>)];
 
       // NUMBER
       char dummy5[sizeof (unsigned long)];
@@ -707,10 +691,6 @@ namespace m68kasm {
         value.move< Expression > (std::move (that.value));
         break;
 
-      case symbol_kind::S_expression_list: // expression_list
-        value.move< ExpressionList > (std::move (that.value));
-        break;
-
       case symbol_kind::S_size: // size
         value.move< Size > (std::move (that.value));
         break;
@@ -718,6 +698,10 @@ namespace m68kasm {
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
         value.move< String > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< std::vector<Expression> > (std::move (that.value));
         break;
 
       case symbol_kind::S_NUMBER: // NUMBER
@@ -758,18 +742,6 @@ namespace m68kasm {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, ExpressionList&& v)
-        : Base (t)
-        , value (std::move (v))
-      {}
-#else
-      basic_symbol (typename Base::kind_type t, const ExpressionList& v)
-        : Base (t)
-        , value (v)
-      {}
-#endif
-
-#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, Size&& v)
         : Base (t)
         , value (std::move (v))
@@ -788,6 +760,18 @@ namespace m68kasm {
       {}
 #else
       basic_symbol (typename Base::kind_type t, const String& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<Expression>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<Expression>& v)
         : Base (t)
         , value (v)
       {}
@@ -841,10 +825,6 @@ switch (yykind)
         value.template destroy< Expression > ();
         break;
 
-      case symbol_kind::S_expression_list: // expression_list
-        value.template destroy< ExpressionList > ();
-        break;
-
       case symbol_kind::S_size: // size
         value.template destroy< Size > ();
         break;
@@ -852,6 +832,10 @@ switch (yykind)
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
         value.template destroy< String > ();
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.template destroy< std::vector<Expression> > ();
         break;
 
       case symbol_kind::S_NUMBER: // NUMBER
@@ -1966,10 +1950,6 @@ switch (yykind)
         value.copy< Expression > (YY_MOVE (that.value));
         break;
 
-      case symbol_kind::S_expression_list: // expression_list
-        value.copy< ExpressionList > (YY_MOVE (that.value));
-        break;
-
       case symbol_kind::S_size: // size
         value.copy< Size > (YY_MOVE (that.value));
         break;
@@ -1977,6 +1957,10 @@ switch (yykind)
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
         value.copy< String > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.copy< std::vector<Expression> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_NUMBER: // NUMBER
@@ -2026,10 +2010,6 @@ switch (yykind)
         value.move< Expression > (YY_MOVE (s.value));
         break;
 
-      case symbol_kind::S_expression_list: // expression_list
-        value.move< ExpressionList > (YY_MOVE (s.value));
-        break;
-
       case symbol_kind::S_size: // size
         value.move< Size > (YY_MOVE (s.value));
         break;
@@ -2037,6 +2017,10 @@ switch (yykind)
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_LOCAL_IDENTIFIER: // LOCAL_IDENTIFIER
         value.move< String > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_expression_list: // expression_list
+        value.move< std::vector<Expression> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_NUMBER: // NUMBER
@@ -2109,20 +2093,17 @@ switch (yykind)
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 2113 "syntactic.h"
+#line 2097 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 141 "syntactic.y"
+#line 125 "syntactic.y"
 
-
-void DestroyExpression(Expression *expression);
-void DestroyStatement(Statement *statement);
 
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
 
-#line 2126 "syntactic.h"
+#line 2107 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED
