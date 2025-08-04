@@ -44,7 +44,7 @@
 
 
 // Unqualified %code blocks.
-#line 111 "syntactic.y"
+#line 79 "syntactic.y"
 
 
 #include <initializer_list>
@@ -52,19 +52,13 @@
 YY_DECL;
 void m68kasm_error(const std::string &message);
 
-static void DoExpression(Expression &expression, ExpressionType type, const std::initializer_list<Expression> &subexpressions)
-{
-	expression.type = type;
-	expression.shared.emplace<std::vector<Expression>>(subexpressions);
-}
-
 void m68kasm::parser::error(const std::string &message)
 {
 	m68kasm_error(message);
 }
 
 
-#line 68 "syntactic.cpp"
+#line 62 "syntactic.cpp"
 
 
 #ifndef YY_
@@ -138,7 +132,7 @@ void m68kasm::parser::error(const std::string &message)
 
 #line 25 "syntactic.y"
 namespace m68kasm {
-#line 142 "syntactic.cpp"
+#line 136 "syntactic.cpp"
 
   /// Build a parser object.
   parser::parser (void *scanner_yyarg, Statement *statement_yyarg)
@@ -614,107 +608,107 @@ namespace m68kasm {
           switch (yyn)
             {
   case 2: // statement: %empty
-#line 182 "syntactic.y"
+#line 144 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_EMPTY;
 	}
-#line 622 "syntactic.cpp"
+#line 616 "syntactic.cpp"
     break;
 
   case 3: // statement: label offset_table
-#line 186 "syntactic.y"
+#line 148 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
 		statement->shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
 	}
-#line 631 "syntactic.cpp"
+#line 625 "syntactic.cpp"
     break;
 
   case 4: // statement: offset_table
-#line 191 "syntactic.y"
+#line 153 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_OFFSET_TABLE;
 		statement->shared.emplace<std::vector<std::string>>(std::move(yystack_[0].value.as < std::vector<std::string> > ()));
 	}
-#line 640 "syntactic.cpp"
+#line 634 "syntactic.cpp"
     break;
 
   case 5: // statement: DIRECTIVE_EVEN
-#line 196 "syntactic.y"
+#line 158 "syntactic.y"
         {
 		statement->type = STATEMENT_TYPE_EVEN;
 	}
-#line 648 "syntactic.cpp"
+#line 642 "syntactic.cpp"
     break;
 
   case 6: // label: IDENTIFIER ":"
-#line 203 "syntactic.y"
+#line 165 "syntactic.y"
         {
 		yylhs.value.as < std::string > () = std::move(yystack_[1].value.as < std::string > ());
 	}
-#line 656 "syntactic.cpp"
+#line 650 "syntactic.cpp"
     break;
 
   case 7: // offset_table: offset_table_entry
-#line 210 "syntactic.y"
+#line 172 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
-#line 664 "syntactic.cpp"
+#line 658 "syntactic.cpp"
     break;
 
   case 8: // offset_table: offset_table offset_table_entry
-#line 214 "syntactic.y"
+#line 176 "syntactic.y"
         {
 		yylhs.value.as < std::vector<std::string> > () = std::move(yystack_[1].value.as < std::vector<std::string> > ());
 		yylhs.value.as < std::vector<std::string> > ().emplace_back(std::move(yystack_[0].value.as < std::string > ()));
 	}
-#line 673 "syntactic.cpp"
+#line 667 "syntactic.cpp"
     break;
 
   case 9: // offset_table_entry: DIRECTIVE_DC size IDENTIFIER "-" IDENTIFIER
-#line 222 "syntactic.y"
+#line 184 "syntactic.y"
         {
 		static_cast<void>(yystack_[0].value.as < std::string > ());
 		yylhs.value.as < std::string > () = std::move(yystack_[2].value.as < std::string > ());
 	}
-#line 682 "syntactic.cpp"
+#line 676 "syntactic.cpp"
     break;
 
   case 10: // size: SIZE_BYTE
-#line 242 "syntactic.y"
+#line 204 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_BYTE;
 	}
-#line 690 "syntactic.cpp"
+#line 684 "syntactic.cpp"
     break;
 
   case 11: // size: SIZE_SHORT
-#line 246 "syntactic.y"
+#line 208 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_SHORT;
 	}
-#line 698 "syntactic.cpp"
+#line 692 "syntactic.cpp"
     break;
 
   case 12: // size: SIZE_WORD
-#line 250 "syntactic.y"
+#line 212 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_WORD;
 	}
-#line 706 "syntactic.cpp"
+#line 700 "syntactic.cpp"
     break;
 
   case 13: // size: SIZE_LONGWORD
-#line 254 "syntactic.y"
+#line 216 "syntactic.y"
         {
 		yylhs.value.as < Size > () = SIZE_LONGWORD;
 	}
-#line 714 "syntactic.cpp"
+#line 708 "syntactic.cpp"
     break;
 
 
-#line 718 "syntactic.cpp"
+#line 712 "syntactic.cpp"
 
             default:
               break;
@@ -1151,8 +1145,8 @@ namespace m68kasm {
   const unsigned char
   parser::yyrline_[] =
   {
-       0,   182,   182,   185,   190,   195,   202,   209,   213,   221,
-     241,   245,   249,   253
+       0,   144,   144,   147,   152,   157,   164,   171,   175,   183,
+     203,   207,   211,   215
   };
 
   void
@@ -1185,7 +1179,7 @@ namespace m68kasm {
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 1189 "syntactic.cpp"
+#line 1183 "syntactic.cpp"
 
-#line 432 "syntactic.y"
+#line 393 "syntactic.y"
 

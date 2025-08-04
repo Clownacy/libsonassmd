@@ -61,42 +61,10 @@ enum Size
 	SIZE_UNDEFINED = 1 << 4
 };
 
-enum ExpressionType
-{
-	EXPRESSION_SUBTRACT,
-	EXPRESSION_ADD,
-	EXPRESSION_MULTIPLY,
-	EXPRESSION_DIVIDE,
-	EXPRESSION_MODULO,
-	EXPRESSION_NEGATE,
-	EXPRESSION_LOGICAL_NOT,
-	EXPRESSION_LOGICAL_OR,
-	EXPRESSION_LOGICAL_AND,
-	EXPRESSION_BITWISE_NOT,
-	EXPRESSION_BITWISE_OR,
-	EXPRESSION_BITWISE_XOR,
-	EXPRESSION_BITWISE_AND,
-	EXPRESSION_EQUALITY,
-	EXPRESSION_INEQUALITY,
-	EXPRESSION_LESS_THAN,
-	EXPRESSION_LESS_OR_EQUAL,
-	EXPRESSION_MORE_THAN,
-	EXPRESSION_MORE_OR_EQUAL,
-	EXPRESSION_LEFT_SHIFT,
-	EXPRESSION_RIGHT_SHIFT,
-	EXPRESSION_NUMBER
-};
-
-struct Expression
-{
-	ExpressionType type;
-	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
-};
-
 struct StatementDc
 {
 	Size size;
-	std::vector<Expression> values;
+	std::vector<unsigned long> values;
 };
 
 enum StatementType
@@ -109,11 +77,11 @@ enum StatementType
 struct Statement
 {
 	StatementType type;
-	std::variant<std::monostate, StatementDc, Expression, std::string, std::vector<std::string>> shared;
+	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>> shared;
 };
 
 
-#line 117 "syntactic.h"
+#line 85 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -257,7 +225,7 @@ struct Statement
 
 #line 25 "syntactic.y"
 namespace m68kasm {
-#line 261 "syntactic.h"
+#line 229 "syntactic.h"
 
 
 
@@ -2006,17 +1974,17 @@ switch (yykind)
 
 #line 25 "syntactic.y"
 } // m68kasm
-#line 2010 "syntactic.h"
+#line 1978 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 105 "syntactic.y"
+#line 73 "syntactic.y"
 
 
 #define YY_DECL m68kasm::parser::symbol_type m68kasm_lex(void *yyscanner)
 
 
-#line 2020 "syntactic.h"
+#line 1988 "syntactic.h"
 
 
 #endif // !YY_M68KASM_SYNTACTIC_H_INCLUDED

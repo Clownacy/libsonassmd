@@ -49,42 +49,10 @@ enum Size
 	SIZE_UNDEFINED = 1 << 4
 };
 
-enum ExpressionType
-{
-	EXPRESSION_SUBTRACT,
-	EXPRESSION_ADD,
-	EXPRESSION_MULTIPLY,
-	EXPRESSION_DIVIDE,
-	EXPRESSION_MODULO,
-	EXPRESSION_NEGATE,
-	EXPRESSION_LOGICAL_NOT,
-	EXPRESSION_LOGICAL_OR,
-	EXPRESSION_LOGICAL_AND,
-	EXPRESSION_BITWISE_NOT,
-	EXPRESSION_BITWISE_OR,
-	EXPRESSION_BITWISE_XOR,
-	EXPRESSION_BITWISE_AND,
-	EXPRESSION_EQUALITY,
-	EXPRESSION_INEQUALITY,
-	EXPRESSION_LESS_THAN,
-	EXPRESSION_LESS_OR_EQUAL,
-	EXPRESSION_MORE_THAN,
-	EXPRESSION_MORE_OR_EQUAL,
-	EXPRESSION_LEFT_SHIFT,
-	EXPRESSION_RIGHT_SHIFT,
-	EXPRESSION_NUMBER
-};
-
-struct Expression
-{
-	ExpressionType type;
-	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
-};
-
 struct StatementDc
 {
 	Size size;
-	std::vector<Expression> values;
+	std::vector<unsigned long> values;
 };
 
 enum StatementType
@@ -97,7 +65,7 @@ enum StatementType
 struct Statement
 {
 	StatementType type;
-	std::variant<std::monostate, StatementDc, Expression, std::string, std::vector<std::string>> shared;
+	std::variant<std::monostate, StatementDc, std::string, std::vector<std::string>> shared;
 };
 
 }
@@ -114,12 +82,6 @@ struct Statement
 
 YY_DECL;
 void m68kasm_error(const std::string &message);
-
-static void DoExpression(Expression &expression, ExpressionType type, const std::initializer_list<Expression> &subexpressions)
-{
-	expression.type = type;
-	expression.shared.emplace<std::vector<Expression>>(subexpressions);
-}
 
 void m68kasm::parser::error(const std::string &message)
 {
@@ -170,8 +132,8 @@ void m68kasm::parser::error(const std::string &message)
 %type<Size> size
 %type<std::vector<std::string>> offset_table
 %type<std::string> label offset_table_entry
-%type<std::vector<Expression>> expression_list
-%type<Expression> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
+%type<std::vector<unsigned long>> expression_list
+%type<unsigned long> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
 
 %start statement
 
@@ -270,12 +232,12 @@ expression
 	/* This is an assembler extension: asm68k doesn't support this. */
 	| expression LOGICAL_AND expression1
 	{
-		DoExpression($$, EXPRESSION_LOGICAL_AND, {std::move($1), std::move($3)});
+		$$ = $1 && $3;
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
 	| expression LOGICAL_OR expression1
 	{
-		DoExpression($$, EXPRESSION_LOGICAL_OR, {std::move($1), std::move($3)});
+		$$ = $1 || $3;
 	}
 	;
 
@@ -286,15 +248,15 @@ expression1
 	}
 	| expression1 "=" expression2
 	{
-		DoExpression($$, EXPRESSION_EQUALITY, {std::move($1), std::move($3)});
+		$$ = $1 == $3;
 	}
 	| expression1 EQUALITY expression2
 	{
-		DoExpression($$, EXPRESSION_EQUALITY, {std::move($1), std::move($3)});
+		$$ = $1 == $3;
 	}
 	| expression1 INEQUALITY expression2
 	{
-		DoExpression($$, EXPRESSION_INEQUALITY, {std::move($1), std::move($3)});
+		$$ = $1 != $3;
 	}
 	;
 
@@ -305,19 +267,19 @@ expression2
 	}
 	| expression2 "<" expression3
 	{
-		DoExpression($$, EXPRESSION_LESS_THAN, {std::move($1), std::move($3)});
+		$$ = $1 < $3;
 	}
 	| expression2 LESS_OR_EQUAL expression3
 	{
-		DoExpression($$, EXPRESSION_LESS_OR_EQUAL, {std::move($1), std::move($3)});
+		$$ = $1 <= $3;
 	}
 	| expression2 ">" expression3
 	{
-		DoExpression($$, EXPRESSION_MORE_THAN, {std::move($1), std::move($3)});
+		$$ = $1 > $3;
 	}
 	| expression2 MORE_OR_EQUAL expression3
 	{
-		DoExpression($$, EXPRESSION_MORE_OR_EQUAL, {std::move($1), std::move($3)});
+		$$ = $1 >= $3;
 	}
 	;
 
@@ -328,11 +290,11 @@ expression3
 	}
 	| expression3 "+" expression4
 	{
-		DoExpression($$, EXPRESSION_ADD, {std::move($1), std::move($3)});
+		$$ = $1 + $3;
 	}
 	| expression3 "-" expression4
 	{
-		DoExpression($$, EXPRESSION_SUBTRACT, {std::move($1), std::move($3)});
+		$$ = $1 - $3;
 	}
 	;
 
@@ -343,15 +305,15 @@ expression4
 	}
 	| expression4 "*" expression5
 	{
-		DoExpression($$, EXPRESSION_MULTIPLY, {std::move($1), std::move($3)});
+		$$ = $1 * $3;
 	}
 	| expression4 "/" expression5
 	{
-		DoExpression($$, EXPRESSION_DIVIDE, {std::move($1), std::move($3)});
+		$$ = $1 / $3;
 	}
 	| expression4 "%" expression5
 	{
-		DoExpression($$, EXPRESSION_MODULO, {std::move($1), std::move($3)});
+		$$ = $1 % $3;
 	}
 	;
 
@@ -362,19 +324,19 @@ expression5
 	}
 	| expression5 "&" expression6
 	{
-		DoExpression($$, EXPRESSION_BITWISE_AND, {std::move($1), std::move($3)});
+		$$ = $1 & $3;
 	}
 	| expression5 "!" expression6
 	{
-		DoExpression($$, EXPRESSION_BITWISE_OR, {std::move($1), std::move($3)});
+		$$ = $1 | $3;
 	}
 	| expression5 "|" expression6
 	{
-		DoExpression($$, EXPRESSION_BITWISE_OR, {std::move($1), std::move($3)});
+		$$ = $1 | $3;
 	}
 	| expression5 "^" expression6
 	{
-		DoExpression($$, EXPRESSION_BITWISE_XOR, {std::move($1), std::move($3)});
+		$$ = $1 ^ $3;
 	}
 	;
 
@@ -385,11 +347,11 @@ expression6
 	}
 	| expression6 LEFT_SHIFT expression7
 	{
-		DoExpression($$, EXPRESSION_LEFT_SHIFT, {std::move($1), std::move($3)});
+		$$ = $1 << $3;
 	}
 	| expression6 RIGHT_SHIFT expression7
 	{
-		DoExpression($$, EXPRESSION_RIGHT_SHIFT, {std::move($1), std::move($3)});
+		$$ = $1 >> $3;
 	}
 	;
 
@@ -404,24 +366,23 @@ expression7
 	}
 	| "-" expression7
 	{
-		DoExpression($$, EXPRESSION_NEGATE, {std::move($2)});
+		$$ = -$2;
 	}
 	| "~" expression7
 	{
-		DoExpression($$, EXPRESSION_BITWISE_NOT, {std::move($2)});
+		$$ = ~$2;
 	}
 	/* This is an assembler extension: asm68k doesn't support this. */
 	| "!" expression7
 	{
-		DoExpression($$, EXPRESSION_LOGICAL_NOT, {std::move($2)});
+		$$ = !$2;
 	}
 	;
 
 expression8
 	: NUMBER
 	{
-		$$.type = EXPRESSION_NUMBER;
-		$$.shared.emplace<unsigned long>($1);
+		$$ = $1;
 	}
 	| "(" expression ")"
 	{
