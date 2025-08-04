@@ -40,16 +40,16 @@
 #include <variant>
 #include <vector>
 
-typedef enum Size
+enum Size
 {
 	SIZE_BYTE      = 1 << 0,
 	SIZE_SHORT     = 1 << 1,
 	SIZE_WORD      = 1 << 2,
 	SIZE_LONGWORD  = 1 << 3,
 	SIZE_UNDEFINED = 1 << 4
-} Size;
+};
 
-typedef enum ExpressionType
+enum ExpressionType
 {
 	EXPRESSION_SUBTRACT,
 	EXPRESSION_ADD,
@@ -73,32 +73,32 @@ typedef enum ExpressionType
 	EXPRESSION_LEFT_SHIFT,
 	EXPRESSION_RIGHT_SHIFT,
 	EXPRESSION_NUMBER
-} ExpressionType;
+};
 
-typedef struct Expression
+struct Expression
 {
 	ExpressionType type;
 	std::variant<std::monostate, unsigned long, std::string, std::vector<Expression>> shared;
-} Expression;
+};
 
-typedef struct StatementDc
+struct StatementDc
 {
 	Size size;
 	std::vector<Expression> values;
-} StatementDc;
+};
 
-typedef enum StatementType
+enum StatementType
 {
 	STATEMENT_TYPE_EMPTY,
 	STATEMENT_TYPE_DC,
 	STATEMENT_TYPE_EVEN
-} StatementType;
+};
 
-typedef struct Statement
+struct Statement
 {
 	StatementType type;
 	std::variant<std::monostate, StatementDc, Expression, std::string> shared;
-} Statement;
+};
 
 }
 
