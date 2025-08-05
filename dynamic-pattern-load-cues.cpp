@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <random>
 #include <string>
-#include <utility>
 
 #include "common.h"
 
@@ -70,7 +69,7 @@ void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
 
 	stream << "\n";
 
-	for (const auto &frame : std::as_const(frames))
+	for (const auto &frame : frames)
 	{
 		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 
@@ -82,7 +81,7 @@ void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
 
 	stream << "\n";
 
-	for (const auto &frame : std::as_const(frames))
+	for (const auto &frame : frames)
 	{
 		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 		stream << frame_label << ":";

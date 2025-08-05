@@ -1,7 +1,6 @@
 #include "dynamic-pattern-load-cue.h"
 
 #include <algorithm>
-#include <utility>
 
 #include "common.h"
 
@@ -11,7 +10,7 @@ int DynamicPatternLoadCue::getMappedTile(const int tile_index) const
 {
 	int base_tile = 0;
 
-	for (const auto &copy : std::as_const(copies))
+	for (const auto &copy : copies)
 	{
 		if (tile_index < base_tile + copy.length)
 			return copy.start + (tile_index - base_tile);
@@ -25,7 +24,7 @@ int DynamicPatternLoadCue::getMappedTile(const int tile_index) const
 int DynamicPatternLoadCue::size_encoded() const
 {
 	int size = 0;
-	for (const auto &copy : std::as_const(copies))
+	for (const auto &copy : copies)
 		size += copy.size_encoded();
 	return size;
 }
@@ -33,7 +32,7 @@ int DynamicPatternLoadCue::size_encoded() const
 int DynamicPatternLoadCue::total_segments() const
 {
 	int segments = 0;
-	for (const auto &copy : std::as_const(copies))
+	for (const auto &copy : copies)
 		segments += copy.total_segments();
 	return segments;
 }
@@ -59,7 +58,7 @@ void DynamicPatternLoadCue::toAssemblyStream(std::ostream &stream, const Game ga
 	if (!mapmacros)
 		stream << "\tdc." << (game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
 
-	for (const auto &copy : std::as_const(copies))
+	for (const auto &copy : copies)
 		copy.toAssemblyStream(stream, mapmacros);
 }
 

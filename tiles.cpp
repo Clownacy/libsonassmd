@@ -1,7 +1,5 @@
 #include "tiles.h"
 
-#include <utility>
-
 namespace libsonassmd {
 
 void Tiles::fromBinaryStream(std::istream &stream)
@@ -26,13 +24,13 @@ void Tiles::fromBinaryStream(std::istream &stream)
 
 void Tiles::toBinaryStream(std::ostream &stream) const
 {
-	for (const auto &tile : std::as_const(*this))
+	for (const auto &tile : *this)
 		tile.toBinaryStream(stream);
 }
 
 void Tiles::toAssemblyStream(std::ostream &stream) const
 {
-	for (const auto &tile : std::as_const(*this))
+	for (const auto &tile : *this)
 		tile.toAssemblyStream(stream);
 }
 

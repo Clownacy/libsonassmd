@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <random>
 #include <string>
-#include <utility>
 
 #include "common.h"
 
@@ -97,7 +96,7 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 
 	stream << "\n";
 
-	for (const auto &frame : std::as_const(frames))
+	for (const auto &frame : frames)
 	{
 		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 
@@ -109,7 +108,7 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 
 	stream << "\n";
 
-	for (const auto &frame : std::as_const(frames))
+	for (const auto &frame : frames)
 	{
 		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 		stream << frame_label << ":";
@@ -131,8 +130,8 @@ DynamicPatternLoadCues SpriteMappings::removeDPLCs()
 {
 	// Determine the total number of tiles.
 	int total_tiles = 0;
-	for (const auto &frame : std::as_const(frames))
-		for (const auto &piece : std::as_const(frame.pieces))
+	for (const auto &frame : frames)
+		for (const auto &piece : frame.pieces)
 			total_tiles = std::max(total_tiles, piece.tile_index + piece.width * piece.height);
 
 	// I suppose a hash map would work here too.
@@ -148,7 +147,7 @@ DynamicPatternLoadCues SpriteMappings::removeDPLCs()
 		// Mark which tiles are mapped to which DPLC tiles.
 		std::fill(tile_indices.begin(), tile_indices.end(), false);
 
-		for (const auto &piece : std::as_const(frame.pieces))
+		for (const auto &piece : frame.pieces)
 			for (int i = 0; i < piece.width * piece.height; ++i)
 				tile_indices[piece.tile_index + i] = true;
 

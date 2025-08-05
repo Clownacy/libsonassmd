@@ -1,7 +1,5 @@
 #include "object-layout.h"
 
-#include <utility>
-
 namespace libsonassmd {
 
 bool ObjectLayout::compareObjects(const Object &a, const Object &b)
@@ -41,7 +39,7 @@ void ObjectLayout::fromBinaryStream(std::istream &stream)
 
 void ObjectLayout::toStreamCommon(std::ostream &stream, const bool assembly) const
 {
-	for (const auto &object : std::as_const(objects))
+	for (const auto &object : objects)
 	{
 		// 0xFFFF is reserved for sentinel objects.
 		if (object.x == 0xFFFF)
