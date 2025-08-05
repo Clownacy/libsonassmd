@@ -142,7 +142,7 @@ namespace libsonassmd
 %type<DPLCs> dplcs
 %type<StringList> offset_table
 %type<StringList> offset_table_line offset_table_entries
-%type<std::string> label offset_table_entry
+%type<std::string> identifier label offset_table_entry
 %type<StringList> labels
 %type<std::vector<unsigned long>> expression_list
 %type<std::stringstream> bytes
@@ -368,7 +368,7 @@ offset_table_line
 	{
 		$$ = std::move($2);
 	}
-	| MAPPINGS_TABLE_ENTRY size IDENTIFIER
+	| MAPPINGS_TABLE_ENTRY size identifier
 	{
 		$$.emplace_back(std::move($3));
 	}
@@ -387,9 +387,20 @@ offset_table_entries
 	;
 
 offset_table_entry
-	: IDENTIFIER "-" IDENTIFIER
+	: identifier "-" identifier
 	{
 		static_cast<void>($3);
+		$$ = std::move($1);
+	}
+	;
+
+identifier
+	: IDENTIFIER
+	{
+		$$ = std::move($1);
+	}
+	| LOCAL_IDENTIFIER
+	{
 		$$ = std::move($1);
 	}
 	;

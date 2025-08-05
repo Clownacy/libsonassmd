@@ -464,6 +464,7 @@ namespace libsonassmd { namespace CodeReader {
       // LOCAL_LABEL
       // label
       // offset_table_entry
+      // identifier
       char dummy9[sizeof (std::string)];
 
       // bytes
@@ -654,18 +655,19 @@ namespace libsonassmd { namespace CodeReader {
         S_offset_table_line = 61,                // offset_table_line
         S_offset_table_entries = 62,             // offset_table_entries
         S_offset_table_entry = 63,               // offset_table_entry
-        S_bytes = 64,                            // bytes
-        S_expression_list = 65,                  // expression_list
-        S_size = 66,                             // size
-        S_expression = 67,                       // expression
-        S_expression1 = 68,                      // expression1
-        S_expression2 = 69,                      // expression2
-        S_expression3 = 70,                      // expression3
-        S_expression4 = 71,                      // expression4
-        S_expression5 = 72,                      // expression5
-        S_expression6 = 73,                      // expression6
-        S_expression7 = 74,                      // expression7
-        S_expression8 = 75                       // expression8
+        S_identifier = 64,                       // identifier
+        S_bytes = 65,                            // bytes
+        S_expression_list = 66,                  // expression_list
+        S_size = 67,                             // size
+        S_expression = 68,                       // expression
+        S_expression1 = 69,                      // expression1
+        S_expression2 = 70,                      // expression2
+        S_expression3 = 71,                      // expression3
+        S_expression4 = 72,                      // expression4
+        S_expression5 = 73,                      // expression5
+        S_expression6 = 74,                      // expression6
+        S_expression7 = 75,                      // expression7
+        S_expression8 = 76                       // expression8
       };
     };
 
@@ -742,6 +744,7 @@ namespace libsonassmd { namespace CodeReader {
       case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
+      case symbol_kind::S_identifier: // identifier
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -997,6 +1000,7 @@ switch (yykind)
       case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
+      case symbol_kind::S_identifier: // identifier
         value.template destroy< std::string > ();
         break;
 
@@ -2240,8 +2244,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 204,     ///< Last index in yytable_.
-      yynnts_ = 27,  ///< Number of nonterminal symbols.
+      yylast_ = 213,     ///< Last index in yytable_.
+      yynnts_ = 28,  ///< Number of nonterminal symbols.
       yyfinal_ = 18 ///< Termination state number.
     };
 
@@ -2309,6 +2313,7 @@ switch (yykind)
       case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
+      case symbol_kind::S_identifier: // identifier
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -2406,6 +2411,7 @@ switch (yykind)
       case symbol_kind::S_LOCAL_LABEL: // LOCAL_LABEL
       case symbol_kind::S_label: // label
       case symbol_kind::S_offset_table_entry: // offset_table_entry
+      case symbol_kind::S_identifier: // identifier
         value.move< std::string > (YY_MOVE (s.value));
         break;
 
@@ -2496,7 +2502,7 @@ switch (yykind)
 
 #line 23 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2500 "syntactic.h"
+#line 2506 "syntactic.h"
 
 
 // "%code provides" blocks.
@@ -2504,7 +2510,7 @@ switch (yykind)
 
 
 
-#line 2508 "syntactic.h"
+#line 2514 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
