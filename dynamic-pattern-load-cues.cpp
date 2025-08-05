@@ -1,9 +1,11 @@
 #include "dynamic-pattern-load-cues.h"
 
+#include <fstream>
 #include <random>
 #include <string>
 
 #include "common.h"
+#include "parser/code-reader.h"
 
 namespace libsonassmd {
 
@@ -53,6 +55,21 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 
 	stream.clear();
 	stream.exceptions(original_exceptions);
+}
+
+void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream)
+{
+	auto raw_dplcs = CodeReader::ReadDynamicPatternLoadCues(stream);
+
+	// TODO: Handle there being multiple offset tables (like Sonic 3's Sonic sprites).
+	for (const auto &label : raw_dplcs.offset_tables[0])
+		frames.emplace_back(std::move(raw_dplcs.frames[label]));
+}
+
+void DynamicPatternLoadCues::fromAssemblyFile(const std::filesystem::path &file_path)
+{
+	std::ifstream stream(file_path);
+	fromAssemblyStream(stream);
 }
 
 void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const

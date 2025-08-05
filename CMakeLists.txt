@@ -3,6 +3,14 @@ cmake_minimum_required(VERSION 3.0...3.28.1)
 project(sonassmd LANGUAGES CXX)
 
 add_library(sonassmd STATIC
+	"clowncommon/clowncommon.h"
+	"parser/flex/FlexLexer.h"
+	"parser/code-reader.cpp"
+	"parser/code-reader.h"
+	"parser/lexical.cpp"
+	"parser/lexical.h"
+	"parser/syntactic.cpp"
+	"parser/syntactic.h"
 	"assembleable.cpp"
 	"assembleable.h"
 	"assembler.cpp"
@@ -27,8 +35,15 @@ add_library(sonassmd STATIC
 	"tile.h"
 	"tiles.cpp"
 	"tiles.h"
-	"clowncommon/clowncommon.h"
 )
+
+# Flex does '#include <FlexLexer.h>', so trick it into using a vendored file by doing this.
+target_include_directories(sonassmd PRIVATE "parser/flex")
+
+if(MSVC)
+	# Yes, you stupid piece of shit, I want you to follow the C++ standard.
+	target_compile_options(sonassmd PRIVATE "/Zc:__cplusplus")
+endif()
 
 ##################
 # clownassembler #

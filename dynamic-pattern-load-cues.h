@@ -15,6 +15,8 @@ class DynamicPatternLoadCues : public Assembleable
 {
 private:
 	void fromBinaryStream(std::istream &stream) override;
+	void fromAssemblyStream(std::istream &stream) override;
+	void fromAssemblyFile(const std::filesystem::path &file_path) override;
 
 public:
 	using Frame = DynamicPatternLoadCue;

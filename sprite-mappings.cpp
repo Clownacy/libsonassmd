@@ -1,10 +1,12 @@
 #include "sprite-mappings.h"
 
 #include <algorithm>
+#include <fstream>
 #include <random>
 #include <string>
 
 #include "common.h"
+#include "parser/code-reader.h".h"
 
 namespace libsonassmd {
 
@@ -81,6 +83,21 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 
 	stream.clear();
 	stream.exceptions(original_exceptions);
+}
+
+void SpriteMappings::fromAssemblyStream(std::istream &stream)
+{
+	auto raw_mappings = CodeReader::ReadMappings(stream);
+
+	// TODO: Handle there being multiple offset tables (like Sonic 3's Sonic sprites).
+	for (const auto &label : raw_mappings.offset_tables[0])
+		frames.emplace_back(std::move(raw_mappings.frames[label]));
+}
+
+void SpriteMappings::fromAssemblyFile(const std::filesystem::path &file_path)
+{
+	std::ifstream stream(file_path);
+	fromAssemblyStream(stream);
 }
 
 void SpriteMappings::toAssemblyStream(std::ostream &stream) const
