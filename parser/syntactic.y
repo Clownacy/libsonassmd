@@ -82,8 +82,6 @@ namespace libsonassmd
 
 %code {
 
-#include <initializer_list>
-
 #include "../common.h"
 #include "lexical.h"
 
