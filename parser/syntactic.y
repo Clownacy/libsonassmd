@@ -26,10 +26,9 @@
 %define api.token.constructor 
 %define api.value.type variant 
 
-%param {void *scanner}
-
 %parse-param {Mappings &mappings}
 %parse-param {Game game}
+%parse-param {Lexer &lexer}
 
 %define parse.error verbose
 
@@ -46,6 +45,8 @@ namespace libsonassmd
 {
 	namespace CodeReader
 	{
+		class Lexer;
+
 		enum class Size
 		{
 			BYTE,
@@ -68,15 +69,16 @@ namespace libsonassmd
 
 %code provides {
 
-#define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
-
 }
 
 %code {
 
 #include <initializer_list>
+#include "lexical.h"
 
-YY_DECL;
+#undef yylex
+#define yylex(x) lexer(x)
+
 void libsonassmd_yyerror(const std::string &message);
 
 void libsonassmd::CodeReader::parser::error(const std::string &message)

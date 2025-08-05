@@ -16,11 +16,11 @@ endif
 
 all: lexical.cpp lexical.h syntactic.cpp syntactic.h
 
-lexical.cpp lexical.h: lexical.l syntactic.h
-	$(LEX) --outfile=lexical.cpp --header-file=lexical.h $<
+lexical.cpp: lexical.l syntactic.h
+	$(LEX) --outfile=lexical.cpp $<
 
 syntactic.cpp syntactic.h: syntactic.y
 	$(YACC) --output=syntactic.cpp --defines=syntactic.h $(YFLAGS) $<
 
 test: main.cpp lexical.cpp syntactic.cpp ../sprite-frame.cpp ../sprite-piece.cpp ../common.cpp
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@
+	$(CXX) -Iflex $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@

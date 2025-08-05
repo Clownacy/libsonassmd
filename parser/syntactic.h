@@ -45,7 +45,7 @@
 #ifndef YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 # define YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 // "%code requires" blocks.
-#line 36 "syntactic.y"
+#line 35 "syntactic.y"
 
 
 #include <map>
@@ -59,6 +59,8 @@ namespace libsonassmd
 {
 	namespace CodeReader
 	{
+		class Lexer;
+
 		enum class Size
 		{
 			BYTE,
@@ -78,7 +80,7 @@ namespace libsonassmd
 }
 
 
-#line 82 "syntactic.h"
+#line 84 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -222,7 +224,7 @@ namespace libsonassmd
 
 #line 23 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
-#line 226 "syntactic.h"
+#line 228 "syntactic.h"
 
 
 
@@ -1033,7 +1035,7 @@ switch (yykind)
     };
 
     /// Build a parser object.
-    parser (void *scanner_yyarg, Mappings &mappings_yyarg, Game game_yyarg);
+    parser (Mappings &mappings_yyarg, Game game_yyarg, Lexer &lexer_yyarg);
     virtual ~parser ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -2087,9 +2089,9 @@ switch (yykind)
 
 
     // User arguments.
-    void *scanner;
     Mappings &mappings;
     Game game;
+    Lexer &lexer;
 
   };
 
@@ -2309,14 +2311,12 @@ switch (yykind)
 
 #line 23 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2313 "syntactic.h"
+#line 2315 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 69 "syntactic.y"
+#line 70 "syntactic.y"
 
-
-#define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd_code_reader_yylex(void *yyscanner)
 
 
 #line 2323 "syntactic.h"

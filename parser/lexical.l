@@ -18,9 +18,10 @@
 %option never-interactive
 %option nounistd
 %option nounput noinput noyywrap
-%option reentrant
+%option c++
 %option prefix="libsonassmd_code_reader_yy"
 %option caseless
+%option yyclass="Lexer"
 
 %{
 
@@ -29,6 +30,10 @@
 #include <string>
 
 #include "syntactic.h"
+#include "lexical.h"
+
+#undef YY_DECL
+#define YY_DECL libsonassmd::CodeReader::parser::symbol_type libsonassmd::CodeReader::Lexer::operator()()
 
 static unsigned long ParseNumber(const char* const string_start, const size_t string_length, const int base)
 {
