@@ -87,11 +87,11 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 
 void SpriteMappings::fromAssemblyStream(std::istream &stream)
 {
-	auto raw_mappings = CodeReader::ReadMappings(stream);
+	const auto raw_mappings = CodeReader::ReadMappings(stream);
 
 	// TODO: Handle there being multiple offset tables (like Sonic 3's Sonic sprites).
 	for (const auto &label : raw_mappings.offset_tables[0])
-		frames.emplace_back(std::move(raw_mappings.frames[label]));
+		frames.emplace_back(raw_mappings.frames.at(label));
 }
 
 void SpriteMappings::fromAssemblyFile(const std::filesystem::path &file_path)

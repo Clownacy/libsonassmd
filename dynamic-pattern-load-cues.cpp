@@ -59,11 +59,11 @@ void DynamicPatternLoadCues::fromBinaryStream(std::istream &stream)
 
 void DynamicPatternLoadCues::fromAssemblyStream(std::istream &stream)
 {
-	auto raw_dplcs = CodeReader::ReadDynamicPatternLoadCues(stream);
+	const auto raw_dplcs = CodeReader::ReadDynamicPatternLoadCues(stream);
 
 	// TODO: Handle there being multiple offset tables (like Sonic 3's Sonic sprites).
 	for (const auto &label : raw_dplcs.offset_tables[0])
-		frames.emplace_back(std::move(raw_dplcs.frames[label]));
+		frames.emplace_back(raw_dplcs.frames.at(label));
 }
 
 void DynamicPatternLoadCues::fromAssemblyFile(const std::filesystem::path &file_path)
