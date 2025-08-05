@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "assembleable.h"
+#include "dynamic-pattern-load-cue.h"
 
 namespace libsonassmd {
 
@@ -16,40 +17,7 @@ private:
 	void fromBinaryStream(std::istream &stream) override;
 
 public:
-	class Frame
-	{
-	private:
-		void fromBinaryStream(std::istream &stream);
-
-	public:
-		class Copy
-		{
-		private:
-			void fromBinaryStream(std::istream &stream);
-
-		public:
-			int start;
-			int length;
-
-			Copy() = default;
-			Copy(const int start, const int length) : start(start), length(length) {}
-			Copy(std::istream &stream) {fromBinaryStream(stream);}
-
-			int size_encoded() const;
-			int total_segments() const;
-			void toAssemblyStream(std::ostream &stream) const;
-		};
-
-		std::vector<Copy> copies;
-
-		Frame() = default;
-		Frame(std::istream &stream) {fromBinaryStream(stream);}
-
-		int getMappedTile(int tile_index) const;
-		int size_encoded() const;
-		int total_segments() const;
-		void toAssemblyStream(std::ostream &stream) const;
-	};
+	using Frame = DynamicPatternLoadCue;
 
 	DynamicPatternLoadCues() = default;
 	DynamicPatternLoadCues(const std::filesystem::path &file_path, const Format format) {fromFile(file_path, format);}

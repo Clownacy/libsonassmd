@@ -9,6 +9,8 @@ add_library(sonassmd STATIC
 	"assembler.h"
 	"common.cpp"
 	"common.h"
+	"dynamic-pattern-load-cue.cpp"
+	"dynamic-pattern-load-cue.h"
 	"dynamic-pattern-load-cues.cpp"
 	"dynamic-pattern-load-cues.h"
 	"object.cpp"

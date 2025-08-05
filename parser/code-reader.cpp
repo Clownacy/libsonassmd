@@ -12,10 +12,10 @@ void parser::error(const std::string &message)
 
 Mappings ReadMappings(std::istream &input, const Game game)
 {
-	Mappings mappings;
+	Output output;
 
-	Lexer lexer(input, std::cout);
-	parser parser(mappings, game, lexer);
+	Lexer lexer(input, Lexer::Type::Mappings);
+	parser parser(output, game, lexer);
 #ifdef LIBSONASSMD_CODE_READER_YYDEBUG
 	parser.set_debug_level(1);
 #endif
@@ -23,7 +23,7 @@ Mappings ReadMappings(std::istream &input, const Game game)
 	if (parser())
 		throw std::runtime_error("Unspecified parser error");
 
-	return mappings;
+	return std::get<Mappings>(output);
 }
 
 }}

@@ -60,6 +60,22 @@ local_identifier  [@\.][A-Za-z_0-9\?]+
 
 %%
 
+%{
+	if (type)
+	{
+		type = std::nullopt;
+
+		switch (*type)
+		{
+			case Type::Mappings:
+				return libsonassmd::CodeReader::parser::make_START_MAPPINGS();
+
+			case Type::DPLCs:
+				return libsonassmd::CodeReader::parser::make_START_DPLCS();
+		}
+	}
+%}
+
  /* Ignore whitespace */
 [ \t]+          ;
 
@@ -118,6 +134,8 @@ even            ; // Just get rid of this junk; we don't need it.
 "mappingsTableEntry" return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE_ENTRY();
 "spriteHeader"       return libsonassmd::CodeReader::parser::make_SPRITE_HEADER();
 "spritePiece"        return libsonassmd::CodeReader::parser::make_SPRITE_PIECE();
+"dplcHeader"         return libsonassmd::CodeReader::parser::make_DPLC_HEADER();
+"dplcEntry"          return libsonassmd::CodeReader::parser::make_DPLC_ENTRY();
 
  /* Decimal number. */
 {decimal} {
@@ -170,6 +188,6 @@ even            ; // Just get rid of this junk; we don't need it.
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
-.       throw libsonassmd::CodeReader::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
+.       throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
 
 %%

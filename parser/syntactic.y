@@ -26,7 +26,7 @@
 %define api.token.constructor 
 %define api.value.type variant 
 
-%parse-param {Mappings &mappings}
+%parse-param {Output &output}
 %parse-param {Game game}
 %parse-param {Lexer &lexer}
 
@@ -37,8 +37,10 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <variant>
 #include <vector>
 
+#include "../dynamic-pattern-load-cue.h"
 #include "../sprite-frame.h"
 
 namespace libsonassmd
@@ -62,6 +64,14 @@ namespace libsonassmd
 			std::vector<StringList> offset_tables;
 			std::map<std::string, libsonassmd::SpriteFrame> frames;
 		};
+
+		struct DPLCs
+		{
+			std::vector<StringList> offset_tables;
+			std::map<std::string, libsonassmd::DynamicPatternLoadCue> frames;
+		};
+
+		using Output = std::variant<Mappings, DPLCs>;
 	}
 }
 
@@ -123,10 +133,15 @@ namespace libsonassmd
 %token MAPPINGS_TABLE_ENTRY
 %token SPRITE_HEADER
 %token SPRITE_PIECE
+%token DPLC_HEADER
+%token DPLC_ENTRY
 %token<std::string> LABEL
 %token<std::string> LOCAL_LABEL
+%token START_MAPPINGS
+%token START_DPLCS
 
 %type<Mappings> mappings
+%type<DPLCs> dplcs
 %type<StringList> offset_table
 %type<std::string> label offset_table_entry
 %type<StringList> labels
@@ -134,6 +149,8 @@ namespace libsonassmd
 %type<std::stringstream> bytes
 %type<SpritePiece> sprite_piece;
 %type<SpriteFrame> sprite_frame;
+%type<DynamicPatternLoadCue::Copy> dplc_copy;
+%type<DynamicPatternLoadCue> dplc_frame;
 %type<Size> size
 %type<Size> dc
 %type<unsigned long> expression expression1 expression2 expression3 expression4 expression5 expression6 expression7 expression8
@@ -143,9 +160,13 @@ namespace libsonassmd
 %%
 
 output
-	: mappings
+	: START_MAPPINGS mappings
 	{
-		mappings = std::move($1);
+		output = std::move($2);
+	}
+	| START_DPLCS dplcs
+	{
+		output = std::move($2);
 	}
 	;
 
@@ -187,6 +208,51 @@ mappings
 			$$.frames.insert({label, frame});
 	}
 	| mappings labels SPRITE_HEADER sprite_frame label
+	{
+		$$ = std::move($1);
+		for (const auto &label : $2)
+			$$.frames.insert({label, $4});
+	}
+	;
+
+dplcs
+	: offset_table
+	{
+		// A label-less offset table can occur at the start of the file, but no later.
+		// This restriction is important for avoiding shift-reduce conflicts.
+		$$.offset_tables.emplace_back(std::move($1));
+	}
+	| labels offset_table
+	{
+		$$.offset_tables.emplace_back(std::move($2));
+	}
+	| labels bytes
+	{
+		// TODO: Catch exceptions?
+		// TODO: Deduplicate this all, dammit!
+		const DynamicPatternLoadCue frame($2);
+		for (const auto &label : $1)
+			$$.frames.insert({label, frame});
+	}
+	| labels DPLC_HEADER dplc_frame label
+	{
+		for (const auto &label : $1)
+			$$.frames.insert({label, $3});
+	}
+	| dplcs labels offset_table
+	{
+		$$ = std::move($1);
+		$$.offset_tables.emplace_back(std::move($3));
+	}
+	| dplcs labels bytes
+	{
+		$$ = std::move($1);
+		// TODO: Catch exceptions?
+		const DynamicPatternLoadCue frame($3);
+		for (const auto &label : $2)
+			$$.frames.insert({label, frame});
+	}
+	| dplcs labels DPLC_HEADER dplc_frame label
 	{
 		$$ = std::move($1);
 		for (const auto &label : $2)
@@ -255,6 +321,26 @@ sprite_frame
 	{
 		$$ = std::move($1);
 		$$.pieces.emplace_back(std::move($2));
+	}
+	;
+
+dplc_copy
+	: DPLC_ENTRY expression "," expression
+	{
+		$$.start = $2;
+		$$.length = $4;
+	}
+	;
+
+dplc_frame
+	: dplc_copy
+	{
+		$$.copies.emplace_back(std::move($1));
+	}
+	| dplc_frame dplc_copy
+	{
+		$$ = std::move($1);
+		$$.copies.emplace_back(std::move($2));
 	}
 	;
 

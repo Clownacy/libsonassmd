@@ -22,14 +22,14 @@ int main([[maybe_unused]] const int argc, char** const argv)
 		std::cerr << "Block type: Offset table\n";
 
 		for (const auto &identifier : offset_table)
-			std::cerr << std::format("\t{}\n", identifier);
+			std::cerr << '\t' << identifier << '\n';
 	}
 
 	std::cerr << "Block type: Mapping frame\n";
 
 	for (const auto& [label, frame] : mappings.frames)
 	{
-		std::cerr << std::format("\tLabel: {}\n", label);
+		std::cerr << "\tLabel: " << label << '\n';
 		std::cerr << "\tData:\n";
 		frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
 	}

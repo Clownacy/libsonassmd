@@ -1,7 +1,7 @@
 LEX = flex
 YACC = bison
 
-CXXFLAGS = -Wall -Wextra -Wpedantic -std=c++20
+CXXFLAGS = -Wall -Wextra -Wpedantic
 
 ifeq ($(DEBUG),1)
  YFLAGS = --debug
@@ -22,5 +22,5 @@ lexical.cpp: lexical.l syntactic.h
 syntactic.cpp syntactic.h: syntactic.y
 	$(YACC) --output=syntactic.cpp --defines=syntactic.h $(YFLAGS) $<
 
-test: main.cpp code-reader.cpp lexical.cpp syntactic.cpp ../sprite-frame.cpp ../sprite-piece.cpp ../common.cpp
-	$(CXX) -Iflex $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@
+test: main.cpp code-reader.cpp lexical.cpp syntactic.cpp ../dynamic-pattern-load-cue.cpp ../sprite-frame.cpp ../sprite-piece.cpp ../common.cpp
+	$(CXX) -std=c++17 -Iflex $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LIBS) $^ -o $@

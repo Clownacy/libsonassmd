@@ -51,8 +51,10 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <variant>
 #include <vector>
 
+#include "../dynamic-pattern-load-cue.h"
 #include "../sprite-frame.h"
 
 namespace libsonassmd
@@ -76,11 +78,19 @@ namespace libsonassmd
 			std::vector<StringList> offset_tables;
 			std::map<std::string, libsonassmd::SpriteFrame> frames;
 		};
+
+		struct DPLCs
+		{
+			std::vector<StringList> offset_tables;
+			std::map<std::string, libsonassmd::DynamicPatternLoadCue> frames;
+		};
+
+		using Output = std::variant<Mappings, DPLCs>;
 	}
 }
 
 
-#line 84 "syntactic.h"
+#line 94 "syntactic.h"
 
 
 # include <cstdlib> // std::abort
@@ -224,7 +234,7 @@ namespace libsonassmd
 
 #line 23 "syntactic.y"
 namespace libsonassmd { namespace CodeReader {
-#line 228 "syntactic.h"
+#line 238 "syntactic.h"
 
 
 
@@ -420,22 +430,31 @@ namespace libsonassmd { namespace CodeReader {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // dplcs
+      char dummy1[sizeof (DPLCs)];
+
+      // dplc_frame
+      char dummy2[sizeof (DynamicPatternLoadCue)];
+
+      // dplc_copy
+      char dummy3[sizeof (DynamicPatternLoadCue::Copy)];
+
       // mappings
-      char dummy1[sizeof (Mappings)];
+      char dummy4[sizeof (Mappings)];
 
       // dc
       // size
-      char dummy2[sizeof (Size)];
+      char dummy5[sizeof (Size)];
 
       // sprite_frame
-      char dummy3[sizeof (SpriteFrame)];
+      char dummy6[sizeof (SpriteFrame)];
 
       // sprite_piece
-      char dummy4[sizeof (SpritePiece)];
+      char dummy7[sizeof (SpritePiece)];
 
       // labels
       // offset_table
-      char dummy5[sizeof (StringList)];
+      char dummy8[sizeof (StringList)];
 
       // IDENTIFIER
       // LOCAL_IDENTIFIER
@@ -443,13 +462,13 @@ namespace libsonassmd { namespace CodeReader {
       // LOCAL_LABEL
       // label
       // offset_table_entry
-      char dummy6[sizeof (std::string)];
+      char dummy9[sizeof (std::string)];
 
       // bytes
-      char dummy7[sizeof (std::stringstream)];
+      char dummy10[sizeof (std::stringstream)];
 
       // expression_list
-      char dummy8[sizeof (std::vector<unsigned long>)];
+      char dummy11[sizeof (std::vector<unsigned long>)];
 
       // NUMBER
       // expression
@@ -461,7 +480,7 @@ namespace libsonassmd { namespace CodeReader {
       // expression6
       // expression7
       // expression8
-      char dummy9[sizeof (unsigned long)];
+      char dummy12[sizeof (unsigned long)];
     };
 
     /// The size of the largest semantic type.
@@ -545,8 +564,12 @@ namespace libsonassmd { namespace CodeReader {
     TOKEN_MAPPINGS_TABLE_ENTRY = 40, // MAPPINGS_TABLE_ENTRY
     TOKEN_SPRITE_HEADER = 41,      // SPRITE_HEADER
     TOKEN_SPRITE_PIECE = 42,       // SPRITE_PIECE
-    TOKEN_LABEL = 43,              // LABEL
-    TOKEN_LOCAL_LABEL = 44         // LOCAL_LABEL
+    TOKEN_DPLC_HEADER = 43,        // DPLC_HEADER
+    TOKEN_DPLC_ENTRY = 44,         // DPLC_ENTRY
+    TOKEN_LABEL = 45,              // LABEL
+    TOKEN_LOCAL_LABEL = 46,        // LOCAL_LABEL
+    TOKEN_START_MAPPINGS = 47,     // START_MAPPINGS
+    TOKEN_START_DPLCS = 48         // START_DPLCS
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -563,7 +586,7 @@ namespace libsonassmd { namespace CodeReader {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 45, ///< Number of tokens.
+        YYNTOKENS = 49, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -608,30 +631,37 @@ namespace libsonassmd { namespace CodeReader {
         S_MAPPINGS_TABLE_ENTRY = 40,             // MAPPINGS_TABLE_ENTRY
         S_SPRITE_HEADER = 41,                    // SPRITE_HEADER
         S_SPRITE_PIECE = 42,                     // SPRITE_PIECE
-        S_LABEL = 43,                            // LABEL
-        S_LOCAL_LABEL = 44,                      // LOCAL_LABEL
-        S_YYACCEPT = 45,                         // $accept
-        S_output = 46,                           // output
-        S_mappings = 47,                         // mappings
-        S_label = 48,                            // label
-        S_labels = 49,                           // labels
-        S_offset_table = 50,                     // offset_table
-        S_sprite_piece = 51,                     // sprite_piece
-        S_sprite_frame = 52,                     // sprite_frame
-        S_dc = 53,                               // dc
-        S_offset_table_entry = 54,               // offset_table_entry
-        S_bytes = 55,                            // bytes
-        S_expression_list = 56,                  // expression_list
-        S_size = 57,                             // size
-        S_expression = 58,                       // expression
-        S_expression1 = 59,                      // expression1
-        S_expression2 = 60,                      // expression2
-        S_expression3 = 61,                      // expression3
-        S_expression4 = 62,                      // expression4
-        S_expression5 = 63,                      // expression5
-        S_expression6 = 64,                      // expression6
-        S_expression7 = 65,                      // expression7
-        S_expression8 = 66                       // expression8
+        S_DPLC_HEADER = 43,                      // DPLC_HEADER
+        S_DPLC_ENTRY = 44,                       // DPLC_ENTRY
+        S_LABEL = 45,                            // LABEL
+        S_LOCAL_LABEL = 46,                      // LOCAL_LABEL
+        S_START_MAPPINGS = 47,                   // START_MAPPINGS
+        S_START_DPLCS = 48,                      // START_DPLCS
+        S_YYACCEPT = 49,                         // $accept
+        S_output = 50,                           // output
+        S_mappings = 51,                         // mappings
+        S_dplcs = 52,                            // dplcs
+        S_label = 53,                            // label
+        S_labels = 54,                           // labels
+        S_offset_table = 55,                     // offset_table
+        S_sprite_piece = 56,                     // sprite_piece
+        S_sprite_frame = 57,                     // sprite_frame
+        S_dplc_copy = 58,                        // dplc_copy
+        S_dplc_frame = 59,                       // dplc_frame
+        S_dc = 60,                               // dc
+        S_offset_table_entry = 61,               // offset_table_entry
+        S_bytes = 62,                            // bytes
+        S_expression_list = 63,                  // expression_list
+        S_size = 64,                             // size
+        S_expression = 65,                       // expression
+        S_expression1 = 66,                      // expression1
+        S_expression2 = 67,                      // expression2
+        S_expression3 = 68,                      // expression3
+        S_expression4 = 69,                      // expression4
+        S_expression5 = 70,                      // expression5
+        S_expression6 = 71,                      // expression6
+        S_expression7 = 72,                      // expression7
+        S_expression8 = 73                       // expression8
       };
     };
 
@@ -666,6 +696,18 @@ namespace libsonassmd { namespace CodeReader {
       {
         switch (this->kind ())
     {
+      case symbol_kind::S_dplcs: // dplcs
+        value.move< DPLCs > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_dplc_frame: // dplc_frame
+        value.move< DynamicPatternLoadCue > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_dplc_copy: // dplc_copy
+        value.move< DynamicPatternLoadCue::Copy > (std::move (that.value));
+        break;
+
       case symbol_kind::S_mappings: // mappings
         value.move< Mappings > (std::move (that.value));
         break;
@@ -736,6 +778,42 @@ namespace libsonassmd { namespace CodeReader {
 #else
       basic_symbol (typename Base::kind_type t)
         : Base (t)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, DPLCs&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const DPLCs& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, DynamicPatternLoadCue&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const DynamicPatternLoadCue& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, DynamicPatternLoadCue::Copy&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const DynamicPatternLoadCue::Copy& v)
+        : Base (t)
+        , value (v)
       {}
 #endif
 
@@ -871,6 +949,18 @@ namespace libsonassmd { namespace CodeReader {
         // Value type destructor.
 switch (yykind)
     {
+      case symbol_kind::S_dplcs: // dplcs
+        value.template destroy< DPLCs > ();
+        break;
+
+      case symbol_kind::S_dplc_frame: // dplc_frame
+        value.template destroy< DynamicPatternLoadCue > ();
+        break;
+
+      case symbol_kind::S_dplc_copy: // dplc_copy
+        value.template destroy< DynamicPatternLoadCue::Copy > ();
+        break;
+
       case symbol_kind::S_mappings: // mappings
         value.template destroy< Mappings > ();
         break;
@@ -1035,7 +1125,7 @@ switch (yykind)
     };
 
     /// Build a parser object.
-    parser (Mappings &mappings_yyarg, Game game_yyarg, Lexer &lexer_yyarg);
+    parser (Output &output_yyarg, Game game_yyarg, Lexer &lexer_yyarg);
     virtual ~parser ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -1727,6 +1817,36 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
+      make_DPLC_HEADER ()
+      {
+        return symbol_type (token::TOKEN_DPLC_HEADER);
+      }
+#else
+      static
+      symbol_type
+      make_DPLC_HEADER ()
+      {
+        return symbol_type (token::TOKEN_DPLC_HEADER);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_DPLC_ENTRY ()
+      {
+        return symbol_type (token::TOKEN_DPLC_ENTRY);
+      }
+#else
+      static
+      symbol_type
+      make_DPLC_ENTRY ()
+      {
+        return symbol_type (token::TOKEN_DPLC_ENTRY);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
       make_LABEL (std::string v)
       {
         return symbol_type (token::TOKEN_LABEL, std::move (v));
@@ -1752,6 +1872,36 @@ switch (yykind)
       make_LOCAL_LABEL (const std::string& v)
       {
         return symbol_type (token::TOKEN_LOCAL_LABEL, v);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_START_MAPPINGS ()
+      {
+        return symbol_type (token::TOKEN_START_MAPPINGS);
+      }
+#else
+      static
+      symbol_type
+      make_START_MAPPINGS ()
+      {
+        return symbol_type (token::TOKEN_START_MAPPINGS);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_START_DPLCS ()
+      {
+        return symbol_type (token::TOKEN_START_DPLCS);
+      }
+#else
+      static
+      symbol_type
+      make_START_DPLCS ()
+      {
+        return symbol_type (token::TOKEN_START_DPLCS);
       }
 #endif
 
@@ -1782,7 +1932,7 @@ switch (yykind)
 
 
     /// Stored state numbers (used for stacks).
-    typedef signed char state_type;
+    typedef unsigned char state_type;
 
     /// The arguments of the error message.
     int yy_syntax_error_arguments_ (const context& yyctx,
@@ -1838,9 +1988,9 @@ switch (yykind)
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const signed char yytable_[];
+    static const unsigned char yytable_[];
 
-    static const signed char yycheck_[];
+    static const short yycheck_[];
 
     // YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
     // state STATE-NUM.
@@ -2082,14 +2232,14 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 160,     ///< Last index in yytable_.
-      yynnts_ = 22,  ///< Number of nonterminal symbols.
-      yyfinal_ = 19 ///< Termination state number.
+      yylast_ = 206,     ///< Last index in yytable_.
+      yynnts_ = 25,  ///< Number of nonterminal symbols.
+      yyfinal_ = 18 ///< Termination state number.
     };
 
 
     // User arguments.
-    Mappings &mappings;
+    Output &output;
     Game game;
     Lexer &lexer;
 
@@ -2110,6 +2260,18 @@ switch (yykind)
   {
     switch (this->kind ())
     {
+      case symbol_kind::S_dplcs: // dplcs
+        value.copy< DPLCs > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_dplc_frame: // dplc_frame
+        value.copy< DynamicPatternLoadCue > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_dplc_copy: // dplc_copy
+        value.copy< DynamicPatternLoadCue::Copy > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_mappings: // mappings
         value.copy< Mappings > (YY_MOVE (that.value));
         break;
@@ -2193,6 +2355,18 @@ switch (yykind)
     super_type::move (s);
     switch (this->kind ())
     {
+      case symbol_kind::S_dplcs: // dplcs
+        value.move< DPLCs > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_dplc_frame: // dplc_frame
+        value.move< DynamicPatternLoadCue > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_dplc_copy: // dplc_copy
+        value.move< DynamicPatternLoadCue::Copy > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_mappings: // mappings
         value.move< Mappings > (YY_MOVE (s.value));
         break;
@@ -2311,15 +2485,15 @@ switch (yykind)
 
 #line 23 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2315 "syntactic.h"
+#line 2489 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 70 "syntactic.y"
+#line 80 "syntactic.y"
 
 
 
-#line 2323 "syntactic.h"
+#line 2497 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

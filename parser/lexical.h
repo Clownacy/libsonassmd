@@ -15,9 +15,22 @@ namespace libsonassmd { namespace CodeReader {
 class Lexer : public libsonassmd_code_reader_yyFlexLexer
 {
 public:
-	using libsonassmd_code_reader_yyFlexLexer::libsonassmd_code_reader_yyFlexLexer;
+	enum class Type
+	{
+		Mappings,
+		DPLCs
+	};
 
-	libsonassmd::CodeReader::parser::symbol_type operator()();
+private:
+	std::optional<Type> type;
+
+public:
+	Lexer(std::istream &input, const Type type)
+		: libsonassmd_code_reader_yyFlexLexer(&input, nullptr)
+		, type(type)
+	{}
+
+	parser::symbol_type operator()();
 };
 
 }}

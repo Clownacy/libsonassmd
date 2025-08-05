@@ -338,8 +338,8 @@ int yyFlexLexer::yylex()
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 55
-#define YY_END_OF_BUFFER 56
+#define YY_NUM_RULES 57
+#define YY_END_OF_BUFFER 58
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -347,20 +347,21 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[103] =
+static const flex_int16_t yy_accept[117] =
     {   0,
-        0,    0,   56,   54,    1,   55,   54,   24,   13,   22,
-       23,   11,   12,   16,   14,   10,   15,    9,   17,   43,
-       28,   54,   20,   18,   21,   19,   52,   52,   52,   52,
-       52,   26,   25,   27,    1,    0,   48,   32,   44,   45,
-       29,   53,    5,    8,    6,    7,   43,    0,    2,   37,
-       35,   33,   31,   34,   36,   38,   52,   46,    3,   52,
-       52,   52,   30,   49,   48,   50,   47,   52,   52,   52,
-       51,    4,   52,   52,   52,   52,   52,   52,   52,   52,
-       52,   52,   52,   52,   52,   52,   52,   52,   52,   52,
-       52,   52,   42,   52,   41,   39,   52,   52,   52,   52,
+        0,    0,   58,   56,    1,   57,   56,   24,   13,   22,
+       23,   11,   12,   16,   14,   10,   15,    9,   17,   45,
+       28,   56,   20,   18,   21,   19,   54,   54,   54,   54,
+       54,   26,   25,   27,    1,    0,   50,   32,   46,   47,
+       29,   55,    5,    8,    6,    7,   45,    0,    2,   37,
+       35,   33,   31,   34,   36,   38,   54,   48,    3,   54,
+       54,   54,   54,   30,   51,   50,   52,   49,   54,   54,
+       54,   54,   53,   54,    4,   54,   54,   54,   54,   54,
+       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
+       54,   54,   54,   54,   54,   44,   54,   54,   54,   54,
 
-       40,    0
+       43,   54,   54,   54,   54,   54,   42,   54,   41,   39,
+       54,   54,   54,   54,   40,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -406,39 +407,43 @@ static const YY_CHAR yy_meta[67] =
         7,    7,    7,    7,    1,    1
     } ;
 
-static const flex_int16_t yy_base[110] =
+static const flex_int16_t yy_base[124] =
     {   0,
-        0,    0,  223,  272,  218,   52,   53,  195,    0,  199,
-      206,  272,  272,  272,  272,  272,  272,   43,  272,   54,
-      272,  210,   52,  188,   59,    0,  190,   64,   50,   69,
-       57,  272,  143,  272,  205,    0,  187,  272,    0,  188,
-      272,  182,  180,  177,  176,  175,   68,  187,  272,  272,
-      272,  272,  272,  272,  272,  272,  158,  272,  146,   70,
-       71,   78,  272,  122,  117,  272,  272,   82,   75,   88,
-      272,   98,   89,   83,   90,  100,  108,  113,   85,  105,
-      115,  112,  129,  131,  138,  134,  139,  143,  149,  153,
-      156,  119,   92,  167,   86,  168,  155,  161,  162,  170,
+        0,    0,  265,  304,  262,   52,   53,  241,    0,  243,
+      251,  304,  304,  304,  304,  304,  304,   43,  304,   54,
+      304,  255,   52,  235,   59,    0,  237,   66,   50,   57,
+       69,  304,  190,  304,  252,    0,  234,  304,    0,  234,
+      304,  230,  229,  226,  221,  220,   72,  235,  304,  304,
+      304,  304,  304,  304,  304,  304,  218,  304,  216,   73,
+       67,   77,   80,  304,  213,  211,  304,  304,   82,   76,
+       83,   92,  304,  104,  209,   98,   88,   81,  110,  106,
+      117,  123,  124,  126,  134,  129,  135,  140,  132,  141,
+      137,  147,  151,  160,  172,  207,  157,  170,  161,  175,
 
-       80,  272,  233,  238,  242,  249,  254,  259,  264
+      155,  186,  180,  185,  189,  187,  153,  190,  102,  199,
+      195,  200,  203,  202,   94,  304,  265,  270,  274,  281,
+      286,  291,  296
     } ;
 
-static const flex_int16_t yy_def[110] =
+static const flex_int16_t yy_def[124] =
     {   0,
-      102,    1,  102,  102,  102,  103,  103,  102,  104,  102,
-      102,  102,  102,  102,  102,  102,  102,  105,  102,  102,
-      102,  106,  102,  102,  102,  105,  107,  107,  107,  107,
-      107,  102,  102,  102,  102,  108,  109,  102,  104,  102,
-      102,  105,  105,  105,  105,  105,  102,  106,  102,  102,
-      102,  102,  102,  102,  102,  102,  107,  102,  107,  107,
-      107,  107,  102,  108,  109,  102,  102,  107,  107,  107,
-      102,  107,  107,  107,  107,  107,  107,  107,  107,  107,
-      107,  107,  107,  107,  107,  107,  107,  107,  107,  107,
-      107,  107,  107,  107,  107,  107,  107,  107,  107,  107,
+      116,    1,  116,  116,  116,  117,  117,  116,  118,  116,
+      116,  116,  116,  116,  116,  116,  116,  119,  116,  116,
+      116,  120,  116,  116,  116,  119,  121,  121,  121,  121,
+      121,  116,  116,  116,  116,  122,  123,  116,  118,  116,
+      116,  119,  119,  119,  119,  119,  116,  120,  116,  116,
+      116,  116,  116,  116,  116,  116,  121,  116,  121,  121,
+      121,  121,  121,  116,  122,  123,  116,  116,  121,  121,
+      121,  121,  116,  121,  121,  121,  121,  121,  121,  121,
+      121,  121,  121,  121,  121,  121,  121,  121,  121,  121,
+      121,  121,  121,  121,  121,  121,  121,  121,  121,  121,
 
-      107,    0,  102,  102,  102,  102,  102,  102,  102
+      121,  121,  121,  121,  121,  121,  121,  121,  121,  121,
+      121,  121,  121,  121,  121,    0,  116,  116,  116,  116,
+      116,  116,  116
     } ;
 
-static const flex_int16_t yy_nxt[339] =
+static const flex_int16_t yy_nxt[371] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
        14,   15,   16,   17,   18,   19,   20,   20,   21,   22,
@@ -448,38 +453,41 @@ static const flex_int16_t yy_nxt[339] =
        29,   27,   27,   27,   27,   30,   27,   27,   27,   31,
        27,   27,   27,   27,   33,   34,   36,   36,   58,   43,
        47,   47,   50,   51,   52,   58,   36,   36,   44,   54,
-       55,   56,   58,   45,   47,   47,   46,   58,   58,   58,
-       43,   59,   60,   58,   61,   62,   58,   44,   58,   68,
+       55,   56,   62,   45,   58,   58,   46,   58,   47,   47,
+       43,   58,   61,   59,   58,   58,   70,   44,   58,   58,
 
-       58,   58,   45,   58,   58,   46,   58,   58,   58,   69,
-       58,   60,   59,   73,   62,   61,   58,   70,   58,   72,
-       68,   74,   75,   58,   76,   82,   58,   77,   69,   78,
-       58,   58,   73,   58,   83,   66,   70,   58,   72,   79,
-       71,   74,   75,   76,   82,   80,   77,   58,   84,   58,
-       78,   81,   58,   85,   86,   83,   58,   58,   95,   79,
-       87,   58,   89,   88,   58,   80,   90,   58,   84,   91,
-       81,   58,   85,   58,   58,   86,   58,   95,   92,   58,
-       58,   87,   93,   89,   88,   58,   58,   90,   58,   49,
-       91,   94,   98,   67,   67,   67,   96,   97,   67,   92,
+       58,   58,   45,   62,   60,   46,   58,   63,   69,   74,
+       58,   61,   58,   75,   59,   71,   58,   70,   82,   72,
+       58,   76,   58,   60,   58,   77,   63,   69,   58,   81,
+       74,   80,   75,   78,   71,   58,   79,   82,   72,   83,
+       76,   58,   58,   84,   58,   77,   85,   58,   81,   87,
+       58,   80,   58,   58,   78,   58,   79,   88,   58,   58,
+       83,   94,   84,   92,   86,   58,   89,   85,   91,   58,
+       87,   58,   90,   58,   95,   58,   97,   88,   58,   58,
+       93,   96,   94,   86,   92,   99,   89,   91,   58,  103,
+       58,   90,   98,   58,   95,  102,  101,   97,   58,   93,
 
-       67,  100,   99,   93,   40,   66,   35,   63,   58,   53,
-       94,   98,   49,   41,  101,   40,   38,   96,   97,   35,
-      100,   99,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  101,   37,  102,  102,  102,   37,   37,
-       39,  102,  102,   39,   42,  102,   42,   42,   42,   48,
-       48,   48,   48,   48,   48,   48,   57,   57,   57,   57,
-       57,   64,  102,   64,   64,   64,   65,   65,   65,   65,
-       65,    3,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
+       96,  100,  104,   58,   58,   58,   99,   58,   58,  106,
+      103,   98,  105,   58,  107,  101,  102,   58,   58,  110,
+       58,   58,  100,  104,  108,   58,  109,   58,  111,   67,
+      106,   73,  112,  105,   58,  107,   58,   49,   68,   68,
+      110,  113,  114,  108,   68,  109,  115,   68,   68,  111,
+       40,  112,   67,   35,   64,   58,   53,   49,   41,   40,
+      113,  114,   38,   35,  116,  115,   37,  116,  116,  116,
+       37,   37,   39,  116,  116,   39,   42,  116,   42,   42,
+       42,   48,   48,   48,   48,   48,   48,   48,   57,   57,
+       57,   57,   57,   65,  116,   65,   65,   65,   66,   66,
 
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102
+       66,   66,   66,    3,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116
     } ;
 
-static const flex_int16_t yy_chk[339] =
+static const flex_int16_t yy_chk[371] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -488,36 +496,39 @@ static const flex_int16_t yy_chk[339] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    6,    7,   29,   18,
-       20,   20,   23,   23,   23,   31,    6,    7,   18,   25,
-       25,   25,   28,   18,   47,   47,   18,   30,   60,   61,
-       18,   28,   29,   69,   30,   31,   62,   18,  101,   60,
+       20,   20,   23,   23,   23,   30,    6,    7,   18,   25,
+       25,   25,   30,   18,   28,   61,   18,   31,   47,   47,
+       18,   60,   29,   28,   70,   62,   61,   18,   63,   78,
 
-       68,   74,   18,   79,   95,   18,   70,   73,   75,   61,
-       93,   29,   28,   69,   31,   30,   72,   62,   76,   68,
-       60,   70,   73,   80,   74,   79,   77,   75,   61,   76,
-       82,   78,   69,   81,   80,   65,   62,   92,   68,   77,
-       64,   70,   73,   74,   79,   78,   75,   83,   81,   84,
-       76,   78,   86,   82,   83,   80,   85,   87,   92,   77,
-       84,   88,   86,   85,   59,   78,   87,   89,   81,   88,
-       78,   90,   82,   97,   91,   83,   57,   92,   89,   98,
-       99,   84,   90,   86,   85,   94,   96,   87,  100,   48,
-       88,   91,   97,   46,   45,   44,   94,   96,   43,   89,
+       69,   71,   18,   30,   28,   18,   77,   31,   60,   69,
+       72,   29,  115,   70,   28,   62,   76,   61,   78,   63,
+      109,   71,   74,   28,   80,   72,   31,   60,   79,   77,
+       69,   76,   70,   74,   62,   81,   74,   78,   63,   79,
+       71,   82,   83,   80,   84,   72,   81,   86,   77,   83,
+       89,   76,   85,   87,   74,   91,   74,   84,   88,   90,
+       79,   89,   80,   87,   82,   92,   85,   81,   86,   93,
+       83,  107,   85,  101,   90,   97,   92,   84,   94,   99,
+       88,   91,   89,   82,   87,   94,   85,   86,   98,   99,
+       95,   85,   93,  100,   90,   98,   97,   92,  103,   88,
 
-       42,   99,   98,   90,   40,   37,   35,   33,   27,   24,
-       91,   97,   22,   11,  100,   10,    8,   94,   96,    5,
-       99,   98,    3,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,  100,  103,    0,    0,    0,  103,  103,
-      104,    0,    0,  104,  105,    0,  105,  105,  105,  106,
-      106,  106,  106,  106,  106,  106,  107,  107,  107,  107,
-      107,  108,    0,  108,  108,  108,  109,  109,  109,  109,
-      109,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
+       91,   95,  100,  104,  102,  106,   94,  105,  108,  103,
+       99,   93,  102,  111,  104,   97,   98,  110,  112,  108,
+      114,  113,   95,  100,  105,   96,  106,   75,  110,   66,
+      103,   65,  111,  102,   59,  104,   57,   48,   46,   45,
+      108,  112,  113,  105,   44,  106,  114,   43,   42,  110,
+       40,  111,   37,   35,   33,   27,   24,   22,   11,   10,
+      112,  113,    8,    5,    3,  114,  117,    0,    0,    0,
+      117,  117,  118,    0,    0,  118,  119,    0,  119,  119,
+      119,  120,  120,  120,  120,  120,  120,  120,  121,  121,
+      121,  121,  121,  122,    0,  122,  122,  122,  123,  123,
 
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
-      102,  102,  102,  102,  102,  102,  102,  102
+      123,  123,  123,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+      116,  116,  116,  116,  116,  116,  116,  116,  116,  116
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -568,9 +579,9 @@ static unsigned long ParseNumber(const char* const string_start, const size_t st
 	return value;
 }
 
-#line 571 "lexical.cpp"
+#line 582 "lexical.cpp"
 /* Regular expression. */
-#line 573 "lexical.cpp"
+#line 584 "lexical.cpp"
 
 #define INITIAL 0
 
@@ -705,9 +716,25 @@ YY_DECL
 #line 61 "lexical.l"
 
 
-#line 64 "lexical.l"
+
+#line 65 "lexical.l"
+	if (type)
+	{
+		type = std::nullopt;
+
+		switch (*type)
+		{
+			case Type::Mappings:
+				return libsonassmd::CodeReader::parser::make_START_MAPPINGS();
+
+			case Type::DPLCs:
+				return libsonassmd::CodeReader::parser::make_START_DPLCS();
+		}
+	}
+
+
  /* Ignore whitespace */
-#line 710 "lexical.cpp"
+#line 737 "lexical.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -734,13 +761,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 103 )
+				if ( yy_current_state >= 117 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_current_state != 102 );
+		while ( yy_current_state != 116 );
 		yy_cp = (yy_last_accepting_cpos);
 		yy_current_state = (yy_last_accepting_state);
 
@@ -762,7 +789,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 65 "lexical.l"
+#line 81 "lexical.l"
 ;
 	YY_BREAK
 /* Ignore comments */
@@ -771,318 +798,328 @@ case 2:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 68 "lexical.l"
+#line 84 "lexical.l"
 ;
 	YY_BREAK
 /* Terminate at end of file. When terminating, revert to initial state. */
 case YY_STATE_EOF(INITIAL):
-#line 71 "lexical.l"
+#line 87 "lexical.l"
 return libsonassmd::CodeReader::parser::make_YYEOF();
 	YY_BREAK
 /* Directives. */
 case 3:
 YY_RULE_SETUP
-#line 74 "lexical.l"
+#line 90 "lexical.l"
 return libsonassmd::CodeReader::parser::make_DIRECTIVE_DC();
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 75 "lexical.l"
+#line 91 "lexical.l"
 ; // Just get rid of this junk; we don't need it.
 /* Sizes. */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 78 "lexical.l"
+#line 94 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_BYTE();
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 79 "lexical.l"
+#line 95 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_SHORT();
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 80 "lexical.l"
+#line 96 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_WORD();
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 81 "lexical.l"
+#line 97 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_LONGWORD();
 	YY_BREAK
 /* Misc. symbols. */
 case 9:
 YY_RULE_SETUP
-#line 84 "lexical.l"
+#line 100 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PERIOD();
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 85 "lexical.l"
+#line 101 "lexical.l"
 return libsonassmd::CodeReader::parser::make_COMMA();
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 86 "lexical.l"
+#line 102 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PARENTHESIS_LEFT();
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 87 "lexical.l"
+#line 103 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PARENTHESIS_RIGHT();
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 88 "lexical.l"
+#line 104 "lexical.l"
 return libsonassmd::CodeReader::parser::make_DOLLAR();
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 89 "lexical.l"
+#line 105 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PLUS();
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 90 "lexical.l"
+#line 106 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MINUS();
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 91 "lexical.l"
+#line 107 "lexical.l"
 return libsonassmd::CodeReader::parser::make_ASTERIX();
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 92 "lexical.l"
+#line 108 "lexical.l"
 return libsonassmd::CodeReader::parser::make_FORWARD_SLASH();
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 93 "lexical.l"
+#line 109 "lexical.l"
 return libsonassmd::CodeReader::parser::make_EQUAL();
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 94 "lexical.l"
+#line 110 "lexical.l"
 return libsonassmd::CodeReader::parser::make_AT();
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 95 "lexical.l"
+#line 111 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LESS();
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 96 "lexical.l"
+#line 112 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MORE();
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 97 "lexical.l"
+#line 113 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PERCENT();
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 98 "lexical.l"
+#line 114 "lexical.l"
 return libsonassmd::CodeReader::parser::make_AMPERSAND();
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 99 "lexical.l"
+#line 115 "lexical.l"
 return libsonassmd::CodeReader::parser::make_EXCLAMATION();
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 100 "lexical.l"
+#line 116 "lexical.l"
 return libsonassmd::CodeReader::parser::make_VERTICAL_BAR();
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 101 "lexical.l"
+#line 117 "lexical.l"
 return libsonassmd::CodeReader::parser::make_CARET();
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 102 "lexical.l"
+#line 118 "lexical.l"
 return libsonassmd::CodeReader::parser::make_TILDE();
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 103 "lexical.l"
+#line 119 "lexical.l"
 return libsonassmd::CodeReader::parser::make_COLON();
 	YY_BREAK
 /* Operators. */
 case 29:
 YY_RULE_SETUP
-#line 106 "lexical.l"
+#line 122 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LOGICAL_AND();
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 107 "lexical.l"
+#line 123 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LOGICAL_OR();
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 108 "lexical.l"
+#line 124 "lexical.l"
 return libsonassmd::CodeReader::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 109 "lexical.l"
+#line 125 "lexical.l"
 return libsonassmd::CodeReader::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 110 "lexical.l"
+#line 126 "lexical.l"
 return libsonassmd::CodeReader::parser::make_INEQUALITY();
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 111 "lexical.l"
+#line 127 "lexical.l"
 return libsonassmd::CodeReader::parser::make_INEQUALITY();
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 112 "lexical.l"
+#line 128 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LESS_OR_EQUAL();
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 113 "lexical.l"
+#line 129 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MORE_OR_EQUAL();
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 114 "lexical.l"
+#line 130 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LEFT_SHIFT();
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 115 "lexical.l"
+#line 131 "lexical.l"
 return libsonassmd::CodeReader::parser::make_RIGHT_SHIFT();
 	YY_BREAK
 /* MapMacros. */
 case 39:
 YY_RULE_SETUP
-#line 118 "lexical.l"
+#line 134 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE();
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 119 "lexical.l"
+#line 135 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE_ENTRY();
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 120 "lexical.l"
+#line 136 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SPRITE_HEADER();
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 121 "lexical.l"
+#line 137 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SPRITE_PIECE();
 	YY_BREAK
-/* Decimal number. */
 case 43:
 YY_RULE_SETUP
-#line 124 "lexical.l"
+#line 138 "lexical.l"
+return libsonassmd::CodeReader::parser::make_DPLC_HEADER();
+	YY_BREAK
+case 44:
+YY_RULE_SETUP
+#line 139 "lexical.l"
+return libsonassmd::CodeReader::parser::make_DPLC_ENTRY();
+	YY_BREAK
+/* Decimal number. */
+case 45:
+YY_RULE_SETUP
+#line 142 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
 }
 	YY_BREAK
 /* Hexadecimal number (68k). */
-case 44:
+case 46:
 YY_RULE_SETUP
-#line 129 "lexical.l"
+#line 147 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
 }
 	YY_BREAK
 /* Binary number (68k). */
-case 45:
+case 47:
 YY_RULE_SETUP
-#line 134 "lexical.l"
+#line 152 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
 	YY_BREAK
 /* Labels. */
-case 46:
+case 48:
 YY_RULE_SETUP
-#line 139 "lexical.l"
+#line 157 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext, yyleng - 1));
 }
 	YY_BREAK
-case 47:
+case 49:
 YY_RULE_SETUP
-#line 143 "lexical.l"
+#line 161 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext, yyleng - 1));
-}
-	YY_BREAK
-case 48:
-/* rule 48 can match eol */
-YY_RULE_SETUP
-#line 147 "lexical.l"
-{
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 1));
-}
-	YY_BREAK
-case 49:
-/* rule 49 can match eol */
-YY_RULE_SETUP
-#line 151 "lexical.l"
-{
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 1));
 }
 	YY_BREAK
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 155 "lexical.l"
+#line 165 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 2));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 1));
 }
 	YY_BREAK
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 159 "lexical.l"
+#line 169 "lexical.l"
+{
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 1));
+}
+	YY_BREAK
+case 52:
+/* rule 52 can match eol */
+YY_RULE_SETUP
+#line 173 "lexical.l"
+{
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 2));
+}
+	YY_BREAK
+case 53:
+/* rule 53 can match eol */
+YY_RULE_SETUP
+#line 177 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 2));
 }
 	YY_BREAK
 /* Identifier. */
-case 52:
+case 54:
 YY_RULE_SETUP
-#line 164 "lexical.l"
+#line 182 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
 }
 	YY_BREAK
 /* Local identifier. */
-case 53:
+case 55:
 YY_RULE_SETUP
-#line 169 "lexical.l"
+#line 187 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
 }
 	YY_BREAK
 /* Make Bison signal a syntax error for unrecognised symbols */
-case 54:
+case 56:
 YY_RULE_SETUP
-#line 174 "lexical.l"
-throw libsonassmd::CodeReader::parser::syntax_error(std::format("Invalid character '{}'.", yytext));
+#line 192 "lexical.l"
+throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
 	YY_BREAK
-case 55:
+case 57:
 YY_RULE_SETUP
-#line 176 "lexical.l"
+#line 194 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 1085 "lexical.cpp"
+#line 1122 "lexical.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1498,7 +1535,7 @@ int yyFlexLexer::yy_get_next_buffer()
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 103 )
+			if ( yy_current_state >= 117 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1526,11 +1563,11 @@ int yyFlexLexer::yy_get_next_buffer()
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 103 )
+		if ( yy_current_state >= 117 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 102);
+	yy_is_jam = (yy_current_state == 116);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -2044,6 +2081,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 176 "lexical.l"
+#line 194 "lexical.l"
 
 
