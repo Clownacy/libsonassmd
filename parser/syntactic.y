@@ -230,7 +230,7 @@ dplcs
 	{
 		// TODO: Catch exceptions?
 		// TODO: Deduplicate this all, dammit!
-		const DynamicPatternLoadCue frame($2);
+		const DynamicPatternLoadCue frame($2, game);
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
@@ -253,7 +253,7 @@ dplcs
 	{
 		$$ = std::move($1);
 		// TODO: Catch exceptions?
-		const DynamicPatternLoadCue frame($3);
+		const DynamicPatternLoadCue frame($3, game);
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
 	}

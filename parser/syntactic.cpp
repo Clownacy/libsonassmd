@@ -938,7 +938,7 @@ namespace libsonassmd { namespace CodeReader {
         {
 		// TODO: Catch exceptions?
 		// TODO: Deduplicate this all, dammit!
-		const DynamicPatternLoadCue frame(yystack_[0].value.as < std::stringstream > ());
+		const DynamicPatternLoadCue frame(yystack_[0].value.as < std::stringstream > (), game);
 		for (const auto &label : yystack_[1].value.as < StringList > ())
 			yylhs.value.as < DPLCs > ().frames.insert({label, frame});
 	}
@@ -977,7 +977,7 @@ namespace libsonassmd { namespace CodeReader {
         {
 		yylhs.value.as < DPLCs > () = std::move(yystack_[2].value.as < DPLCs > ());
 		// TODO: Catch exceptions?
-		const DynamicPatternLoadCue frame(yystack_[0].value.as < std::stringstream > ());
+		const DynamicPatternLoadCue frame(yystack_[0].value.as < std::stringstream > (), game);
 		for (const auto &label : yystack_[1].value.as < StringList > ())
 			yylhs.value.as < DPLCs > ().frames.insert({label, frame});
 	}

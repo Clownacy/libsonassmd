@@ -31,7 +31,7 @@ int main([[maybe_unused]] const int argc, char** const argv)
 	{
 		std::cerr << "\tLabel: " << label << '\n';
 		std::cerr << "\tData:\n";
-		frame.toAssemblyStream(std::cerr);
+		frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
 	}
 
 	return EXIT_SUCCESS;

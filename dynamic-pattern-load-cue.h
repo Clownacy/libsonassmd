@@ -5,12 +5,14 @@
 #include <ostream>
 #include <vector>
 
+#include "common.h"
+
 namespace libsonassmd {
 
 class DynamicPatternLoadCue
 {
 private:
-	void fromBinaryStream(std::istream &stream);
+	void fromBinaryStream(std::istream &stream, Game game);
 
 public:
 	class Copy
@@ -28,18 +30,18 @@ public:
 
 		int size_encoded() const;
 		int total_segments() const;
-		void toAssemblyStream(std::ostream &stream) const;
+		void toAssemblyStream(std::ostream &stream, bool mapmacros) const;
 	};
 
 	std::vector<Copy> copies;
 
 	DynamicPatternLoadCue() = default;
-	DynamicPatternLoadCue(std::istream &stream) {fromBinaryStream(stream);}
+	DynamicPatternLoadCue(std::istream &stream, const Game game) {fromBinaryStream(stream, game);}
 
 	int getMappedTile(int tile_index) const;
 	int size_encoded() const;
 	int total_segments() const;
-	void toAssemblyStream(std::ostream &stream) const;
+	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
 };
 
 }
