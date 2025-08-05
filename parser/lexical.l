@@ -62,9 +62,10 @@ local_identifier  [@\.][A-Za-z_0-9\?]+
 %{
 	if (type)
 	{
+		const auto value = *type;
 		type = std::nullopt;
 
-		switch (*type)
+		switch (value)
 		{
 			case Type::Mappings:
 				return libsonassmd::CodeReader::parser::make_START_MAPPINGS();
