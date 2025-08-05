@@ -1,6 +1,5 @@
 #include "dynamic-pattern-load-cues.h"
 
-#include <algorithm>
 #include <random>
 #include <string>
 
@@ -99,4 +98,6 @@ void DynamicPatternLoadCues::toAssemblyStream(std::ostream &stream) const
 	}
 
 	stream << "\teven\n";
+}
+
 }
