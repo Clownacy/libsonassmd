@@ -15,7 +15,10 @@ int main([[maybe_unused]] const int argc, char** const argv)
 		return EXIT_FAILURE;
 	}
 
-	auto mappings = libsonassmd::CodeReader::ReadDynamicPatternLoadCues(file, libsonassmd::Game::SONIC_1);
+	libsonassmd::game = libsonassmd::Game::SONIC_1;
+	libsonassmd::mapmacros = true;
+
+	auto mappings = libsonassmd::CodeReader::ReadDynamicPatternLoadCues(file);
 
 	for (const auto &offset_table : mappings.offset_tables)
 	{
@@ -31,7 +34,7 @@ int main([[maybe_unused]] const int argc, char** const argv)
 	{
 		std::cerr << "\tLabel: " << label << '\n';
 		std::cerr << "\tData:\n";
-		frame.toAssemblyStream(std::cerr, libsonassmd::Game::SONIC_1, true);
+		frame.toAssemblyStream(std::cerr);
 	}
 
 	return EXIT_SUCCESS;

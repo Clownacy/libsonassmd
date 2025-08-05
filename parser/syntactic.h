@@ -45,7 +45,7 @@
 #ifndef YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 # define YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED
 // "%code requires" blocks.
-#line 35 "syntactic.y"
+#line 34 "syntactic.y"
 
 
 #include <map>
@@ -1125,7 +1125,7 @@ switch (yykind)
     };
 
     /// Build a parser object.
-    parser (Output &output_yyarg, Game game_yyarg, Lexer &lexer_yyarg);
+    parser (Output &output_yyarg, Lexer &lexer_yyarg);
     virtual ~parser ();
 
 #if 201103L <= YY_CPLUSPLUS
@@ -2240,7 +2240,6 @@ switch (yykind)
 
     // User arguments.
     Output &output;
-    Game game;
     Lexer &lexer;
 
   };
@@ -2485,15 +2484,15 @@ switch (yykind)
 
 #line 23 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2489 "syntactic.h"
+#line 2488 "syntactic.h"
 
 
 // "%code provides" blocks.
-#line 80 "syntactic.y"
+#line 79 "syntactic.y"
 
 
 
-#line 2497 "syntactic.h"
+#line 2496 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

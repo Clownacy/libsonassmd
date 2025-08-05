@@ -11,12 +11,12 @@ void parser::error(const std::string &message)
 }
 
 template<typename T, Lexer::Type Type>
-static T Read(std::istream &input, const Game game)
+static T Read(std::istream &input)
 {
 	Output output;
 
 	Lexer lexer(input, Type);
-	parser parser(output, game, lexer);
+	parser parser(output, lexer);
 #ifdef LIBSONASSMD_CODE_READER_YYDEBUG
 	parser.set_debug_level(1);
 #endif
@@ -27,14 +27,14 @@ static T Read(std::istream &input, const Game game)
 	return std::get<T>(output);
 }
 
-Mappings ReadMappings(std::istream &input, const Game game)
+Mappings ReadMappings(std::istream &input)
 {
-	return Read<Mappings, Lexer::Type::Mappings>(input, game);
+	return Read<Mappings, Lexer::Type::Mappings>(input);
 }
 
-DPLCs ReadDynamicPatternLoadCues(std::istream &input, const Game game)
+DPLCs ReadDynamicPatternLoadCues(std::istream &input)
 {
-	return Read<DPLCs, Lexer::Type::DPLCs>(input, game);
+	return Read<DPLCs, Lexer::Type::DPLCs>(input);
 }
 
 }}

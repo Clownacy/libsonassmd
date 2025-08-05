@@ -12,15 +12,15 @@ namespace libsonassmd {
 class SpriteFrame
 {
 private:
-	void fromBinaryStream(std::istream &stream, Game game);
+	void fromBinaryStream(std::istream &stream);
 
 public:
-	void toAssemblyStream(std::ostream &stream, Game game, bool mapmacros) const;
+	void toAssemblyStream(std::ostream &stream) const;
 
 	std::vector<SpritePiece> pieces;
 
 	SpriteFrame() = default;
-	SpriteFrame(std::istream &stream, const Game game) {fromBinaryStream(stream, game);}
+	SpriteFrame(std::istream &stream) {fromBinaryStream(stream);}
 };
 
 }

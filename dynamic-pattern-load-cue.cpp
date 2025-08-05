@@ -37,7 +37,7 @@ int DynamicPatternLoadCue::total_segments() const
 	return segments;
 }
 
-void DynamicPatternLoadCue::fromBinaryStream(std::istream &stream, const Game game)
+void DynamicPatternLoadCue::fromBinaryStream(std::istream &stream)
 {
 	const auto original_exceptions = stream.exceptions();
 	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
@@ -53,13 +53,13 @@ void DynamicPatternLoadCue::fromBinaryStream(std::istream &stream, const Game ga
 	stream.exceptions(original_exceptions);
 }
 
-void DynamicPatternLoadCue::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void DynamicPatternLoadCue::toAssemblyStream(std::ostream &stream) const
 {
 	if (!mapmacros)
 		stream << "\tdc." << (game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
 
 	for (const auto &copy : copies)
-		copy.toAssemblyStream(stream, mapmacros);
+		copy.toAssemblyStream(stream);
 }
 
 int DynamicPatternLoadCue::Copy::size_encoded() const
@@ -85,7 +85,7 @@ void DynamicPatternLoadCue::Copy::fromBinaryStream(std::istream &stream)
 	stream.exceptions(original_exceptions);
 }
 
-void DynamicPatternLoadCue::Copy::toAssemblyStream(std::ostream &stream, const bool mapmacros) const
+void DynamicPatternLoadCue::Copy::toAssemblyStream(std::ostream &stream) const
 {
 	// TODO: Sanity checks (overflow).
 	for (int i = 0; i < total_segments(); ++i)

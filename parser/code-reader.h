@@ -9,8 +9,8 @@ namespace libsonassmd
 {
 	namespace CodeReader
 	{
-		Mappings ReadMappings(std::istream &input, Game game);
-		DPLCs ReadDynamicPatternLoadCues(std::istream &input, Game game);
+		Mappings ReadMappings(std::istream &input);
+		DPLCs ReadDynamicPatternLoadCues(std::istream &input);
 	}
 }
 

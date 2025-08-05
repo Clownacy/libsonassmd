@@ -76,7 +76,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 		stream.seekg(starting_position);
 		stream.seekg(offset);
 
-		frames.emplace_back(stream, game);
+		frames.emplace_back(stream);
 	}
 
 	stream.clear();
@@ -117,7 +117,7 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 			stream << "\tspriteHeader";
 
 		stream << "\n";
-		frame.toAssemblyStream(stream, game, mapmacros);
+		frame.toAssemblyStream(stream);
 
 		if (mapmacros)
 			stream << frame_label << "_End\n\n";

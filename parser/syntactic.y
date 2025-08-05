@@ -27,7 +27,6 @@
 %define api.value.type variant 
 
 %parse-param {Output &output}
-%parse-param {Game game}
 %parse-param {Lexer &lexer}
 
 %define parse.error verbose
@@ -84,6 +83,8 @@ namespace libsonassmd
 %code {
 
 #include <initializer_list>
+
+#include "../common.h"
 #include "lexical.h"
 
 #undef yylex
@@ -185,7 +186,7 @@ mappings
 	{
 		// TODO: Catch exceptions?
 		// TODO: Deduplicate this all, dammit!
-		const SpriteFrame frame($2, game);
+		const SpriteFrame frame($2);
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
@@ -203,7 +204,7 @@ mappings
 	{
 		$$ = std::move($1);
 		// TODO: Catch exceptions?
-		const SpriteFrame frame($3, game);
+		const SpriteFrame frame($3);
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
 	}
@@ -230,7 +231,7 @@ dplcs
 	{
 		// TODO: Catch exceptions?
 		// TODO: Deduplicate this all, dammit!
-		const DynamicPatternLoadCue frame($2, game);
+		const DynamicPatternLoadCue frame($2);
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
@@ -253,7 +254,7 @@ dplcs
 	{
 		$$ = std::move($1);
 		// TODO: Catch exceptions?
-		const DynamicPatternLoadCue frame($3, game);
+		const DynamicPatternLoadCue frame($3);
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
 	}

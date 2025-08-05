@@ -4,7 +4,7 @@
 
 namespace libsonassmd {
 
-void SpritePiece::fromBinaryStream(std::istream &stream, const Game game)
+void SpritePiece::fromBinaryStream(std::istream &stream)
 {
 	const auto original_exceptions = stream.exceptions();
 	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
@@ -38,7 +38,7 @@ void SpritePiece::fromBinaryStream(std::istream &stream, const Game game)
 	stream.exceptions(original_exceptions);
 }
 
-void SpritePiece::toAssemblyStream(std::ostream &stream, const Game game, const bool mapmacros) const
+void SpritePiece::toAssemblyStream(std::ostream &stream) const
 {
 	if (mapmacros)
 	{
