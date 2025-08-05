@@ -594,7 +594,7 @@ expression7
 	}
 	| "-" expression7
 	{
-		$$ = -$2;
+		$$ = 0 - $2;
 	}
 	| "~" expression7
 	{

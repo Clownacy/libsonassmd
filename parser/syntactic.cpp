@@ -1480,7 +1480,7 @@ namespace libsonassmd { namespace CodeReader {
   case 73: // expression7: "-" expression7
 #line 596 "syntactic.y"
         {
-		yylhs.value.as < unsigned long > () = -yystack_[0].value.as < unsigned long > ();
+		yylhs.value.as < unsigned long > () = 0 - yystack_[0].value.as < unsigned long > ();
 	}
 #line 1486 "syntactic.cpp"
     break;
