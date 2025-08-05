@@ -82,7 +82,6 @@ namespace libsonassmd
 
 %code {
 
-#include "../common.h"
 #include "lexical.h"
 
 #undef yylex
