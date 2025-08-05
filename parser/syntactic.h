@@ -454,6 +454,8 @@ namespace libsonassmd { namespace CodeReader {
 
       // labels
       // offset_table
+      // offset_table_line
+      // offset_table_entries
       char dummy8[sizeof (StringList)];
 
       // IDENTIFIER
@@ -649,19 +651,21 @@ namespace libsonassmd { namespace CodeReader {
         S_dplc_copy = 58,                        // dplc_copy
         S_dplc_frame = 59,                       // dplc_frame
         S_dc = 60,                               // dc
-        S_offset_table_entry = 61,               // offset_table_entry
-        S_bytes = 62,                            // bytes
-        S_expression_list = 63,                  // expression_list
-        S_size = 64,                             // size
-        S_expression = 65,                       // expression
-        S_expression1 = 66,                      // expression1
-        S_expression2 = 67,                      // expression2
-        S_expression3 = 68,                      // expression3
-        S_expression4 = 69,                      // expression4
-        S_expression5 = 70,                      // expression5
-        S_expression6 = 71,                      // expression6
-        S_expression7 = 72,                      // expression7
-        S_expression8 = 73                       // expression8
+        S_offset_table_line = 61,                // offset_table_line
+        S_offset_table_entries = 62,             // offset_table_entries
+        S_offset_table_entry = 63,               // offset_table_entry
+        S_bytes = 64,                            // bytes
+        S_expression_list = 65,                  // expression_list
+        S_size = 66,                             // size
+        S_expression = 67,                       // expression
+        S_expression1 = 68,                      // expression1
+        S_expression2 = 69,                      // expression2
+        S_expression3 = 70,                      // expression3
+        S_expression4 = 71,                      // expression4
+        S_expression5 = 72,                      // expression5
+        S_expression6 = 73,                      // expression6
+        S_expression7 = 74,                      // expression7
+        S_expression8 = 75                       // expression8
       };
     };
 
@@ -727,6 +731,8 @@ namespace libsonassmd { namespace CodeReader {
 
       case symbol_kind::S_labels: // labels
       case symbol_kind::S_offset_table: // offset_table
+      case symbol_kind::S_offset_table_line: // offset_table_line
+      case symbol_kind::S_offset_table_entries: // offset_table_entries
         value.move< StringList > (std::move (that.value));
         break;
 
@@ -980,6 +986,8 @@ switch (yykind)
 
       case symbol_kind::S_labels: // labels
       case symbol_kind::S_offset_table: // offset_table
+      case symbol_kind::S_offset_table_line: // offset_table_line
+      case symbol_kind::S_offset_table_entries: // offset_table_entries
         value.template destroy< StringList > ();
         break;
 
@@ -1980,7 +1988,7 @@ switch (yykind)
     static const signed char yydefact_[];
 
     // YYPGOTO[NTERM-NUM].
-    static const short yypgoto_[];
+    static const signed char yypgoto_[];
 
     // YYDEFGOTO[NTERM-NUM].
     static const signed char yydefgoto_[];
@@ -2232,8 +2240,8 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 198,     ///< Last index in yytable_.
-      yynnts_ = 25,  ///< Number of nonterminal symbols.
+      yylast_ = 204,     ///< Last index in yytable_.
+      yynnts_ = 27,  ///< Number of nonterminal symbols.
       yyfinal_ = 18 ///< Termination state number.
     };
 
@@ -2290,6 +2298,8 @@ switch (yykind)
 
       case symbol_kind::S_labels: // labels
       case symbol_kind::S_offset_table: // offset_table
+      case symbol_kind::S_offset_table_line: // offset_table_line
+      case symbol_kind::S_offset_table_entries: // offset_table_entries
         value.copy< StringList > (YY_MOVE (that.value));
         break;
 
@@ -2385,6 +2395,8 @@ switch (yykind)
 
       case symbol_kind::S_labels: // labels
       case symbol_kind::S_offset_table: // offset_table
+      case symbol_kind::S_offset_table_line: // offset_table_line
+      case symbol_kind::S_offset_table_entries: // offset_table_entries
         value.move< StringList > (YY_MOVE (s.value));
         break;
 
@@ -2484,7 +2496,7 @@ switch (yykind)
 
 #line 23 "syntactic.y"
 } } // libsonassmd::CodeReader
-#line 2488 "syntactic.h"
+#line 2500 "syntactic.h"
 
 
 // "%code provides" blocks.
@@ -2492,7 +2504,7 @@ switch (yykind)
 
 
 
-#line 2496 "syntactic.h"
+#line 2508 "syntactic.h"
 
 
 #endif // !YY_LIBSONASSMD_CODE_READER_YY_SYNTACTIC_H_INCLUDED

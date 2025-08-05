@@ -141,6 +141,7 @@ namespace libsonassmd
 %type<Mappings> mappings
 %type<DPLCs> dplcs
 %type<StringList> offset_table
+%type<StringList> offset_table_line offset_table_entries
 %type<std::string> label offset_table_entry
 %type<StringList> labels
 %type<std::vector<unsigned long>> expression_list
@@ -293,14 +294,16 @@ labels
 	;
 
 offset_table
-	: offset_table_entry
+	: offset_table_line
 	{
-		$$.emplace_back(std::move($1));
+		for (auto &entry : $1)
+			$$.emplace_back(std::move(entry));
 	}
-	| offset_table offset_table_entry
+	| offset_table offset_table_line
 	{
 		$$ = std::move($1);
-		$$.emplace_back(std::move($2));
+		for (auto &entry : $2)
+			$$.emplace_back(std::move(entry));
 	}
 	| MAPPINGS_TABLE
 	{}
@@ -360,15 +363,34 @@ dc
 	}
 	;
 
-offset_table_entry
-	: dc IDENTIFIER "-" IDENTIFIER
+offset_table_line
+	: dc offset_table_entries
 	{
-		static_cast<void>($4);
 		$$ = std::move($2);
 	}
 	| MAPPINGS_TABLE_ENTRY size IDENTIFIER
 	{
-		$$ = std::move($3);
+		$$.emplace_back(std::move($3));
+	}
+	;
+
+offset_table_entries
+	: offset_table_entry
+	{
+		$$.emplace_back(std::move($1));
+	}
+	| offset_table_entries "," offset_table_entry
+	{
+		$$ = std::move($1);
+		$$.emplace_back(std::move($3));
+	}
+	;
+
+offset_table_entry
+	: IDENTIFIER "-" IDENTIFIER
+	{
+		static_cast<void>($3);
+		$$ = std::move($1);
 	}
 	;
 
