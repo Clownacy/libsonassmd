@@ -79,13 +79,6 @@ namespace libsonassmd
 #undef yylex
 #define yylex(x) lexer(x)
 
-void libsonassmd_yyerror(const std::string &message);
-
-void libsonassmd::CodeReader::parser::error(const std::string &message)
-{
-	libsonassmd_yyerror(message);
-}
-
 }
 
 %define api.token.prefix {TOKEN_}

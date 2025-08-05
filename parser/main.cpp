@@ -1,18 +1,9 @@
 #include <cstdlib>
-#include <iostream>
 #include <fstream>
 
-#include "syntactic.h"
-#include "lexical.h"
+#include "code-reader.h"
 
-void libsonassmd_yyerror(const std::string &message)
-{
-	std::cerr << message << '\n';
-}
-
-static libsonassmd::CodeReader::Mappings mappings;
-
-int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
+int main([[maybe_unused]] const int argc, char** const argv)
 {
 	const char* const input_file_path = argv[1];
 
@@ -20,16 +11,11 @@ int main([[maybe_unused]] const int argc, [[maybe_unused]] char** const argv)
 
 	if (!file.is_open())
 	{
-		std::cerr << "Could not open file '" << input_file_path << "'.";
+		std::cerr << "Could not open file '" << input_file_path << "'.\n";
 		return EXIT_FAILURE;
 	}
 
-	libsonassmd::CodeReader::Lexer lexer(file, std::cout);
-	libsonassmd::CodeReader::parser parser(mappings, libsonassmd::Game::SONIC_1, lexer);
-#ifdef LIBSONASSMD_CODE_READER_YYDEBUG
-	parser.set_debug_level(1);
-#endif
-	const int parse_result = parser();
+	auto mappings = libsonassmd::CodeReader::ReadMappings(file, libsonassmd::Game::SONIC_1);
 
 	for (const auto &offset_table : mappings.offset_tables)
 	{
