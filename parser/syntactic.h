@@ -228,7 +228,7 @@ namespace libsonassmd
 #   define LIBSONASSMD_CODE_READER_YYDEBUG 0
 #  endif
 # else /* ! defined YYDEBUG */
-#  define LIBSONASSMD_CODE_READER_YYDEBUG 1
+#  define LIBSONASSMD_CODE_READER_YYDEBUG 0
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined LIBSONASSMD_CODE_READER_YYDEBUG */
 
