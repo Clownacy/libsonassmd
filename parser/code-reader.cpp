@@ -10,11 +10,12 @@ void parser::error(const std::string &message)
 	throw std::runtime_error(message);
 }
 
-Mappings ReadMappings(std::istream &input, const Game game)
+template<typename T, Lexer::Type Type>
+static T Read(std::istream &input, const Game game)
 {
 	Output output;
 
-	Lexer lexer(input, Lexer::Type::Mappings);
+	Lexer lexer(input, Type);
 	parser parser(output, game, lexer);
 #ifdef LIBSONASSMD_CODE_READER_YYDEBUG
 	parser.set_debug_level(1);
@@ -23,7 +24,17 @@ Mappings ReadMappings(std::istream &input, const Game game)
 	if (parser())
 		throw std::runtime_error("Unspecified parser error");
 
-	return std::get<Mappings>(output);
+	return std::get<T>(output);
+}
+
+Mappings ReadMappings(std::istream &input, const Game game)
+{
+	return Read<Mappings, Lexer::Type::Mappings>(input, game);
+}
+
+DPLCs ReadDynamicPatternLoadCues(std::istream &input, const Game game)
+{
+	return Read<DPLCs, Lexer::Type::DPLCs>(input, game);
 }
 
 }}

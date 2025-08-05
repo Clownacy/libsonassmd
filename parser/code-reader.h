@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-#include "../sprite-mappings.h"
 #include "syntactic.h"
 
 namespace libsonassmd
@@ -11,6 +10,7 @@ namespace libsonassmd
 	namespace CodeReader
 	{
 		Mappings ReadMappings(std::istream &input, Game game);
+		DPLCs ReadDynamicPatternLoadCues(std::istream &input, Game game);
 	}
 }
 
