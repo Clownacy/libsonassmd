@@ -17,7 +17,7 @@ static T Read(std::istream &input)
 
 	Lexer lexer(input, Type);
 	parser parser(output, lexer);
-#ifdef LIBSONASSMD_CODE_READER_YYDEBUG
+#if LIBSONASSMD_CODE_READER_YYDEBUG
 	parser.set_debug_level(1);
 #endif
 
