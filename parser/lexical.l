@@ -26,7 +26,6 @@
 %{
 
 #include <charconv>
-#include <format>
 #include <string>
 
 #include "syntactic.h"

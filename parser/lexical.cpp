@@ -560,7 +560,6 @@ static const flex_int16_t yy_chk[371] =
 #line 27 "lexical.l"
 
 #include <charconv>
-#include <format>
 #include <string>
 
 #include "syntactic.h"
@@ -579,9 +578,9 @@ static unsigned long ParseNumber(const char* const string_start, const size_t st
 	return value;
 }
 
-#line 582 "lexical.cpp"
+#line 581 "lexical.cpp"
 /* Regular expression. */
-#line 584 "lexical.cpp"
+#line 583 "lexical.cpp"
 
 #define INITIAL 0
 
@@ -713,11 +712,11 @@ YY_DECL
 		}
 
 	{
-#line 61 "lexical.l"
+#line 60 "lexical.l"
 
 
 
-#line 65 "lexical.l"
+#line 64 "lexical.l"
 	if (type)
 	{
 		type = std::nullopt;
@@ -734,7 +733,7 @@ YY_DECL
 
 
  /* Ignore whitespace */
-#line 737 "lexical.cpp"
+#line 736 "lexical.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -789,7 +788,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 81 "lexical.l"
+#line 80 "lexical.l"
 ;
 	YY_BREAK
 /* Ignore comments */
@@ -798,233 +797,233 @@ case 2:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 84 "lexical.l"
+#line 83 "lexical.l"
 ;
 	YY_BREAK
 /* Terminate at end of file. When terminating, revert to initial state. */
 case YY_STATE_EOF(INITIAL):
-#line 87 "lexical.l"
+#line 86 "lexical.l"
 return libsonassmd::CodeReader::parser::make_YYEOF();
 	YY_BREAK
 /* Directives. */
 case 3:
 YY_RULE_SETUP
-#line 90 "lexical.l"
+#line 89 "lexical.l"
 return libsonassmd::CodeReader::parser::make_DIRECTIVE_DC();
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 91 "lexical.l"
+#line 90 "lexical.l"
 ; // Just get rid of this junk; we don't need it.
 /* Sizes. */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 94 "lexical.l"
+#line 93 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_BYTE();
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 95 "lexical.l"
+#line 94 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_SHORT();
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 96 "lexical.l"
+#line 95 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_WORD();
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 97 "lexical.l"
+#line 96 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SIZE_LONGWORD();
 	YY_BREAK
 /* Misc. symbols. */
 case 9:
 YY_RULE_SETUP
-#line 100 "lexical.l"
+#line 99 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PERIOD();
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 101 "lexical.l"
+#line 100 "lexical.l"
 return libsonassmd::CodeReader::parser::make_COMMA();
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 102 "lexical.l"
+#line 101 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PARENTHESIS_LEFT();
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 103 "lexical.l"
+#line 102 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PARENTHESIS_RIGHT();
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 104 "lexical.l"
+#line 103 "lexical.l"
 return libsonassmd::CodeReader::parser::make_DOLLAR();
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 105 "lexical.l"
+#line 104 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PLUS();
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 106 "lexical.l"
+#line 105 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MINUS();
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 107 "lexical.l"
+#line 106 "lexical.l"
 return libsonassmd::CodeReader::parser::make_ASTERIX();
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 108 "lexical.l"
+#line 107 "lexical.l"
 return libsonassmd::CodeReader::parser::make_FORWARD_SLASH();
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 109 "lexical.l"
+#line 108 "lexical.l"
 return libsonassmd::CodeReader::parser::make_EQUAL();
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 110 "lexical.l"
+#line 109 "lexical.l"
 return libsonassmd::CodeReader::parser::make_AT();
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 111 "lexical.l"
+#line 110 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LESS();
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 112 "lexical.l"
+#line 111 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MORE();
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 113 "lexical.l"
+#line 112 "lexical.l"
 return libsonassmd::CodeReader::parser::make_PERCENT();
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 114 "lexical.l"
+#line 113 "lexical.l"
 return libsonassmd::CodeReader::parser::make_AMPERSAND();
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 115 "lexical.l"
+#line 114 "lexical.l"
 return libsonassmd::CodeReader::parser::make_EXCLAMATION();
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 116 "lexical.l"
+#line 115 "lexical.l"
 return libsonassmd::CodeReader::parser::make_VERTICAL_BAR();
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 117 "lexical.l"
+#line 116 "lexical.l"
 return libsonassmd::CodeReader::parser::make_CARET();
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 118 "lexical.l"
+#line 117 "lexical.l"
 return libsonassmd::CodeReader::parser::make_TILDE();
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 119 "lexical.l"
+#line 118 "lexical.l"
 return libsonassmd::CodeReader::parser::make_COLON();
 	YY_BREAK
 /* Operators. */
 case 29:
 YY_RULE_SETUP
-#line 122 "lexical.l"
+#line 121 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LOGICAL_AND();
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 123 "lexical.l"
+#line 122 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LOGICAL_OR();
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 124 "lexical.l"
+#line 123 "lexical.l"
 return libsonassmd::CodeReader::parser::make_EQUALITY();   /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 125 "lexical.l"
+#line 124 "lexical.l"
 return libsonassmd::CodeReader::parser::make_INEQUALITY(); /* An assembler extension, for programmers that are familiar with C. */
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 126 "lexical.l"
+#line 125 "lexical.l"
 return libsonassmd::CodeReader::parser::make_INEQUALITY();
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 127 "lexical.l"
+#line 126 "lexical.l"
 return libsonassmd::CodeReader::parser::make_INEQUALITY();
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 128 "lexical.l"
+#line 127 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LESS_OR_EQUAL();
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 129 "lexical.l"
+#line 128 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MORE_OR_EQUAL();
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 130 "lexical.l"
+#line 129 "lexical.l"
 return libsonassmd::CodeReader::parser::make_LEFT_SHIFT();
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 131 "lexical.l"
+#line 130 "lexical.l"
 return libsonassmd::CodeReader::parser::make_RIGHT_SHIFT();
 	YY_BREAK
 /* MapMacros. */
 case 39:
 YY_RULE_SETUP
-#line 134 "lexical.l"
+#line 133 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE();
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 135 "lexical.l"
+#line 134 "lexical.l"
 return libsonassmd::CodeReader::parser::make_MAPPINGS_TABLE_ENTRY();
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 136 "lexical.l"
+#line 135 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SPRITE_HEADER();
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 137 "lexical.l"
+#line 136 "lexical.l"
 return libsonassmd::CodeReader::parser::make_SPRITE_PIECE();
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 138 "lexical.l"
+#line 137 "lexical.l"
 return libsonassmd::CodeReader::parser::make_DPLC_HEADER();
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 139 "lexical.l"
+#line 138 "lexical.l"
 return libsonassmd::CodeReader::parser::make_DPLC_ENTRY();
 	YY_BREAK
 /* Decimal number. */
 case 45:
 YY_RULE_SETUP
-#line 142 "lexical.l"
+#line 141 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
 }
@@ -1032,7 +1031,7 @@ YY_RULE_SETUP
 /* Hexadecimal number (68k). */
 case 46:
 YY_RULE_SETUP
-#line 147 "lexical.l"
+#line 146 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
 }
@@ -1040,7 +1039,7 @@ YY_RULE_SETUP
 /* Binary number (68k). */
 case 47:
 YY_RULE_SETUP
-#line 152 "lexical.l"
+#line 151 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
 }
@@ -1048,14 +1047,14 @@ YY_RULE_SETUP
 /* Labels. */
 case 48:
 YY_RULE_SETUP
-#line 157 "lexical.l"
+#line 156 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext, yyleng - 1));
 }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 161 "lexical.l"
+#line 160 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext, yyleng - 1));
 }
@@ -1063,7 +1062,7 @@ YY_RULE_SETUP
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 165 "lexical.l"
+#line 164 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 1));
 }
@@ -1071,7 +1070,7 @@ YY_RULE_SETUP
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 169 "lexical.l"
+#line 168 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 1));
 }
@@ -1079,7 +1078,7 @@ YY_RULE_SETUP
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 173 "lexical.l"
+#line 172 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 2));
 }
@@ -1087,7 +1086,7 @@ YY_RULE_SETUP
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 177 "lexical.l"
+#line 176 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 2));
 }
@@ -1095,7 +1094,7 @@ YY_RULE_SETUP
 /* Identifier. */
 case 54:
 YY_RULE_SETUP
-#line 182 "lexical.l"
+#line 181 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
 }
@@ -1103,7 +1102,7 @@ YY_RULE_SETUP
 /* Local identifier. */
 case 55:
 YY_RULE_SETUP
-#line 187 "lexical.l"
+#line 186 "lexical.l"
 {
 	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
 }
@@ -1111,15 +1110,15 @@ YY_RULE_SETUP
 /* Make Bison signal a syntax error for unrecognised symbols */
 case 56:
 YY_RULE_SETUP
-#line 192 "lexical.l"
+#line 191 "lexical.l"
 throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 194 "lexical.l"
+#line 193 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 1122 "lexical.cpp"
+#line 1121 "lexical.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2081,6 +2080,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 194 "lexical.l"
+#line 193 "lexical.l"
 
 

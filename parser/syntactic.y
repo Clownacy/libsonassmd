@@ -85,7 +85,7 @@ namespace libsonassmd
 #include "lexical.h"
 
 #undef yylex
-#define yylex(x) lexer(x)
+#define yylex lexer
 
 }
 

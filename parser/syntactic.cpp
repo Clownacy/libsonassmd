@@ -50,7 +50,7 @@
 #include "lexical.h"
 
 #undef yylex
-#define yylex(x) lexer(x)
+#define yylex lexer
 
 
 #line 57 "syntactic.cpp"
