@@ -188,6 +188,11 @@ mappings
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
+	| labels SPRITE_HEADER label
+	{
+		for (const auto &label : $1)
+			$$.frames.try_emplace(label);
+	}
 	| labels SPRITE_HEADER sprite_frame label
 	{
 		for (const auto &label : $1)
@@ -205,6 +210,12 @@ mappings
 		const SpriteFrame frame($3);
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
+	}
+	| mappings labels SPRITE_HEADER label
+	{
+		$$ = std::move($1);
+		for (const auto &label : $2)
+			$$.frames.try_emplace(label);
 	}
 	| mappings labels SPRITE_HEADER sprite_frame label
 	{
