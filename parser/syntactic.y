@@ -234,6 +234,11 @@ dplcs
 		for (const auto &label : $1)
 			$$.frames.insert({label, frame});
 	}
+	| labels DPLC_HEADER label
+	{
+		for (const auto &label : $1)
+			$$.frames.try_emplace(label);
+	}
 	| labels DPLC_HEADER dplc_frame label
 	{
 		for (const auto &label : $1)
@@ -251,6 +256,12 @@ dplcs
 		const DynamicPatternLoadCue frame($3);
 		for (const auto &label : $2)
 			$$.frames.insert({label, frame});
+	}
+	| dplcs labels DPLC_HEADER label
+	{
+		$$ = std::move($1);
+		for (const auto &label : $2)
+			$$.frames.try_emplace(label);
 	}
 	| dplcs labels DPLC_HEADER dplc_frame label
 	{
@@ -327,8 +338,8 @@ sprite_frame
 dplc_copy
 	: DPLC_ENTRY expression "," expression
 	{
-		$$.start = $2;
-		$$.length = $4;
+		$$.length = $2;
+		$$.start = $4;
 	}
 	;
 
