@@ -6,7 +6,7 @@
 #include <string>
 
 #include "common.h"
-#include "parser/code-reader.h".h"
+#include "parser/code-reader.h"
 
 namespace libsonassmd {
 
