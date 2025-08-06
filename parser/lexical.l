@@ -17,7 +17,7 @@
 
 %option never-interactive
 %option nounistd
-%option nounput noinput noyywrap
+%option nounput noinput noyywrap nodefault
 %option c++
 %option prefix="libsonassmd_code_reader_yy"
 %option caseless
@@ -77,7 +77,7 @@ local_identifier  [@\.][A-Za-z_0-9\?]+
 %}
 
  /* Ignore whitespace */
-[ \t]+          ;
+[ \t\r\n]+      ;
 
  /* Ignore comments */
 ;.*?$           ;
@@ -188,6 +188,6 @@ even            ; // Just get rid of this junk; we don't need it.
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
-.       throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
+.|\n    throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
 
 %%
