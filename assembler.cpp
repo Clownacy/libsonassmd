@@ -9,7 +9,7 @@ namespace libsonassmd {
 void Assemble(std::istream &input, std::ostream &output)
 {
 	std::stringstream errors;
-	const bool success = ClownAssembler::Assemble(input, output, &errors, nullptr, nullptr, "[Internal buffer]", false, false, false, false, false, nullptr);
+	const bool success = ClownAssembler::Assemble(input, output, &errors);
 
 	if (!success)
 		throw std::runtime_error("Failed to assemble:\n\n" + errors.str());
