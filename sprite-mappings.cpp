@@ -56,7 +56,7 @@ void SpriteMappings::fromBinaryStream(std::istream &stream)
 		const unsigned int frame_offset = ReadU16BE(stream);
 
 		// Valid offsets are never odd.
-		if (game != Game::SONIC_1 && frame_offset % 2 != 0)
+		if (settings.game != Game::SONIC_1 && frame_offset % 2 != 0)
 			break;
 
 		++total_frames;
@@ -104,20 +104,20 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 {
 	// TODO: This code is duplicated in the DPLC code. Can this be made into a common function?
 	std::random_device random_device;
-	const std::string table_label = mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
+	const std::string table_label = settings.mapmacros ? ".offsets" : "CME_" + IntegerToHexString(random_device(), 8);
 
 	stream << table_label << ":";
 
-	if (mapmacros)
+	if (settings.mapmacros)
 		stream << "\tmappingsTable";
 
 	stream << "\n";
 
 	for (const auto &frame : frames)
 	{
-		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
+		const std::string frame_label = settings.mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 
-		if (mapmacros)
+		if (settings.mapmacros)
 			stream << "\tmappingsTableEntry.w\t" << frame_label << "\n";
 		else
 			stream << "\tdc.w\t" << frame_label << "-" << table_label << "\n";
@@ -127,16 +127,16 @@ void SpriteMappings::toAssemblyStream(std::ostream &stream) const
 
 	for (const auto &frame : frames)
 	{
-		const std::string frame_label = mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
+		const std::string frame_label = settings.mapmacros ? ".frame" + std::to_string(&frame - frames.data()) : table_label + "_" + IntegerToHexString(&frame - frames.data());
 		stream << frame_label << ":";
 
-		if (mapmacros)
+		if (settings.mapmacros)
 			stream << "\tspriteHeader";
 
 		stream << "\n";
 		frame.toAssemblyStream(stream);
 
-		if (mapmacros)
+		if (settings.mapmacros)
 			stream << frame_label << "_End\n\n";
 	}
 

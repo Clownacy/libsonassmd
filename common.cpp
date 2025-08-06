@@ -6,8 +6,7 @@
 
 namespace libsonassmd {
 
-Game game;
-bool mapmacros;
+Settings settings;
 
 std::string IntegerToHexString(const unsigned long integer, const unsigned int minimum_digits)
 {

@@ -180,14 +180,14 @@ void Assembleable::fromBinaryFile(const std::filesystem::path &file_path)
 void Assembleable::toBinaryStream(std::ostream &stream) const
 {
 	// Forcefully disable mapmacros, since we cannot assembly those.
-	const auto previous_mapmacros = mapmacros;
-	mapmacros = false;
+	const auto previous_mapmacros = settings.mapmacros;
+	settings.mapmacros = false;
 
 	std::stringstream string_stream;
 	toAssemblyStream(string_stream);
 	Assemble(string_stream, stream);
 
-	mapmacros = previous_mapmacros;
+	settings.mapmacros = previous_mapmacros;
 }
 
 }

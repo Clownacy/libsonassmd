@@ -42,7 +42,7 @@ void DynamicPatternLoadCue::fromBinaryStream(std::istream &stream)
 	const auto original_exceptions = stream.exceptions();
 	stream.exceptions(stream.badbit | stream.eofbit | stream.failbit);
 
-	const unsigned int total_copies = game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
+	const unsigned int total_copies = settings.game != Game::SONIC_1 ? ReadU16BE(stream) :  ReadU8(stream);
 
 	copies.reserve(total_copies);
 
@@ -55,8 +55,8 @@ void DynamicPatternLoadCue::fromBinaryStream(std::istream &stream)
 
 void DynamicPatternLoadCue::toAssemblyStream(std::ostream &stream) const
 {
-	if (!mapmacros)
-		stream << "\tdc." << (game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
+	if (!settings.mapmacros)
+		stream << "\tdc." << (settings.game == Game::SONIC_1 ? 'b' : 'w') << '\t' << total_segments() << '\n';
 
 	for (const auto &copy : copies)
 		copy.toAssemblyStream(stream);
@@ -93,7 +93,7 @@ void DynamicPatternLoadCue::Copy::toAssemblyStream(std::ostream &stream) const
 		const int segment_start = start + 0x10 * i;
 		const int segment_length = std::min(0x10, length - 0x10 * i);
 
-		if (mapmacros)
+		if (settings.mapmacros)
 			stream << "\tdplcEntry\t" << segment_length << ", " << segment_start << "\n";
 		else
 			stream << "\tdc.w\t$" << IntegerToHexString((segment_length - 1) << 12 | (segment_start & 0xFFF), 4) << '\n';

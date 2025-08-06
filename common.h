@@ -17,8 +17,13 @@ enum class Game
 	SONIC_3_AND_KNUCKLES
 };
 
-extern Game game;
-extern bool mapmacros;
+struct Settings
+{
+	Game game;
+	bool mapmacros;
+};
+
+extern Settings settings;
 
 template<std::size_t S>
 inline unsigned long ReadUnsignedBE(std::istream &stream)

@@ -20,7 +20,7 @@ void SpritePiece::fromBinaryStream(std::istream &stream)
 	x_flip = (art_tile & (1 << 11)) != 0;
 	tile_index = art_tile & 0x7FF;
 
-	switch (game)
+	switch (settings.game)
 	{
 		case Game::SONIC_1:
 			x = ReadS8(stream);
@@ -40,7 +40,7 @@ void SpritePiece::fromBinaryStream(std::istream &stream)
 
 void SpritePiece::toAssemblyStream(std::ostream &stream) const
 {
-	if (mapmacros)
+	if (settings.mapmacros)
 	{
 		stream << "\tspritePiece " << x << ", " << y << ", " << width << ", " << height << ", " << tile_index << ", " << x_flip << ", " << y_flip << ", " << palette_line << ", " << priority;
 	}
@@ -57,7 +57,7 @@ void SpritePiece::toAssemblyStream(std::ostream &stream) const
 
 		stream << "\tdc.w\t$" << IntegerToHexString(art_tile_upper_bits | static_cast<unsigned int>(tile_index), 4) << "\n";
 
-		switch (game)
+		switch (settings.game)
 		{
 			case Game::SONIC_1:
 				stream << "\tdc.b\t" << x << "\n";

@@ -16,7 +16,7 @@ void Object::fromBinaryStream(std::istream &stream)
 	const unsigned int byte1 = ReadU8(stream);
 	const unsigned int byte2 = ReadU8(stream);
 
-	switch (game)
+	switch (settings.game)
 	{
 		case Game::SONIC_1:
 			x = word1;
@@ -66,7 +66,7 @@ void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 	if (y > 0xFFF)
 		throw std::range_error("Y is too large");
 
-	if (id > (game == Game::SONIC_1 ? 0x7F : 0xFF))
+	if (id > (settings.game == Game::SONIC_1 ? 0x7F : 0xFF))
 		throw std::range_error("ID is too large");
 
 #if UCHAR_MAX != 0xFF
@@ -76,7 +76,7 @@ void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 
 	unsigned int compact_word;
 
-	switch (game)
+	switch (settings.game)
 	{
 		case Game::SONIC_1:
 			compact_word = (y << 0) | (static_cast<unsigned int>(x_flip) << 14) | (static_cast<unsigned int>(y_flip) << 15);
@@ -97,7 +97,7 @@ void Object::toStreamCommon(std::ostream &stream, const bool assembly) const
 
 	unsigned int compact_byte;
 
-	switch (game)
+	switch (settings.game)
 	{
 		case Game::SONIC_1:
 			compact_byte = (id << 0) | (static_cast<unsigned int>(respawn) << 7);
