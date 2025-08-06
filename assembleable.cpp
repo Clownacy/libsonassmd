@@ -10,6 +10,7 @@
 #include "nemesis.h"
 
 #include "assembler.h"
+#include "common.h"
 
 namespace libsonassmd {
 
@@ -159,14 +160,14 @@ void Assembleable::toStream(std::ostream &stream, const Format format) const
 void Assembleable::fromAssemblyStream(std::istream &stream)
 {
 	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
-	Assemble(stream, string_stream, game);
+	Assemble(stream, string_stream);
 	fromBinaryStream(string_stream);
 }
 
 void Assembleable::fromAssemblyFile(const std::filesystem::path &file_path)
 {
 	std::stringstream string_stream(std::ios::in | std::ios::out | std::ios::binary);
-	Assemble(file_path, string_stream, game);
+	Assemble(file_path, string_stream);
 	fromBinaryStream(string_stream);
 }
 
@@ -178,9 +179,15 @@ void Assembleable::fromBinaryFile(const std::filesystem::path &file_path)
 
 void Assembleable::toBinaryStream(std::ostream &stream) const
 {
+	// Forcefully disable mapmacros, since we cannot assembly those.
+	const auto previous_mapmacros = mapmacros;
+	mapmacros = false;
+
 	std::stringstream string_stream;
 	toAssemblyStream(string_stream);
-	Assemble(string_stream, stream, game);
+	Assemble(string_stream, stream);
+
+	mapmacros = previous_mapmacros;
 }
 
 }
