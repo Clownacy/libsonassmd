@@ -25,7 +25,7 @@ inline unsigned long ReadUnsignedBE(std::istream &stream)
 {
 	std::array<unsigned char, S> bytes;
 
-	stream.read(reinterpret_cast<char*>(std::data(bytes)), std::size(bytes));
+	stream.read(reinterpret_cast<char*>(std::data(bytes)), S);
 
 	return std::accumulate(bytes.cbegin(), bytes.cend(), 0UL, [](const auto &a, const auto &b)
 	{
@@ -56,10 +56,10 @@ inline void WriteBE(std::ostream &stream, const unsigned long value)
 {
 	std::array<unsigned char, S> bytes;
 
-	for (std::size_t i = 0; i < std::size(bytes); ++i)
-		bytes[i] = (value >> (std::size(bytes) - 1 - i) * 8) & 0xFF;
+	for (std::size_t i = 0; i < S; ++i)
+		bytes[i] = (value >> (S - 1 - i) * 8) & 0xFF;
 
-	stream.write(reinterpret_cast<const char*>(std::data(bytes)), std::size(bytes));
+	stream.write(reinterpret_cast<const char*>(std::data(bytes)), S);
 }
 template<>
 inline void WriteBE<1>(std::ostream &stream, const unsigned long value)
