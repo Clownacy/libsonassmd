@@ -18,7 +18,7 @@ int main([[maybe_unused]] const int argc, char** const argv)
 	libsonassmd::game = libsonassmd::Game::SONIC_1;
 	libsonassmd::mapmacros = true;
 
-	auto mappings = libsonassmd::CodeReader::ReadDynamicPatternLoadCues(file);
+	auto mappings = libsonassmd::CodeReader::ReadMappings(file);
 
 	for (const auto &offset_table : mappings.offset_tables)
 	{
