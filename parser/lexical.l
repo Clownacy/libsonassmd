@@ -139,55 +139,55 @@ even            ; // Just get rid of this junk; we don't need it.
 
  /* Decimal number. */
 {decimal} {
-	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(YYText(), YYLeng(), 10));
 }
 
  /* Hexadecimal number (68k). */
 \${hexadecimal} {
-	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(YYText() + 1, YYLeng() - 1, 16));
 }
 
  /* Binary number (68k). */
 \%{binary} {
-	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(YYText() + 1, YYLeng() - 1, 2));
 }
 
  /* Labels. */
 {identifier}: {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText(), YYLeng() - 1));
 }
 
 {local_identifier}:  {
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText(), YYLeng() - 1));
 }
 
 [\r\n]{identifier} {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText() + 1, YYLeng() - 1));
 }
 
 [\r\n]{local_identifier} {
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText() + 1, YYLeng() - 1));
 }
 
 [\r\n]{identifier}: {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 2));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText() + 1, YYLeng() - 2));
 }
 
 [\r\n]{local_identifier}: {
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 2));
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText() + 1, YYLeng() - 2));
 }
 
  /* Identifier. */
 {identifier} {
-	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(YYText(), YYLeng()));
 }
 
  /* Local identifier. */
 {local_identifier} {
-	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(YYText(), YYLeng()));
 }
 
  /* Make Bison signal a syntax error for unrecognised symbols */
-.|\n    throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
+.|\n    throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + YYText() + "'.");
 
 %%

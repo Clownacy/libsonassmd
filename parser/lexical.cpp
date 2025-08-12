@@ -1031,7 +1031,7 @@ case 45:
 YY_RULE_SETUP
 #line 142 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext, yyleng, 10));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(YYText(), YYLeng(), 10));
 }
 	YY_BREAK
 /* Hexadecimal number (68k). */
@@ -1039,7 +1039,7 @@ case 46:
 YY_RULE_SETUP
 #line 147 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 16));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(YYText() + 1, YYLeng() - 1, 16));
 }
 	YY_BREAK
 /* Binary number (68k). */
@@ -1047,7 +1047,7 @@ case 47:
 YY_RULE_SETUP
 #line 152 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(yytext + 1, yyleng - 1, 2));
+	return libsonassmd::CodeReader::parser::make_NUMBER(ParseNumber(YYText() + 1, YYLeng() - 1, 2));
 }
 	YY_BREAK
 /* Labels. */
@@ -1055,14 +1055,14 @@ case 48:
 YY_RULE_SETUP
 #line 157 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText(), YYLeng() - 1));
 }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 161 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText(), YYLeng() - 1));
 }
 	YY_BREAK
 case 50:
@@ -1070,7 +1070,7 @@ case 50:
 YY_RULE_SETUP
 #line 165 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText() + 1, YYLeng() - 1));
 }
 	YY_BREAK
 case 51:
@@ -1078,7 +1078,7 @@ case 51:
 YY_RULE_SETUP
 #line 169 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 1));
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText() + 1, YYLeng() - 1));
 }
 	YY_BREAK
 case 52:
@@ -1086,7 +1086,7 @@ case 52:
 YY_RULE_SETUP
 #line 173 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LABEL(std::string(yytext + 1, yyleng - 2));
+	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText() + 1, YYLeng() - 2));
 }
 	YY_BREAK
 case 53:
@@ -1094,7 +1094,7 @@ case 53:
 YY_RULE_SETUP
 #line 177 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(yytext + 1, yyleng - 2));
+	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText() + 1, YYLeng() - 2));
 }
 	YY_BREAK
 /* Identifier. */
@@ -1102,7 +1102,7 @@ case 54:
 YY_RULE_SETUP
 #line 182 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_IDENTIFIER(std::string(YYText(), YYLeng()));
 }
 	YY_BREAK
 /* Local identifier. */
@@ -1110,7 +1110,7 @@ case 55:
 YY_RULE_SETUP
 #line 187 "lexical.l"
 {
-	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(yytext, yyleng));
+	return libsonassmd::CodeReader::parser::make_LOCAL_IDENTIFIER(std::string(YYText(), YYLeng()));
 }
 	YY_BREAK
 /* Make Bison signal a syntax error for unrecognised symbols */
@@ -1118,7 +1118,7 @@ case 56:
 /* rule 56 can match eol */
 YY_RULE_SETUP
 #line 192 "lexical.l"
-throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + yytext + "'.");
+throw libsonassmd::CodeReader::parser::syntax_error(std::string("Invalid character '") + YYText() + "'.");
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
