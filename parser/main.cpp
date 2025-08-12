@@ -15,8 +15,8 @@ int main([[maybe_unused]] const int argc, char** const argv)
 		return EXIT_FAILURE;
 	}
 
-	libsonassmd::game = libsonassmd::Game::SONIC_1;
-	libsonassmd::mapmacros = true;
+	libsonassmd::settings.game = libsonassmd::Game::SONIC_1;
+	libsonassmd::settings.mapmacros = true;
 
 	auto mappings = libsonassmd::CodeReader::ReadMappings(file);
 
