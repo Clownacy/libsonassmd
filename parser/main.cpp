@@ -7,7 +7,7 @@ int main([[maybe_unused]] const int argc, char** const argv)
 {
 	const char* const input_file_path = argv[1];
 
-	std::ifstream file(input_file_path);
+	std::ifstream file(input_file_path, std::ios::binary);
 
 	if (!file.is_open())
 	{

@@ -50,6 +50,7 @@ static unsigned long ParseNumber(const char* const string_start, const size_t st
 binary_digit      [0-1]
 decimal_digit     [0-9]
 hexadecimal_digit [0-9a-fA-F]
+newline           [\r\n]
 binary            {binary_digit}+
 decimal           {decimal_digit}+
 hexadecimal       {hexadecimal_digit}+
@@ -77,7 +78,7 @@ local_identifier  [@\.][A-Za-z_0-9\?]+
 %}
 
  /* Ignore whitespace */
-[ \t\r\n]+      ;
+[ \t\r\n]       ;
 
  /* Ignore comments */
 ;.*?$           ;
@@ -161,19 +162,19 @@ even            ; // Just get rid of this junk; we don't need it.
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText(), YYLeng() - 1));
 }
 
-[\r\n]{identifier} {
+{newline}{identifier} {
 	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText() + 1, YYLeng() - 1));
 }
 
-[\r\n]{local_identifier} {
+{newline}{local_identifier} {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText() + 1, YYLeng() - 1));
 }
 
-[\r\n]{identifier}: {
+{newline}{identifier}: {
 	return libsonassmd::CodeReader::parser::make_LABEL(std::string(YYText() + 1, YYLeng() - 2));
 }
 
-[\r\n]{local_identifier}: {
+{newline}{local_identifier}: {
 	return libsonassmd::CodeReader::parser::make_LOCAL_LABEL(std::string(YYText() + 1, YYLeng() - 2));
 }
 
